@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PiggyPulse - Settings Wireframe</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-soft: #f8f9fd;
+  --border-soft: #e6e8f0;
+  --text-primary: #1a1d21;
+  --text-secondary: #5c6470;
+  --text-muted: #8b93a1;
+  --accent-primary: #5e63e6;
+  --accent-secondary: #8c6cfb;
+  --focus-ring: rgba(94, 99, 230, 0.28);
+  --danger-border: #dfc9ce;
+  --danger-surface: #fdf8f9;
+  --shadow-soft: 0 10px 24px rgba(26, 29, 33, 0.08);
+}
+
+body.dark {
+  --bg: #14161a;
+  --surface: #1c1f26;
+  --surface-soft: #20242c;
+  --border-soft: #2a2f38;
+  --text-primary: #e6e8eb;
+  --text-secondary: #a8afb9;
+  --text-muted: #7d8590;
+  --accent-primary: #8c6cfb;
+  --accent-secondary: #5e63e6;
+  --focus-ring: rgba(140, 108, 251, 0.32);
+  --danger-border: #5e4850;
+  --danger-surface: #2a2328;
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.32);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 16px 96px;
+}
+
+.app-shell {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface);
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "main";
+  min-height: 640px;
+}
+
+.shell-sidebar {
+  display: none;
+  grid-area: sidebar;
+  border-right: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  padding: 16px 12px;
+}
+
+.shell-group-title {
+  margin: 14px 8px 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.shell-nav-list {
+  display: grid;
+  gap: 2px;
+}
+
+.shell-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+  border: 0;
+  border-left: 4px solid transparent;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 10px 10px 10px 14px;
+}
+
+.shell-nav-item.active {
+  border-left-color: var(--accent-primary);
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+}
+
+.main {
+  grid-area: main;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+.topbar {
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+}
+
+.topbar-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+.theme-btn,
+.action-btn,
+.ghost-btn,
+.primary-btn,
+.danger-btn {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.primary-btn {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.danger-btn {
+  border-color: var(--danger-border);
+  background: var(--danger-surface);
+}
+
+.page-head {
+  padding: 18px 16px;
+  border-bottom: 1px solid var(--border-soft);
+  background:
+    radial-gradient(circle at 8% 28%, rgba(94, 99, 230, 0.08) 0 4px, transparent 5px),
+    radial-gradient(circle at 12% 28%, rgba(94, 99, 230, 0.08) 0 4px, transparent 5px),
+    linear-gradient(100deg, transparent 0%, rgba(94, 99, 230, 0.06) 24%, transparent 46%);
+}
+
+.page-title {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  font-family: "Sora", "Inter", sans-serif;
+  font-weight: 700;
+}
+
+.page-subtitle {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.settings-grid {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.section-nav {
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface-soft);
+  padding: 12px;
+  height: fit-content;
+  display: none;
+}
+
+.section-nav h2 {
+  margin: 0 0 10px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.section-nav button {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-icon {
+  width: 16px;
+  height: 16px;
+  color: color-mix(in srgb, var(--accent-primary) 74%, var(--text-secondary) 26%);
+}
+
+.section-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.section-nav .action-btn.active {
+  border-color: color-mix(in srgb, var(--accent-primary) 45%, var(--border-soft) 55%);
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--accent-primary) 7%, var(--surface) 93%);
+}
+
+.content-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.card {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: var(--surface);
+  padding: 18px;
+}
+
+.card-label {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.card h3 {
+  margin: 8px 0 0;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+
+.card p {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.42;
+}
+
+.form-grid {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.row {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.row .label {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.row .value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.helper {
+  margin-top: 10px;
+  border-left: 2px solid var(--accent-primary);
+  padding-left: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.stack-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.inline-list {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.inline-item {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  padding: 10px;
+}
+
+.inline-item strong {
+  display: block;
+  font-size: 13px;
+}
+
+.inline-item span {
+  margin-top: 4px;
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.danger-zone {
+  border-color: var(--danger-border);
+  background: linear-gradient(180deg, var(--danger-surface), var(--surface));
+}
+
+.state-grid {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.state-card {
+  border: 1px dashed var(--border-soft);
+  border-radius: 12px;
+  background: var(--surface-soft);
+  padding: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.state-card::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 16px;
+  height: 16px;
+  border-left: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+  border-radius: 0 0 0 10px;
+  background: color-mix(in srgb, var(--accent-primary) 7%, var(--surface) 93%);
+}
+
+
+.state-card h4 {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.state-card p {
+  margin: 6px 0 0;
+  font-size: 13px;
+}
+
+.ghost-loading {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+.ghost-line {
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(140, 147, 161, 0.08), rgba(140, 147, 161, 0.18), rgba(140, 147, 161, 0.08));
+  background-size: 220% 100%;
+  animation: ghost-sweep 1.6s linear infinite;
+}
+
+.ghost-line.w-100 { width: 100%; }
+.ghost-line.w-80 { width: 80%; }
+.ghost-line.w-60 { width: 60%; }
+
+@keyframes ghost-sweep {
+  from { background-position: 0% 0; }
+  to { background-position: 220% 0; }
+}
+
+kbd {
+  border: 1px solid var(--border-soft);
+  background: var(--surface);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 11px;
+}
+
+.mobile-accordion {
+  display: block;
+}
+
+details {
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  background: var(--surface);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+details > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px;
+  font-weight: 600;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion-content {
+  border-top: 1px solid var(--border-soft);
+  padding: 12px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.overlay,
+.drawer-overlay,
+.mobile-more-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 90;
+}
+
+.overlay.open,
+.drawer-overlay.open,
+.mobile-more-overlay.open {
+  display: block;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(620px, calc(100% - 24px));
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 16px;
+}
+
+.modal h4,
+.drawer-panel h4 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.modal p,
+.drawer-panel p {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.field-grid {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.field-grid label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.field-grid input,
+.field-grid select,
+.field-grid textarea {
+  width: 100%;
+  margin-top: 4px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: var(--surface-soft);
+}
+
+.modal-actions,
+.drawer-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.drawer-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 90vh;
+  overflow: auto;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px 14px 0 0;
+  background: var(--surface);
+  padding: 12px 14px 16px;
+}
+
+.handle {
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-soft);
+  margin: 2px auto 10px;
+}
+
+.toast-stack {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 58px;
+  z-index: 85;
+  display: grid;
+  gap: 8px;
+  padding: 0 8px;
+}
+
+.toast {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 10px 12px;
+  box-shadow: var(--shadow-soft);
+}
+
+.shell-mobile-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  display: flex;
+  gap: 6px;
+  border-top: 1px solid var(--border-soft);
+  background: var(--surface);
+  padding: 8px;
+}
+
+.shell-mobile-nav a,
+.shell-mobile-nav button {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  text-decoration: none;
+  text-align: center;
+  padding: 8px 6px;
+  font-size: 12px;
+}
+
+.shell-mobile-nav .active {
+  border-color: color-mix(in srgb, var(--accent-primary) 45%, var(--border-soft) 55%);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+  color: var(--text-primary);
+}
+
+.nav-icon {
+  width: 22px;
+  height: 22px;
+  color: color-mix(in srgb, var(--accent-primary) 78%, var(--text-secondary) 22%);
+}
+
+.shell-sidebar .nav-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.brand-logo {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: var(--surface);
+}
+
+.brand-logo img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.logo-pulse-once {
+  animation: logoPulse 220ms ease-out 1;
+}
+
+@keyframes logoPulse {
+  0% { transform: scale(0.96); opacity: 0.84; }
+  60% { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.mobile-more {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px 14px 0 0;
+  background: var(--surface);
+  padding: 12px;
+}
+
+.mobile-more nav {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.mobile-more nav a {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 9px 10px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (min-width: 860px) {
+  .layout {
+    padding: 24px 16px 64px;
+  }
+
+  .app-shell {
+    grid-template-columns: 240px 1fr;
+    grid-template-areas: "sidebar main";
+  }
+
+  .shell-sidebar {
+    display: block;
+  }
+
+  .settings-grid {
+    grid-template-columns: 240px 1fr;
+  }
+
+  .section-nav {
+    display: block;
+  }
+
+  .mobile-accordion {
+    display: none;
+  }
+
+  .shell-mobile-nav {
+    display: none;
+  }
+
+  .toast-stack {
+    left: auto;
+    right: 16px;
+    bottom: 16px;
+    width: min(340px, calc(100% - 32px));
+    padding: 0;
+  }
+}
+</style>
+</head>
+<body>
+<main class="layout">
+  <div class="app-shell">
+    <aside class="shell-sidebar" aria-label="Primary navigation">
+      <div class="shell-group-title">Core</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+      </nav>
+      <div class="shell-group-title">Structure</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      </nav>
+      <div class="shell-group-title">Session</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-5a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg></span><span class="nav-label">Logout</span></a>
+      </nav>
+    </aside>
+
+    <section class="main" aria-label="Settings workspace">
+      <header class="topbar">
+        <div class="topbar-meta">
+          <span class="chip">Authenticated session</span>
+          <span class="chip">Settings changes require explicit save</span>
+        </div>      </header>
+
+      <div class="page-head">
+        <div class="brand-row">
+          <div class="brand-logo logo-pulse-once" aria-hidden="true"><img src="../piggy.png" alt="" /></div>
+          <span class="chip">PiggyPulse identity</span>
+        </div>
+        <h1 class="page-title">Settings</h1>
+        <p class="page-subtitle">Identity, security, structure, preferences, and data ownership controls.</p>
+      </div>
+
+      <div class="settings-grid">
+        <aside class="section-nav" aria-label="Settings section navigation">
+          <h2>Sections</h2>
+          <button class="action-btn active" type="button" data-open-edit="profile"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg></span>Profile</button>
+          <button class="action-btn" type="button" data-open-edit="security"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5 -3.5 8.5 -8 9c-4.5-.5 -8 -4 -8 -9v-5l8 -4"/><path d="M9 12l2 2l4 -4"/></svg></span>Security</button>
+          <button class="action-btn" type="button" data-open-edit="period"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span>Period Model</button>
+          <button class="action-btn" type="button" data-open-edit="preferences"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span>Preferences</button>
+          <button class="action-btn" type="button" data-open-edit="data"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M8 11l4 4l4 -4"/><path d="M4 17v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3 -3v-1"/></svg></span>Data and Export</button>
+          <button class="action-btn" type="button" data-open-edit="danger"><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M5.07 19h13.86a2 2 0 0 0 1.74 -3l-6.93 -12a2 2 0 0 0 -3.48 0l-6.93 12a2 2 0 0 0 1.74 3z"/></svg></span>Danger Zone</button>
+        </aside>
+
+        <div class="content-panel">
+          <article class="card" id="section-profile">
+            <p class="card-label">Profile</p>
+            <h3>Identity metadata</h3>
+            <div class="form-grid">
+              <div class="row"><span class="label">Name</span><span class="value">Leonardo Almeida</span></div>
+              <div class="row"><span class="label">Email</span><span class="value">l***@example.com (read-only)</span></div>
+              <div class="row"><span class="label">Timezone</span><span class="value">Europe/Amsterdam</span></div>
+              <div class="row"><span class="label">Default currency</span><span class="value">EUR</span></div>
+            </div>
+            <p class="helper">Email changes require a verification flow. No auto-save is used in this page.</p>
+            <div class="stack-actions">
+              <button class="primary-btn" type="button" data-open-edit="profile">Edit Profile</button>
+            </div>
+          </article>
+
+          <article class="card" id="section-security">
+            <p class="card-label">Security</p>
+            <h3>Access control and active sessions</h3>
+            <div class="inline-list">
+              <div class="inline-item"><strong>Password</strong><span>Change password using current password confirmation.</span></div>
+              <div class="inline-item"><strong>Two-Factor Authentication</strong><span>Status: Enabled. Recovery codes can be regenerated.</span></div>
+              <div class="inline-item"><strong>Active Sessions</strong><span>MacBook Pro | Netherlands | Last active: 2 minutes ago</span></div>
+              <div class="inline-item"><strong>Session detail privacy</strong><span>Country-level location only. No IP or fingerprint shown.</span></div>
+            </div>
+            <div class="stack-actions">
+              <button class="action-btn" type="button" data-open-edit="security">Manage Security</button>
+              <button class="ghost-btn" type="button" data-open-confirm="revoke">Revoke Session</button>
+            </div>
+          </article>
+
+          <article class="card" id="section-period-model">
+            <p class="card-label">Period Model</p>
+            <h3>Schedule editor</h3>
+            <div class="form-grid">
+              <div class="row"><span class="label">Mode</span><span class="value">Automatic</span></div>
+              <div class="row"><span class="label">Start day</span><span class="value">1</span></div>
+              <div class="row"><span class="label">Duration</span><span class="value">1 month</span></div>
+              <div class="row"><span class="label">Generate ahead</span><span class="value">6 periods</span></div>
+              <div class="row"><span class="label">Weekend rule</span><span class="value">Keep date</span></div>
+              <div class="row"><span class="label">Name pattern</span><span class="value">{MONTH} {YEAR}</span></div>
+            </div>
+            <p class="helper">Schedule updates regenerate future periods only. Transactions are assigned by date, not linked directly to period records.</p>
+            <div class="stack-actions">
+              <button class="action-btn" type="button" data-open-edit="period">Edit Schedule</button>
+            </div>
+          </article>
+
+          <article class="card" id="section-preferences">
+            <p class="card-label">Preferences</p>
+            <h3>Interface behavior</h3>
+            <div class="form-grid">
+              <div class="row"><span class="label">Theme</span><span class="value">System</span></div>
+              <div class="row"><span class="label">Date format</span><span class="value">DD/MM/YYYY</span></div>
+              <div class="row"><span class="label">Number format</span><span class="value">1,234.56</span></div>
+              <div class="row"><span class="label">Compact mode</span><span class="value">Off</span></div>
+            </div>
+            <p class="helper">Changes preview immediately in this mockup but are committed only after pressing Save.</p>
+            <div class="stack-actions">
+              <button class="primary-btn" type="button" data-open-edit="preferences">Save Preferences</button>
+            </div>
+          </article>
+
+          <article class="card" id="section-data-export">
+            <p class="card-label">Data and Export</p>
+            <h3>User data ownership</h3>
+            <div class="inline-list">
+              <div class="inline-item"><strong>Export transactions (CSV)</strong><span>Tabular transaction snapshot.</span></div>
+              <div class="inline-item"><strong>Export full dataset (JSON)</strong><span>Structured dataset for personal archival.</span></div>
+              <div class="inline-item"><strong>Request account data copy</strong><span>Asynchronous copy request with confirmation.</span></div>
+            </div>
+            <div class="stack-actions">
+              <button class="action-btn" type="button" data-open-confirm="export-csv">Export CSV</button>
+              <button class="action-btn" type="button" data-open-confirm="export-json">Export JSON</button>
+              <button class="action-btn" type="button" data-open-confirm="data-copy">Request Data Copy</button>
+            </div>
+          </article>
+
+          <article class="card danger-zone" id="section-danger-zone">
+            <p class="card-label">Danger Zone</p>
+            <h3>Destructive structural actions</h3>
+            <p>Reset Structure removes accounts, categories, and period model definitions. Transactions remain intact.</p>
+            <p>Delete Account permanently deletes account data and requires typed confirmation: <strong>DELETE</strong>.</p>
+            <div class="stack-actions">
+              <button class="danger-btn" type="button" data-open-confirm="reset">Reset Structure</button>
+              <button class="danger-btn" type="button" data-open-confirm="delete">Delete Account</button>
+            </div>
+          </article>
+
+          <article class="card" aria-label="Mobile and keyboard behavior">
+            <p class="card-label">Interaction Contract</p>
+            <h3>Keyboard and focus order</h3>
+            <p>Desktop form order: Name -> Timezone -> Currency -> Save. <kbd>Enter</kbd> on final field saves. <kbd>Esc</kbd> cancels edits.</p>
+            <p>Mobile edit flows use a bottom drawer. <kbd>Enter</kbd> saves in input contexts. <kbd>Esc</kbd> closes drawer. Focus remains visible in all controls.</p>
+            <div class="state-grid">
+              <div class="state-card"><h4>Default</h4><p>All sections loaded with current saved values.</p></div>
+              <div class="state-card"><h4>Empty</h4><p>No active sessions are shown yet. This list fills as sessions are created.</p></div>
+              <div class="state-card"><h4>Loading</h4><p>Settings data is loading. This view settles into place once retrieval completes.</p><div class="ghost-loading" aria-hidden="true"><div class="ghost-line w-100"></div><div class="ghost-line w-80"></div><div class="ghost-line w-60"></div></div></div>
+              <div class="state-card"><h4>Error</h4><p>Settings could not be loaded right now. Retry is available without exposing technical details.</p></div>
+            </div>
+          </article>
+
+          <section class="mobile-accordion" aria-label="Mobile single-column structure">
+            <details name="mobile-settings" open>
+              <summary>Profile</summary>
+              <div class="accordion-content">Name, read-only email, timezone, and default currency with explicit Save.</div>
+            </details>
+            <details name="mobile-settings">
+              <summary>Security</summary>
+              <div class="accordion-content">Password, two-factor status, active sessions, and revoke controls.</div>
+            </details>
+            <details name="mobile-settings">
+              <summary>Period Model</summary>
+              <div class="accordion-content">Mode, start day, duration, generation window, and naming pattern.</div>
+            </details>
+            <details name="mobile-settings">
+              <summary>Preferences</summary>
+              <div class="accordion-content">Theme, date format, number format, and compact mode.</div>
+            </details>
+            <details name="mobile-settings">
+              <summary>Data and Export</summary>
+              <div class="accordion-content">CSV and JSON exports plus data copy request with confirmation.</div>
+            </details>
+            <details name="mobile-settings">
+              <summary>Danger Zone</summary>
+              <div class="accordion-content">Reset Structure and Delete Account with explicit confirmation.</div>
+            </details>
+          </section>
+
+          <article class="card" aria-label="Spec compliance checklist">
+            <p class="card-label">Spec Compliance</p>
+            <h3>Checklist</h3>
+            <p>Section model, explicit save behavior, and destructive confirmations follow <code>app-core/settings/PIGGYPULSE_SETTINGS_SPEC.md</code> and <code>app-core/settings/PIGGYPULSE_SETTINGS_WIREFRAMES.md</code>.</p>
+            <p>Neutral language and non-moral visual encoding follow <code>references/doctrine/calm_reflection_principles.md</code> and <code>app-core/design-system.md</code>.</p>
+            <p>Keyboard/focus behavior and drawer/modal structure follow <code>keyboard_navigation_spec.md</code> and <code>app-core/ux-infrastructure/piggypulse-ux-infrastructure.html</code>.</p>
+            <p>Lifecycle constraints and period invariants follow <code>app-core/entity_lifecycle_rules.md</code>.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<nav class="shell-mobile-nav" aria-label="Mobile primary navigation">
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+  <button class="active" type="button" id="open-mobile-more"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></span><span class="nav-label">More</span></button>
+</nav>
+
+<div class="toast-stack" id="toast-stack" aria-live="polite" aria-label="Notifications"></div>
+
+<div class="overlay" id="edit-modal" aria-hidden="true">
+  <div class="backdrop" data-close="edit-modal"></div>
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="edit-title">
+    <h4 id="edit-title">Edit Profile</h4>
+    <p>Changes are local until Save is selected.</p>
+    <form id="profile-form" novalidate>
+      <div class="field-grid">
+        <label for="profile-name">Name
+          <input id="profile-name" name="profile_name" value="Leonardo Almeida" required />
+        </label>
+        <label for="profile-timezone">Timezone
+          <select id="profile-timezone" name="timezone">
+            <option>Europe/Amsterdam</option>
+            <option>America/New_York</option>
+            <option>America/Los_Angeles</option>
+          </select>
+        </label>
+        <label for="profile-currency">Default currency
+          <select id="profile-currency" name="currency">
+            <option>EUR</option>
+            <option>USD</option>
+            <option>BRL</option>
+          </select>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button class="ghost-btn" type="button" data-close="edit-modal">Cancel</button>
+        <button class="primary-btn" type="submit">Save</button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<div class="drawer-overlay" id="edit-drawer" aria-hidden="true">
+  <div class="backdrop" data-close="edit-drawer"></div>
+  <section class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+    <div class="handle" aria-hidden="true"></div>
+    <h4 id="drawer-title">Edit Settings</h4>
+    <p>Mobile editing uses a bottom drawer. Save is explicit.</p>
+    <form id="drawer-form" novalidate>
+      <div class="field-grid">
+        <label for="drawer-name">Name
+          <input id="drawer-name" value="Leonardo Almeida" required />
+        </label>
+        <label for="drawer-theme">Theme
+          <select id="drawer-theme">
+            <option>System</option>
+            <option>Light</option>
+            <option>Dark</option>
+          </select>
+        </label>
+      </div>
+      <div class="drawer-actions">
+        <button class="ghost-btn" type="button" data-close="edit-drawer">Cancel</button>
+        <button class="primary-btn" type="submit">Save</button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<div class="overlay" id="confirm-modal" aria-hidden="true">
+  <div class="backdrop" data-close="confirm-modal"></div>
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <h4 id="confirm-title">Confirm Action</h4>
+    <p id="confirm-copy">Confirm this action.</p>
+    <div id="confirm-input-wrap" class="field-grid" hidden>
+      <label for="confirm-delete-input">Type DELETE to continue
+        <input id="confirm-delete-input" />
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="ghost-btn" type="button" data-close="confirm-modal">Cancel</button>
+      <button class="danger-btn" type="button" id="confirm-action">Confirm</button>
+    </div>
+  </section>
+</div>
+
+<div class="mobile-more-overlay" id="mobile-more-overlay" aria-hidden="true">
+  <div class="backdrop" data-close="mobile-more-overlay"></div>
+  <section class="mobile-more" role="dialog" aria-modal="true" aria-labelledby="more-title">
+    <div class="handle" aria-hidden="true"></div>
+    <h4 id="more-title">More</h4>
+    <nav aria-label="Mobile secondary navigation">
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+    </nav>
+    <div class="drawer-actions">
+      <button class="ghost-btn" type="button" data-close="mobile-more-overlay">Close</button>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const body = document.body;
+  const toastStack = document.getElementById("toast-stack");
+  const editModal = document.getElementById("edit-modal");
+  const editDrawer = document.getElementById("edit-drawer");
+  const confirmModal = document.getElementById("confirm-modal");
+  const moreOverlay = document.getElementById("mobile-more-overlay");
+  const openMobileMore = document.getElementById("open-mobile-more");
+
+  const confirmTitle = document.getElementById("confirm-title");
+  const confirmCopy = document.getElementById("confirm-copy");
+  const confirmInputWrap = document.getElementById("confirm-input-wrap");
+  const confirmInput = document.getElementById("confirm-delete-input");
+  const confirmAction = document.getElementById("confirm-action");
+
+  let lastTrigger = null;
+
+  const confirmStates = {
+    revoke: {
+      title: "Revoke Session",
+      copy: "Revoking this session signs out that device immediately.",
+      requiresDeleteWord: false,
+      actionLabel: "Revoke"
+    },
+    reset: {
+      title: "Reset Structure",
+      copy: "This removes accounts, categories, and period model settings. Transactions remain unchanged.",
+      requiresDeleteWord: false,
+      actionLabel: "Reset"
+    },
+    delete: {
+      title: "Delete Account",
+      copy: "This action is permanent and cannot be undone.",
+      requiresDeleteWord: true,
+      actionLabel: "Delete Account"
+    },
+    "export-csv": {
+      title: "Export Transactions (CSV)",
+      copy: "Prepare CSV export for explicit download.",
+      requiresDeleteWord: false,
+      actionLabel: "Export"
+    },
+    "export-json": {
+      title: "Export Full Dataset (JSON)",
+      copy: "Prepare JSON export for explicit download.",
+      requiresDeleteWord: false,
+      actionLabel: "Export"
+    },
+    "data-copy": {
+      title: "Request Account Data Copy",
+      copy: "Send data copy request and notify when package is ready.",
+      requiresDeleteWord: false,
+      actionLabel: "Request"
+    }
+  };
+
+  const showToast = (message) => {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = message;
+    toastStack.appendChild(toast);
+    if (toastStack.children.length > 3) {
+      toastStack.firstElementChild.remove();
+    }
+    window.setTimeout(() => toast.remove(), 3200);
+  };
+
+  const openOverlay = (overlay, trigger) => {
+    lastTrigger = trigger || null;
+    overlay.classList.add("open");
+    overlay.setAttribute("aria-hidden", "false");
+  };
+
+  const closeOverlay = (overlay) => {
+    overlay.classList.remove("open");
+    overlay.setAttribute("aria-hidden", "true");
+    if (lastTrigger) {
+      lastTrigger.focus();
+    }
+  };
+
+  const closeAll = () => {
+    [editModal, editDrawer, confirmModal, moreOverlay].forEach((overlay) => {
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+    });
+  };
+
+  const openEdit = (event) => {
+    const isDesktop = window.matchMedia("(min-width: 860px)").matches;
+    if (isDesktop) {
+      openOverlay(editModal, event.currentTarget);
+      document.getElementById("profile-name").focus();
+    } else {
+      openOverlay(editDrawer, event.currentTarget);
+      document.getElementById("drawer-name").focus();
+    }
+  };
+
+  document.querySelectorAll("[data-open-edit]").forEach((button) => {
+    button.addEventListener("click", openEdit);
+  });
+
+  document.querySelectorAll("[data-open-confirm]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const key = event.currentTarget.getAttribute("data-open-confirm");
+      const state = confirmStates[key];
+      if (!state) {
+        return;
+      }
+
+      confirmTitle.textContent = state.title;
+      confirmCopy.textContent = state.copy;
+      confirmAction.textContent = state.actionLabel;
+      confirmInputWrap.hidden = !state.requiresDeleteWord;
+      confirmAction.disabled = false;
+      confirmInput.value = "";
+
+      openOverlay(confirmModal, event.currentTarget);
+      if (state.requiresDeleteWord) {
+        confirmAction.disabled = true;
+        confirmInput.focus();
+      } else {
+        confirmAction.focus();
+      }
+
+      confirmAction.onclick = () => {
+        closeOverlay(confirmModal);
+        showToast("Action completed. History remains intact.");
+      };
+    });
+  });
+
+  confirmInput.addEventListener("input", () => {
+    confirmAction.disabled = confirmInput.value !== "DELETE";
+  });
+
+  document.querySelectorAll("[data-close]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("data-close");
+      const overlay = document.getElementById(id);
+      if (overlay) {
+        closeOverlay(overlay);
+      }
+    });
+  });
+
+  openMobileMore.addEventListener("click", (event) => {
+    openOverlay(moreOverlay, event.currentTarget);
+  });
+
+  ["profile-form", "drawer-form"].forEach((formId) => {
+    const form = document.getElementById(formId);
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      closeAll();
+      showToast("Settings saved. You can review them anytime.");
+    });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeAll();
+    }
+  });
+})();
+</script>
+</body>
+</html>

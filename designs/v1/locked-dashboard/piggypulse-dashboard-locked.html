@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PiggyPulse - Dashboard (Locked State)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-soft: #f8f9fd;
+  --text-primary: #1a1d21;
+  --text-secondary: #5c6470;
+  --text-muted: #8b93a1;
+  --border-soft: #e6e8f0;
+  --accent-primary: #5e63e6;
+  --accent-secondary: #8c6cfb;
+  --focus-ring: rgba(94, 99, 230, 0.28);
+}
+
+body.dark {
+  --bg: #14161a;
+  --surface: #1c1f26;
+  --surface-soft: #20242c;
+  --text-primary: #e6e8eb;
+  --text-secondary: #a8afb9;
+  --text-muted: #7d8590;
+  --border-soft: #2a2f38;
+  --accent-primary: #8c6cfb;
+  --accent-secondary: #5e63e6;
+  --focus-ring: rgba(140, 108, 251, 0.32);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+button,
+a {
+  font: inherit;
+  color: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.shell-frame {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 16px 96px;
+}
+
+.shell-app {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: var(--surface);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "main";
+}
+
+.shell-sidebar { display: none; grid-area: sidebar; border-right: 1px solid var(--border-soft); background: var(--surface-soft); padding: 16px 12px; }
+.shell-group-title { margin: 14px 8px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+.shell-nav-list { display: grid; gap: 2px; }
+.shell-nav-item { display: block; border: 0; border-left: 4px solid transparent; border-radius: 10px; color: var(--text-secondary); text-decoration: none; padding: 10px 10px 10px 14px; }
+.shell-nav-item.active { border-left-color: var(--accent-primary); color: var(--text-primary); background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%); }
+.shell-main { grid-area: main; }
+.shell-topbar { border-bottom: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 16px; }
+.shell-utility-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.shell-chip { border: 1px solid var(--border-soft); border-radius: 999px; padding: 6px 10px; font-size: 12px; color: var(--text-secondary); background: var(--surface); }
+.shell-mobile-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; display: flex; gap: 6px; padding: 8px; border-top: 1px solid var(--border-soft); background: var(--surface); }
+.shell-mobile-nav a, .shell-mobile-nav button { flex: 1; border: 1px solid var(--border-soft); border-radius: 10px; color: var(--text-secondary); text-decoration: none; background: var(--surface); padding: 8px 10px; text-align: center; font-size: 12px; cursor: pointer; }
+.shell-mobile-nav .active { border-color: color-mix(in srgb, var(--accent-primary) 40%, var(--border-soft) 60%); background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%); color: var(--text-primary); }
+.shell-drawer-layer { position: fixed; inset: 0; display: none; z-index: 75; }
+.shell-drawer-layer.open { display: block; }
+.shell-drawer-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.4); }
+.shell-drawer-panel { position: absolute; left: 0; right: 0; bottom: 0; border: 1px solid var(--border-soft); border-radius: 14px 14px 0 0; background: var(--surface); padding: 12px 14px 16px; }
+.shell-handle { width: 42px; height: 4px; border-radius: 999px; background: var(--border-soft); margin: 2px auto 10px; }
+.shell-more-nav { margin-top: 12px; display: grid; gap: 8px; }
+.shell-more-nav a { border: 1px solid var(--border-soft); border-radius: 10px; text-decoration: none; color: var(--text-secondary); padding: 9px 10px; display: flex; align-items: center; gap: 8px; }
+.shell-more-nav .nav-icon { width: 18px; height: 18px; color: color-mix(in srgb, var(--accent-primary) 76%, var(--text-secondary) 24%); }
+
+.toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 30;
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 78px 20px 110px;
+}
+
+.header {
+  margin-bottom: 14px;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.controls {
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.controls-title {
+  margin: 0 0 10px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.switches {
+  display: grid;
+  gap: 8px;
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.switch input {
+  width: 16px;
+  height: 16px;
+}
+
+.guidance {
+  display: none;
+  border: 1px solid var(--border-soft);
+  border-radius: 24px;
+  background: var(--surface);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+}
+
+.guidance p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.cta {
+  display: inline-flex;
+  margin-top: 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 8px 12px;
+}
+
+.cta:hover {
+  border-color: color-mix(in srgb, var(--accent-primary) 30%, var(--border-soft) 70%);
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.slot {
+  position: relative;
+  min-height: 280px;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface);
+  padding: 30px 26px;
+  transition: opacity 160ms ease-in;
+}
+
+.locked-layer {
+  background: color-mix(in srgb, var(--surface-soft) 86%, var(--bg) 14%);
+  border-style: dashed;
+  transition-duration: 140ms;
+  transition-timing-function: ease-out;
+  pointer-events: none;
+}
+
+.locked-layer .configure-link {
+  pointer-events: auto;
+}
+
+.empty-layer,
+.active-layer {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.slot.state-locked .locked-layer {
+  opacity: 1;
+}
+
+.slot.state-empty .locked-layer,
+.slot.state-active .locked-layer {
+  opacity: 0;
+}
+
+.slot.state-empty .empty-layer {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.slot.state-active .active-layer {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.card-head {
+  margin: 0;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.requirement {
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.configure-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface) 92%, var(--surface-soft) 8%);
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 9px 12px;
+  transition: border-color 140ms ease, background-color 140ms ease, color 140ms ease;
+}
+
+.configure-link:hover {
+  border-color: color-mix(in srgb, var(--accent-primary) 45%, var(--border-soft) 55%);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+  color: color-mix(in srgb, var(--accent-primary) 55%, var(--text-secondary) 45%);
+}
+
+.configure-link::after {
+  content: "\2192";
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.empty-title {
+  margin: 18px 0 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.empty-message {
+  margin-top: 10px;
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.empty-helper {
+  margin-top: 10px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.period-main {
+  margin-top: 18px;
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.period-sub {
+  margin-top: 10px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.progress {
+  margin-top: 20px;
+  height: 10px;
+  background: color-mix(in srgb, var(--text-muted) 18%, transparent);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress > span {
+  display: block;
+  width: 68%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+}
+
+.note {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.lower-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.kpi {
+  margin-top: 16px;
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.subtle {
+  margin-top: 8px;
+  color: var(--text-secondary);
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--border-soft);
+}
+
+.dot.out {
+  background: var(--accent-secondary);
+  opacity: 0.6;
+}
+
+.dot.current {
+  border: 2px solid var(--accent-primary);
+  background: transparent;
+}
+
+.net-row {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.net-value {
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.delta {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.distribution {
+  margin-top: 18px;
+  height: 7px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--text-muted) 18%, transparent);
+  display: flex;
+}
+
+.seg-a { width: 42%; background: var(--accent-primary); opacity: 0.75; }
+.seg-b { width: 48%; background: var(--accent-secondary); opacity: 0.7; }
+.seg-c { width: 10%; background: color-mix(in srgb, var(--accent-secondary) 55%, var(--text-muted) 45%); opacity: 0.7; }
+
+@media (min-width: 900px) {
+  .page {
+    padding: 92px 24px 120px;
+  }
+
+  .slot {
+    min-height: 320px;
+  }
+
+  .lower-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .net-row {
+    grid-template-columns: 1fr auto;
+    align-items: start;
+  }
+}
+
+@media (min-width: 860px) {
+  .shell-frame { padding: 24px 16px 64px; }
+  .shell-app { grid-template-columns: 240px 1fr; grid-template-areas: "sidebar main"; }
+  .shell-sidebar { display: block; }
+  .shell-mobile-nav { display: none; }
+}
+
+/* shell-playful-nav */
+.page-title {
+  font-family: "Sora", "Inter", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.empty::before,
+.loading::before {
+  content: "";
+  display: block;
+  width: 74px;
+  height: 22px;
+  margin-bottom: 10px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 16% 50%, rgba(94, 99, 230, 0.18) 0 4px, transparent 5px),
+              radial-gradient(circle at 33% 50%, rgba(94, 99, 230, 0.18) 0 4px, transparent 5px),
+              linear-gradient(90deg, transparent 0%, rgba(94, 99, 230, 0.14) 42%, transparent 76%);
+}
+
+.state-pill,
+.shell-chip,
+.chip {
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.shell-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shell-nav-item .nav-icon {
+  width: 16px;
+  text-align: center;
+  opacity: 0.82;
+  font-size: 13px;
+  line-height: 1;
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary) 74%, var(--text-secondary) 26%);
+}
+
+.shell-nav-item.active .nav-icon {
+  opacity: 1;
+}
+
+.shell-mobile-nav a,
+.shell-mobile-nav button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.shell-mobile-nav .nav-icon {
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.9;
+  width: 22px;
+  height: 22px;
+  color: color-mix(in srgb, var(--accent-primary) 80%, var(--text-secondary) 20%);
+}
+
+.shell-mobile-nav .nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.shell-main {
+  position: relative;
+}
+
+.shell-main::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 120px;
+  height: 46px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle at 16% 50%, rgba(94, 99, 230, 0.12) 0 5px, transparent 6px),
+              radial-gradient(circle at 36% 50%, rgba(94, 99, 230, 0.12) 0 5px, transparent 6px),
+              linear-gradient(100deg, transparent 0%, rgba(94, 99, 230, 0.1) 42%, transparent 75%);
+  opacity: 0.44;
+}
+
+@media (max-width: 860px) {
+  .shell-main::before {
+    display: none;
+  }
+}
+
+</style>
+</head>
+<body>
+<main class="shell-frame">
+  <div class="shell-app">
+    <aside class="shell-sidebar" aria-label="Primary navigation">
+      <div class="shell-group-title">Core</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+      </nav>
+      <div class="shell-group-title">Structure</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      </nav>
+      <div class="shell-group-title">Session</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-5a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg></span><span class="nav-label">Logout</span></a>
+      </nav>
+    </aside>
+    <section class="shell-main">
+      <header class="shell-topbar">
+        <div class="shell-utility-row">
+          <span class="shell-chip">Section: Dashboard</span>
+          <span class="shell-chip">State: Locked when structure is incomplete</span>
+        </div>
+      </header>
+<div class="page">
+  <header class="header">
+    <h1 class="title">PiggyPulse Dashboard</h1>
+    <p class="subtitle">Structure-aware rendering with locked and active dashboard cards.</p>
+  </header>
+
+  <section class="controls" aria-label="Structural prerequisites and preview data">
+    <p class="controls-title">Structural prerequisites</p>
+    <div class="switches">
+      <label class="switch"><span>Period model defined</span><input type="checkbox" id="req-period" /></label>
+      <label class="switch"><span>At least one asset account</span><input type="checkbox" id="req-account" /></label>
+      <label class="switch"><span>Incoming category exists</span><input type="checkbox" id="req-incoming" /></label>
+      <label class="switch"><span>Outgoing category exists</span><input type="checkbox" id="req-outgoing" /></label>
+    </div>
+
+    <p class="controls-title" style="margin-top: 12px;">Data availability</p>
+    <div class="switches">
+      <label class="switch"><span>Current period has transactions</span><input type="checkbox" id="data-period" /></label>
+      <label class="switch"><span>Categories have current-period values</span><input type="checkbox" id="data-stability" /></label>
+      <label class="switch"><span>Accounts have current-period values</span><input type="checkbox" id="data-net" /></label>
+    </div>
+  </section>
+
+  <section class="guidance" id="setup-guidance" aria-label="Setup guidance">
+    <p>Complete your setup to activate dashboard insights.</p>
+    <a class="cta" href="../period-management/piggypulse-period-management.html">Continue Setup</a>
+  </section>
+
+  <section class="dashboard" aria-label="Dashboard cards">
+    <article class="slot state-locked" id="slot-period">
+      <div class="layer locked-layer">
+        <h2 class="card-head">Current Period</h2>
+        <p class="requirement">Requirement: Define automatic or manual period model.</p>
+        <a class="configure-link" href="../period-management/piggypulse-period-management.html">Configure</a>
+      </div>
+      <div class="layer empty-layer">
+        <h2 class="card-head">Current Period</h2>
+        <p class="empty-title">No transactions recorded in the current period yet.</p>
+        <p class="empty-helper">Current period totals and pace projection will appear as this period gathers activity.</p>
+      </div>
+      <div class="layer active-layer">
+        <h2 class="card-head">Current Period</h2>
+        <div class="period-main">$4,580</div>
+        <div class="period-sub">of $5,000</div>
+        <div class="progress" aria-hidden="true"><span></span></div>
+        <div class="note">12 days remaining. Projected spend at current pace: $5,240.</div>
+      </div>
+    </article>
+
+    <div class="lower-grid">
+      <article class="slot state-locked" id="slot-stability">
+        <div class="layer locked-layer">
+          <h2 class="card-head">Budget Stability</h2>
+          <p class="requirement">Requirement: Add 1 Incoming and 1 Outgoing category.</p>
+          <a class="configure-link" href="../category-management/piggypulse-categories-management.html">Configure</a>
+        </div>
+        <div class="layer empty-layer">
+          <h2 class="card-head">Budget Stability</h2>
+          <p class="empty-title">Stability indicators appear after at least one completed period.</p>
+          <p class="empty-helper">Trend context is calculated from closed periods, then quietly enriches this view.</p>
+        </div>
+        <div class="layer active-layer">
+          <h2 class="card-head">Budget Stability</h2>
+          <div class="kpi">78%</div>
+          <div class="subtle">Within range in 18 of 23 periods.</div>
+          <div class="dots" aria-hidden="true">
+            <span class="dot"></span>
+            <span class="dot out"></span>
+            <span class="dot"></span>
+            <span class="dot current"></span>
+            <span class="dot"></span>
+            <span class="dot out"></span>
+          </div>
+          <div class="note">Recent 6 periods shown for trajectory context.</div>
+        </div>
+      </article>
+
+      <article class="slot state-locked" id="slot-net">
+        <div class="layer locked-layer">
+          <h2 class="card-head">Net Position</h2>
+          <p class="requirement">Requirement: Add at least one asset account.</p>
+          <a class="configure-link" href="../accounts-management/piggypulse-accounts-management.html">Configure</a>
+        </div>
+        <div class="layer empty-layer">
+          <h2 class="card-head">Net Position</h2>
+          <p class="empty-title">Net position reflects account movements within the active period.</p>
+          <p class="empty-helper">Breakdown values appear once account balances and period changes are available.</p>
+        </div>
+        <div class="layer active-layer">
+          <h2 class="card-head">Net Position</h2>
+          <div class="net-row">
+            <div>
+              <div class="net-value">$30,320</div>
+              <div class="delta">Change this period: +$320</div>
+            </div>
+            <div class="subtle">Across 4 accounts</div>
+          </div>
+          <div class="distribution" aria-hidden="true">
+            <span class="seg-a"></span><span class="seg-b"></span><span class="seg-c"></span>
+          </div>
+          <div class="note">Liquid $12,800 · Protected $15,200 · Debt -$3,000.</div>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+    </section>
+  </div>
+</main>
+
+<nav class="shell-mobile-nav" aria-label="Mobile primary navigation">
+  <a class="active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+  <button type="button" id="shell-open-more"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></span><span class="nav-label">More</span></button>
+</nav>
+
+<div class="shell-drawer-layer" id="shell-mobile-drawer" aria-hidden="true">
+  <div class="shell-drawer-backdrop" id="shell-close-more"></div>
+  <section class="shell-drawer-panel" role="dialog" aria-modal="true" aria-label="More">
+    <div class="shell-handle" aria-hidden="true"></div>
+    <nav class="shell-more-nav">
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+    </nav>
+  </section>
+</div>
+
+<script>
+(() => {
+  const body = document.body;
+  const shellMobileDrawer = document.getElementById("shell-mobile-drawer");
+  const shellOpenMore = document.getElementById("shell-open-more");
+  const shellCloseMore = document.getElementById("shell-close-more");
+
+  const reqPeriod = document.getElementById("req-period");
+  const reqAccount = document.getElementById("req-account");
+  const reqIncoming = document.getElementById("req-incoming");
+  const reqOutgoing = document.getElementById("req-outgoing");
+
+  const dataPeriod = document.getElementById("data-period");
+  const dataStability = document.getElementById("data-stability");
+  const dataNet = document.getElementById("data-net");
+
+  const slotPeriod = document.getElementById("slot-period");
+  const slotStability = document.getElementById("slot-stability");
+  const slotNet = document.getElementById("slot-net");
+  const setupGuidance = document.getElementById("setup-guidance");
+
+  const openShellMore = () => {
+    shellMobileDrawer.classList.add("open");
+    shellMobileDrawer.setAttribute("aria-hidden", "false");
+  };
+
+  const closeShellMore = () => {
+    shellMobileDrawer.classList.remove("open");
+    shellMobileDrawer.setAttribute("aria-hidden", "true");
+  };
+
+  const setSlotState = (slot, state) => {
+    slot.classList.remove("state-locked", "state-empty", "state-active");
+    slot.classList.add(`state-${state}`);
+  };
+
+  const resolveState = (isReady, hasData) => {
+    if (!isReady) {
+      return "locked";
+    }
+    return hasData ? "active" : "empty";
+  };
+
+  const render = () => {
+    const periodReady = reqPeriod.checked;
+    const accountReady = reqAccount.checked;
+    const categoryReady = reqIncoming.checked && reqOutgoing.checked;
+
+    setSlotState(slotPeriod, resolveState(periodReady, dataPeriod.checked));
+    setSlotState(slotStability, resolveState(categoryReady, dataStability.checked));
+    setSlotState(slotNet, resolveState(accountReady, dataNet.checked));
+
+    const hasMissingStructure = !periodReady || !accountReady || !categoryReady;
+    setupGuidance.style.display = hasMissingStructure ? "block" : "none";
+  };
+
+  [
+    reqPeriod,
+    reqAccount,
+    reqIncoming,
+    reqOutgoing,
+    dataPeriod,
+    dataStability,
+    dataNet
+  ].forEach((el) => {
+    el.addEventListener("change", render);
+  });
+
+  if (shellOpenMore) shellOpenMore.addEventListener("click", openShellMore);
+  if (shellCloseMore) shellCloseMore.addEventListener("click", closeShellMore);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeShellMore();
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

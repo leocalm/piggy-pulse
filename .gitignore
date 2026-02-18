@@ -1,0 +1,12 @@
+# macOS artifacts
+.DS_Store
+**/.DS_Store
+__MACOSX/
+**/__MACOSX/
+
+# Archives (working zip dumps — not part of the public design record)
+archives/
+
+# Python version file (no scripts in this repo)
+.python-version
+.claude

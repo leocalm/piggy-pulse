@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PiggyPulse - Authentication Flow Wireframe</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  color-scheme: light dark;
+  --accent-primary: #5E63E6;
+  --accent-secondary: #8C6CFB;
+  --bg: #F4F6FB;
+  --surface: #FFFFFF;
+  --surface-soft: #F9FAFD;
+  --border-soft: #E6E8F0;
+  --text-primary: #1A1D21;
+  --text-secondary: #5C6470;
+  --text-muted: #8B93A1;
+  --focus-ring: rgba(94, 99, 230, 0.28);
+  --brand-gradient-start: #4FD1FF;
+  --brand-gradient-end: #9B6BFF;
+  --brand-gradient-angle: 90deg;
+  --font-brand: Inter, system-ui, -apple-system, BlinkMacSystemFont;
+  --font-brand-weight: 700;
+  --font-brand-tracking: -0.01em;
+  --shadow-brand-color: rgb(79, 209, 255, 0.25);
+  --shadow-brand-blur: 24px;
+  --shadow-brand-offset-y: 8px;
+}
+
+body.dark {
+  --bg: #14161A;
+  --surface: #1C1F26;
+  --surface-soft: #20242C;
+  --border-soft: #2A2F38;
+  --text-primary: #E6E8EB;
+  --text-secondary: #A8AFB9;
+  --text-muted: #7D8590;
+  --focus-ring: rgba(140, 108, 251, 0.32);
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.light) {
+    --bg: #14161A;
+    --surface: #1C1F26;
+    --surface-soft: #20242C;
+    --border-soft: #2A2F38;
+    --text-primary: #E6E8EB;
+    --text-secondary: #A8AFB9;
+    --text-muted: #7D8590;
+    --focus-ring: rgba(140, 108, 251, 0.32);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: "Inter", sans-serif;
+}
+
+button,
+input,
+textarea,
+select { font: inherit; color: inherit; }
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 14px 110px;
+}
+
+.header {
+  margin-bottom: 12px;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.segmented,
+.subnav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.segmented button,
+.subnav button {
+  border: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.segmented button.active,
+.subnav button.active {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background: rgba(94,99,230,0.08);
+}
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.auth-canvas {
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  background: var(--surface);
+  padding: 20px 14px;
+}
+
+.auth-card {
+  max-width: 420px;
+  margin: 0 auto;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 20px 16px;
+}
+
+.brand {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.logo {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto;
+  object-fit: contain;
+  display: block;
+}
+
+.wordmark {
+  margin: 5px 0 0;
+  font-size: 18px;
+}
+
+.brand-text {
+  font-family: var(--font-brand), serif;
+  font-weight: var(--font-brand-weight);
+  letter-spacing: var(--font-brand-tracking);
+  background: linear-gradient(
+    var(--brand-gradient-angle),
+    var(--brand-gradient-start),
+    var(--brand-gradient-end)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.brand-glow {
+  filter: drop-shadow(
+    0 var(--shadow-brand-offset-y) var(--shadow-brand-blur) var(--shadow-brand-color)
+  );
+}
+
+.positioning {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.section-title {
+  margin: 14px 0 6px;
+  font-size: 18px;
+}
+
+.section-copy {
+  margin: 0 0 12px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+input,
+textarea {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  padding: 10px 11px;
+}
+
+.helper {
+  margin: -2px 0 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.message {
+  margin: 0 0 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  padding: 10px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.btn {
+  width: 100%;
+  border: 1px solid var(--accent-primary);
+  background: var(--accent-primary);
+  color: #FFFFFF;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn.muted {
+  border-color: var(--border-soft);
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+}
+
+.link-row {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.link-row a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.state-line {
+  margin: 10px 0 0;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  border: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.code-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.code-cell {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  height: 44px;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+}
+
+.email-canvas {
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  background: var(--surface);
+  padding: 14px;
+}
+
+.email {
+  max-width: 620px;
+  margin: 0 auto;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.email-head {
+  padding: 14px;
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.email-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+}
+
+.email-body {
+  padding: 14px;
+}
+
+.email h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.email p {
+  margin: 10px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.email-cta {
+  margin-top: 14px;
+  display: inline-block;
+  border: 1px solid var(--accent-primary);
+  background: var(--accent-primary);
+  color: #FFFFFF;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@media (min-width: 920px) {
+  .page { padding: 32px 24px 120px; }
+  .title { font-size: 30px; }
+  .subtitle { font-size: 15px; }
+  .auth-card { padding: 24px 20px; }
+  .auth-canvas,
+  .email-canvas { padding: 20px; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="header">
+    <h1 class="title">Authentication</h1>
+    <p class="subtitle">Calm, neutral, and structurally consistent access flow</p>
+  </header>
+
+  <nav class="segmented" aria-label="Authentication preview groups">
+    <button class="active" data-group="pages" type="button">Pages</button>
+    <button data-group="emails" type="button">Emails</button>
+  </nav>
+
+  <section class="panel active" data-panel="pages">
+    <nav class="subnav" aria-label="Authentication pages">
+      <button class="active" data-screen="login" type="button">Login</button>
+      <button data-screen="twofa" type="button">2FA</button>
+      <button data-screen="forgot" type="button">Forgot Password</button>
+      <button data-screen="reset" type="button">Reset Password</button>
+    </nav>
+
+    <div class="auth-canvas">
+      <section class="panel active" data-auth="login">
+        <article class="auth-card" aria-label="Login page">
+          <div class="brand">
+            <img class="logo" src="../piggy.png" alt="" />
+            <p class="wordmark brand-text brand-glow">PiggyPulse</p>
+            <p class="positioning">Clarity begins with structure.</p>
+          </div>
+          <h2 class="section-title">Welcome back</h2>
+          <label>Email
+            <input type="email" value="" placeholder="name@example.com" />
+          </label>
+          <label>Password
+            <input type="password" value="" placeholder="Enter password" />
+          </label>
+          <p class="message">We couldn't sign you in. Please verify your credentials and try again.</p>
+          <button class="btn" type="button">Log in</button>
+          <div class="link-row"><a href="#">Forgot password?</a></div>
+          <div class="state-line" aria-label="Supported states">
+            <span class="chip">idle</span>
+            <span class="chip">typing</span>
+            <span class="chip">validating</span>
+            <span class="chip">submitting</span>
+            <span class="chip">error</span>
+            <span class="chip">locked</span>
+            <span class="chip">two_factor_required</span>
+          </div>
+          <p class="helper" style="margin-top:8px;">We're temporarily limiting sign-in attempts. Please try again later.</p>
+        </article>
+      </section>
+
+      <section class="panel" data-auth="twofa">
+        <article class="auth-card" aria-label="Two-factor page">
+          <div class="brand">
+            <img class="logo" src="../piggy.png" alt="" />
+            <p class="wordmark brand-text brand-glow">PiggyPulse</p>
+          </div>
+          <h2 class="section-title">Verify your identity</h2>
+          <p class="section-copy">Enter your 6-digit verification code from your authenticator app.</p>
+          <div class="code-grid" aria-label="Verification code inputs">
+            <div class="code-cell">1</div>
+            <div class="code-cell">2</div>
+            <div class="code-cell">3</div>
+            <div class="code-cell">4</div>
+            <div class="code-cell">5</div>
+            <div class="code-cell">6</div>
+          </div>
+          <p class="message">Verification failed. Please try again.</p>
+          <button class="btn" type="button">Verify</button>
+          <div class="state-line">
+            <span class="chip">typing</span>
+            <span class="chip">submitting</span>
+            <span class="chip">error</span>
+            <span class="chip">success</span>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel" data-auth="forgot">
+        <article class="auth-card" aria-label="Forgot password page">
+          <div class="brand">
+            <img class="logo" src="../piggy.png" alt="" />
+            <p class="wordmark brand-text brand-glow">PiggyPulse</p>
+          </div>
+          <h2 class="section-title">Password recovery</h2>
+          <p class="section-copy">Enter your email address. If it is registered, you will receive a reset link.</p>
+          <label>Email
+            <input type="email" placeholder="name@example.com" />
+          </label>
+          <button class="btn" type="button">Send link</button>
+          <p class="message" style="margin-top:12px;">If the email is registered, you will receive a reset link shortly.</p>
+          <div class="state-line">
+            <span class="chip">idle</span>
+            <span class="chip">submitting</span>
+            <span class="chip">success</span>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel" data-auth="reset">
+        <article class="auth-card" aria-label="Reset password page">
+          <div class="brand">
+            <img class="logo" src="../piggy.png" alt="" />
+            <p class="wordmark brand-text brand-glow">PiggyPulse</p>
+          </div>
+          <h2 class="section-title">Create new password</h2>
+          <label>New password
+            <input type="password" placeholder="Create password" />
+          </label>
+          <label>Confirm password
+            <input type="password" placeholder="Repeat password" />
+          </label>
+          <p class="helper">Use at least 12 characters.</p>
+          <p class="helper">Include letters and numbers.</p>
+          <p class="message">This reset link is invalid or expired.</p>
+          <button class="btn" type="button">Update password</button>
+          <p class="helper" style="margin-top:10px;">Password updated successfully. Redirecting to login.</p>
+          <div class="state-line">
+            <span class="chip">typing</span>
+            <span class="chip">error</span>
+            <span class="chip">success</span>
+          </div>
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="emails">
+    <nav class="subnav" aria-label="Authentication emails">
+      <button class="active" data-email="reset-mail" type="button">Password Reset</button>
+      <button data-email="twofa-mail" type="button">2FA Enabled</button>
+      <button data-email="password-mail" type="button">Password Changed</button>
+    </nav>
+
+    <div class="email-canvas">
+      <section class="panel active" data-mail="reset-mail">
+        <article class="email" aria-label="Password reset email">
+          <div class="email-head">
+            <img class="email-logo" src="../piggy.png" alt="" />
+            <p class="wordmark brand-text brand-glow" style="margin:0;">PiggyPulse</p>
+          </div>
+          <div class="email-body">
+            <h3>Subject: Password reset request</h3>
+            <p>A request was made to reset your password.</p>
+            <p>If this was you, use the link below to continue.</p>
+            <a class="email-cta" href="#">Reset password</a>
+            <p>This link will expire in 30 minutes.</p>
+            <p>If you did not make this request, no action is required.</p>
+            <p>For your security, this request was logged.</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel" data-mail="twofa-mail">
+        <article class="email" aria-label="Two-factor enabled email">
+          <div class="email-head">
+            <img class="email-logo" src="../piggy.png" alt="" />
+            <p class="wordmark brand-text brand-glow" style="margin:0;">PiggyPulse</p>
+          </div>
+          <div class="email-body">
+            <h3>Subject: Two-factor authentication enabled</h3>
+            <p>Two-factor authentication was enabled for your PiggyPulse account.</p>
+            <p>If you did not make this request, no action is required.</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel" data-mail="password-mail">
+        <article class="email" aria-label="Password changed email">
+          <div class="email-head">
+            <img class="email-logo" src="../piggy.png" alt="" />
+            <p class="wordmark brand-text brand-glow" style="margin:0;">PiggyPulse</p>
+          </div>
+          <div class="email-body">
+            <h3>Subject: Password updated</h3>
+            <p>Your PiggyPulse password was updated.</p>
+            <p>If you did not make this request, no action is required.</p>
+          </div>
+        </article>
+      </section>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const body = document.body;
+
+  document.querySelectorAll("[data-group]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-group]").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll("[data-panel]").forEach((panel) => {
+        panel.classList.toggle("active", panel.getAttribute("data-panel") === btn.getAttribute("data-group"));
+      });
+    });
+  });
+
+  document.querySelectorAll("[data-screen]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-screen]").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll("[data-auth]").forEach((panel) => {
+        panel.classList.toggle("active", panel.getAttribute("data-auth") === btn.getAttribute("data-screen"));
+      });
+    });
+  });
+
+  document.querySelectorAll("[data-email]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-email]").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll("[data-mail]").forEach((panel) => {
+        panel.classList.toggle("active", panel.getAttribute("data-mail") === btn.getAttribute("data-email"));
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

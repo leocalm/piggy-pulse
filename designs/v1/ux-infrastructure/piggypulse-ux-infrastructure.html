@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PiggyPulse - UX Infrastructure</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-soft: #f8f9fd;
+  --border-soft: #e6e8f0;
+  --text-primary: #1a1d21;
+  --text-secondary: #5c6470;
+  --text-muted: #8b93a1;
+  --accent-primary: #5e63e6;
+  --accent-secondary: #8c6cfb;
+  --focus-ring: rgba(94, 99, 230, 0.28);
+  --shadow-soft: 0 10px 24px rgba(26, 29, 33, 0.06);
+}
+
+body.dark {
+  --bg: #14161a;
+  --surface: #1c1f26;
+  --surface-soft: #20242c;
+  --border-soft: #2a2f38;
+  --text-primary: #e6e8eb;
+  --text-secondary: #a8afb9;
+  --text-muted: #7d8590;
+  --accent-primary: #8c6cfb;
+  --accent-secondary: #5e63e6;
+  --focus-ring: rgba(140, 108, 251, 0.32);
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.28);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px 96px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.secondary-btn {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.section {
+  margin-top: 24px;
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: var(--surface);
+  padding: 16px;
+}
+
+.section h2 {
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+
+.section p {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.app-shell {
+  margin-top: 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  overflow: hidden;
+  min-height: 540px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "main";
+}
+
+.shell-sidebar {
+  display: none;
+  grid-area: sidebar;
+  background: var(--surface-soft);
+  padding: 16px 12px;
+  border-right: 1px solid var(--border-soft);
+}
+
+.shell-group-title {
+  margin: 14px 8px 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.shell-nav-list {
+  display: grid;
+  gap: 2px;
+}
+
+.shell-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-left: 4px solid transparent;
+  padding: 10px 10px 10px 14px;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.shell-nav-item.active {
+  border-left-color: var(--accent-primary);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+  color: var(--text-primary);
+}
+
+.shell-nav-item .nav-icon {
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary) 74%, var(--text-secondary) 26%);
+}
+
+.main-shell {
+  grid-area: main;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+.topbar {
+  border-bottom: 1px solid var(--border-soft);
+  padding: 12px 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.utility-chip {
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.page-head {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.head-title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.content-grid {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 980px) {
+  .content-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.demo-card {
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 14px;
+  min-height: 188px;
+}
+
+.demo-head {
+  margin: 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.controls {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.check-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  background: var(--surface-soft);
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.check-row input {
+  width: 16px;
+  height: 16px;
+}
+
+.state-box {
+  margin-top: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  padding: 12px;
+  min-height: 92px;
+  background: var(--surface-soft);
+}
+
+.state-box.locked {
+  border-style: dashed;
+}
+
+.state-label {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.state-text {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.state-action {
+  margin-top: 10px;
+}
+
+.focus-layout {
+  margin-top: 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  min-height: 340px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, var(--surface-soft), var(--surface));
+}
+
+.focus-card {
+  width: min(720px, calc(100% - 32px));
+  min-height: 240px;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 20px;
+  background: var(--surface);
+}
+
+.focus-card h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.focus-card p {
+  margin: 8px 0 0;
+}
+
+.wire-grid {
+  margin-top: 12px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 860px) {
+  .wire-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.overlay-preview,
+.state-gallery {
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  background: var(--surface-soft);
+  padding: 12px;
+}
+
+.overlay-preview h3,
+.state-gallery h3 {
+  margin: 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.button-row {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.small-btn {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.small-btn.danger {
+  border-color: color-mix(in srgb, var(--accent-primary) 35%, var(--border-soft) 65%);
+}
+
+.state-cards {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+@media (min-width: 640px) {
+  .state-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 980px) {
+  .state-cards {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  }
+}
+
+.state-card {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 10px;
+}
+
+.state-card.locked {
+  border-style: dashed;
+}
+
+.state-card .label {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.state-card .body {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.toast-stack {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  padding: 0 8px 8px;
+}
+
+.toast {
+  border: 1px solid var(--border-soft);
+  background: var(--surface);
+  color: var(--text-secondary);
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow-soft);
+}
+
+.toast strong {
+  color: var(--text-primary);
+}
+
+.overlay-layer {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 90;
+}
+
+.overlay-layer.open {
+  display: block;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.modal-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(520px, calc(100% - 24px));
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 16px;
+}
+
+.modal-card h4,
+.drawer-panel h4 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.modal-card p,
+.drawer-panel p {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.modal-actions,
+.drawer-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.drawer-layer {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 95;
+}
+
+.drawer-layer.open {
+  display: block;
+}
+
+.drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.drawer-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 90vh;
+  overflow: auto;
+  border-radius: 14px 14px 0 0;
+  border: 1px solid var(--border-soft);
+  background: var(--surface);
+  padding: 12px 14px 16px;
+}
+
+.handle {
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-soft);
+  margin: 2px auto 10px;
+}
+
+.field-grid {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.field-grid label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.field-grid input,
+.field-grid textarea {
+  width: 100%;
+  margin-top: 4px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  padding: 8px 10px;
+}
+
+.shell-mobile-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 70;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 8px;
+  border-top: 1px solid var(--border-soft);
+  background: var(--surface);
+}
+
+.shell-mobile-nav a,
+.shell-mobile-nav button {
+  flex: 1;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.shell-mobile-nav a.active,
+.shell-mobile-nav button.active {
+  border-color: color-mix(in srgb, var(--accent-primary) 40%, var(--border-soft) 60%);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+  color: var(--text-primary);
+}
+
+.shell-mobile-nav .nav-icon {
+  width: 22px;
+  height: 22px;
+  color: color-mix(in srgb, var(--accent-primary) 80%, var(--text-secondary) 20%);
+}
+
+.shell-mobile-nav .nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.more-nav {
+  margin-top: 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.more-nav a {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.more-nav .nav-icon {
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary) 76%, var(--text-secondary) 24%);
+}
+
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (min-width: 860px) {
+  .page {
+    padding: 24px 16px 64px;
+  }
+
+  .app-shell {
+    grid-template-columns: 240px 1fr;
+    grid-template-areas: "sidebar main";
+  }
+
+  .shell-sidebar {
+    display: block;
+  }
+
+  .shell-group-title {
+    display: block;
+  }
+
+  .shell-mobile-nav {
+    display: none;
+  }
+
+  .toast-stack {
+    left: auto;
+    right: 16px;
+    bottom: 16px;
+    width: min(340px, calc(100% - 32px));
+    padding: 0;
+  }
+
+  .toast {
+    border-radius: 10px;
+  }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="toolbar">
+    <div>
+      <h1 class="title">PiggyPulse UX Infrastructure</h1>
+      <p class="subtitle">Combined preview: app frame, focus layout, overlays, loading/error/empty/locked/active states.</p>
+    </div>  </div>
+
+  <section class="section" aria-label="App layout shell">
+    <h2>App Layout (Authenticated)</h2>
+    <p>Sidebar 240px desktop, structural top bar, page header, and content grid within the 1100px system.</p>
+
+    <div class="app-shell">
+      <aside class="shell-sidebar" aria-label="Primary navigation">
+        <div class="shell-group-title">Core</div>
+        <nav class="shell-nav-list">
+          <a class="shell-nav-item active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+          <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+          <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+        </nav>
+
+        <div class="shell-group-title">Structure</div>
+        <nav class="shell-nav-list">
+          <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+          <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+          <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+        </nav>
+
+        <div class="shell-group-title">Session</div>
+        <nav class="shell-nav-list">
+          <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+          <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-5a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg></span><span class="nav-label">Logout</span></a>
+        </nav>
+      </aside>
+
+      <div class="main-shell">
+        <div class="topbar" aria-label="Top utilities">
+          <span class="utility-chip">Period: February 2026</span>
+          <span class="utility-chip">Scope: All accounts</span>
+        </div>
+
+        <header class="page-head">
+          <h3 class="head-title">Infrastructure Preview</h3>
+          <button class="secondary-btn" type="button">Primary Action</button>
+        </header>
+
+        <div class="content-grid">
+          <article class="demo-card">
+            <h4 class="demo-head">Unified Rendering Contract</h4>
+            <div class="controls">
+              <label class="check-row"><span>Missing structure (locked)</span><input id="s-locked" type="checkbox" /></label>
+              <label class="check-row"><span>Data request failed (error)</span><input id="s-error" type="checkbox" /></label>
+              <label class="check-row"><span>Data request pending (loading)</span><input id="s-loading" type="checkbox" /></label>
+              <label class="check-row"><span>No records found (empty)</span><input id="s-empty" type="checkbox" /></label>
+            </div>
+            <div class="state-box" id="resolved-state" aria-live="polite">
+              <p class="state-label" id="resolved-label">active</p>
+              <p class="state-text" id="resolved-text">Fully rendered data view.</p>
+              <div class="state-action" id="resolved-action"></div>
+            </div>
+          </article>
+
+          <article class="demo-card">
+            <h4 class="demo-head">Infrastructure Notes</h4>
+            <p class="state-text" style="margin-top:10px;">
+              Precedence: <strong>locked &gt; error &gt; loading &gt; empty &gt; active</strong>.
+              This preview resolves one visible state at a time and keeps transitions structural.
+            </p>
+            <p class="state-text">
+              Toast stack: max 3. Neutral/success/info auto-dismiss in 4 seconds. Error toast remains until dismissed.
+            </p>
+            <p class="state-text">
+              Keyboard: <code>Esc</code> closes modal/drawer. Focus remains visible across nav, overlays, and state controls.
+            </p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Focus layout">
+    <h2>Focus Layout (Auth / Onboarding)</h2>
+    <p>Centered container with no sidebar. Width adapts from 480 to 720 based on context.</p>
+    <div class="focus-layout">
+      <article class="focus-card">
+        <h3>Authentication / Onboarding Container</h3>
+        <p>Single-task layout with stable focus order and no competing side navigation.</p>
+        <div class="field-grid" style="margin-top: 14px;">
+          <label>Email<input type="email" value="name@example.com" /></label>
+          <label>Password<input type="password" value="password" /></label>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Overlays and notifications">
+    <h2>Notification &amp; Overlay Primitives</h2>
+    <p>Confirmation modal, mobile drawer, and toasts with infrastructure-specific behavior.</p>
+
+    <div class="wire-grid">
+      <div class="overlay-preview">
+        <h3>Overlay Triggers</h3>
+        <div class="button-row">
+          <button type="button" class="small-btn" id="open-confirm">Open Confirmation</button>
+          <button type="button" class="small-btn" id="open-drawer">Open More Drawer</button>
+          <button type="button" class="small-btn" id="toast-neutral">Toast Neutral</button>
+          <button type="button" class="small-btn" id="toast-success">Toast Success</button>
+          <button type="button" class="small-btn" id="toast-info">Toast Info</button>
+          <button type="button" class="small-btn danger" id="toast-error">Toast Error</button>
+        </div>
+      </div>
+
+      <div class="state-gallery">
+        <h3>Universal State Gallery</h3>
+        <div class="state-cards">
+          <article class="state-card locked">
+            <p class="label">Locked</p>
+            <p class="body">Requirement: Add account.</p>
+            <button type="button" class="small-btn" style="margin-top:8px;">Go to Accounts</button>
+          </article>
+          <article class="state-card">
+            <p class="label">Loading</p>
+            <p class="body">Loading placeholders render while data is pending.</p>
+          </article>
+          <article class="state-card">
+            <p class="label">Error</p>
+            <p class="body">Data could not be loaded.</p>
+            <button type="button" class="small-btn" style="margin-top:8px;">Retry</button>
+          </article>
+          <article class="state-card">
+            <p class="label">Empty</p>
+            <p class="body">No transactions in this period.</p>
+            <button type="button" class="small-btn" style="margin-top:8px;">Add transaction</button>
+          </article>
+          <article class="state-card">
+            <p class="label">Active</p>
+            <p class="body">Fully rendered data view.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="shell-mobile-nav" aria-label="Mobile primary navigation">
+  <a class="active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+  <button type="button" id="open-more-nav"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></span><span class="nav-label">More</span></button>
+</nav>
+
+<div class="toast-stack" id="toast-stack" aria-live="polite" aria-label="Notifications"></div>
+
+<div class="overlay-layer" id="confirm-overlay" aria-hidden="true">
+  <div class="modal-backdrop" data-close="confirm"></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <h4 id="confirm-title">Confirm archive</h4>
+    <p>This will move the category to archived status. Historical records remain unchanged.</p>
+    <div class="modal-actions">
+      <button type="button" class="small-btn" id="confirm-cancel">Cancel</button>
+      <button type="button" class="small-btn danger" id="confirm-accept">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="drawer-layer" id="mobile-drawer" aria-hidden="true">
+  <div class="drawer-backdrop" data-close="drawer"></div>
+  <div class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+    <div class="handle" aria-hidden="true"></div>
+    <h4 id="drawer-title">More</h4>
+    <p>Mobile secondary navigation.</p>
+    <nav class="more-nav" aria-label="More navigation">
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+    </nav>
+    <div class="drawer-actions">
+      <button type="button" class="small-btn" id="drawer-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const body = document.body;
+
+  const stateInputs = {
+    locked: document.getElementById("s-locked"),
+    error: document.getElementById("s-error"),
+    loading: document.getElementById("s-loading"),
+    empty: document.getElementById("s-empty")
+  };
+  const stateBox = document.getElementById("resolved-state");
+  const stateLabel = document.getElementById("resolved-label");
+  const stateText = document.getElementById("resolved-text");
+  const stateAction = document.getElementById("resolved-action");
+
+  const confirmOverlay = document.getElementById("confirm-overlay");
+  const drawer = document.getElementById("mobile-drawer");
+  const openMoreNav = document.getElementById("open-more-nav");
+  const toastStack = document.getElementById("toast-stack");
+
+  let lastTrigger = null;
+  const precedence = ["locked", "error", "loading", "empty", "active"];
+
+  const stateContent = {
+    locked: {
+      text: "Requirement: Add account to enable this block.",
+      action: '<button type="button" class="small-btn">Go to Accounts</button>'
+    },
+    error: {
+      text: "Data could not be loaded.",
+      action: '<button type="button" class="small-btn">Retry</button>'
+    },
+    loading: {
+      text: "Loading data for the current period.",
+      action: ""
+    },
+    empty: {
+      text: "No transactions in this period.",
+      action: '<button type="button" class="small-btn">Add transaction</button>'
+    },
+    active: {
+      text: "Fully rendered data view.",
+      action: ""
+    }
+  };
+
+  const resolveState = () => {
+    if (stateInputs.locked.checked) {
+      return "locked";
+    }
+    if (stateInputs.error.checked) {
+      return "error";
+    }
+    if (stateInputs.loading.checked) {
+      return "loading";
+    }
+    if (stateInputs.empty.checked) {
+      return "empty";
+    }
+    return "active";
+  };
+
+  const renderState = () => {
+    const state = resolveState();
+    stateBox.className = `state-box ${state}`;
+    stateLabel.textContent = `${state} (resolved)`;
+    stateText.textContent = stateContent[state].text;
+    stateAction.innerHTML = stateContent[state].action;
+  };
+
+  const addToast = (type, text) => {
+    const current = toastStack.querySelectorAll(".toast");
+    if (current.length >= 3) {
+      current[0].remove();
+    }
+
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.innerHTML = `<strong>${type}</strong><div>${text}</div>`;
+    toastStack.appendChild(toast);
+
+    if (type !== "Error") {
+      window.setTimeout(() => {
+        toast.remove();
+      }, 4000);
+    }
+  };
+
+  const openOverlay = (el, trigger) => {
+    lastTrigger = trigger;
+    el.classList.add("open");
+    el.setAttribute("aria-hidden", "false");
+    if (trigger && trigger.id === "open-more-nav") {
+      trigger.classList.add("active");
+    }
+  };
+
+  const closeOverlay = (el) => {
+    el.classList.remove("open");
+    el.setAttribute("aria-hidden", "true");
+    openMoreNav.classList.remove("active");
+    if (lastTrigger) {
+      lastTrigger.focus();
+    }
+  };
+
+  document.getElementById("open-confirm").addEventListener("click", (e) => {
+    openOverlay(confirmOverlay, e.currentTarget);
+    document.getElementById("confirm-cancel").focus();
+  });
+
+  document.getElementById("open-drawer").addEventListener("click", (e) => {
+    openOverlay(drawer, e.currentTarget);
+    document.getElementById("drawer-close").focus();
+  });
+
+  openMoreNav.addEventListener("click", (e) => {
+    openOverlay(drawer, e.currentTarget);
+    document.getElementById("drawer-close").focus();
+  });
+
+  document.getElementById("confirm-cancel").addEventListener("click", () => {
+    closeOverlay(confirmOverlay);
+  });
+
+  document.getElementById("confirm-accept").addEventListener("click", () => {
+    closeOverlay(confirmOverlay);
+    addToast("Success", "Updated.");
+  });
+
+  document.getElementById("drawer-close").addEventListener("click", () => {
+    closeOverlay(drawer);
+  });
+
+  document.querySelectorAll("[data-close='confirm']").forEach((el) => {
+    el.addEventListener("click", () => closeOverlay(confirmOverlay));
+  });
+
+  document.querySelectorAll("[data-close='drawer']").forEach((el) => {
+    el.addEventListener("click", () => closeOverlay(drawer));
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      if (confirmOverlay.classList.contains("open")) {
+        closeOverlay(confirmOverlay);
+      } else if (drawer.classList.contains("open")) {
+        closeOverlay(drawer);
+      }
+    }
+  });
+
+  document.getElementById("toast-neutral").addEventListener("click", () => {
+    addToast("Neutral", "Saved.");
+  });
+  document.getElementById("toast-success").addEventListener("click", () => {
+    addToast("Success", "Updated.");
+  });
+  document.getElementById("toast-info").addEventListener("click", () => {
+    addToast("Info", "Review pending items.");
+  });
+  document.getElementById("toast-error").addEventListener("click", () => {
+    addToast("Error", "Data could not be loaded.");
+  });
+
+  Object.values(stateInputs).forEach((input) => {
+    input.addEventListener("change", renderState);
+  });
+
+  renderState();
+})();
+</script>
+</body>
+</html>

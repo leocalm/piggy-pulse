@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PiggyPulse - Onboarding Wireframe</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  color-scheme: light dark;
+  --accent-primary: #5E63E6;
+  --accent-secondary: #8C6CFB;
+  --bg: #F4F6FB;
+  --surface: #FFFFFF;
+  --surface-soft: #F9FAFD;
+  --border-soft: #E6E8F0;
+  --text-primary: #1A1D21;
+  --text-secondary: #5C6470;
+  --text-muted: #8B93A1;
+  --focus-ring: rgba(94, 99, 230, 0.28);
+  --brand-gradient-start: #4FD1FF;
+  --brand-gradient-end: #9B6BFF;
+  --brand-gradient-angle: 90deg;
+  --font-brand: Inter, system-ui, -apple-system, BlinkMacSystemFont;
+  --font-brand-weight: 700;
+  --font-brand-tracking: -0.01em;
+  --shadow-brand-color: rgb(79, 209, 255, 0.25);
+  --shadow-brand-blur: 24px;
+  --shadow-brand-offset-y: 8px;
+}
+
+body.dark {
+  --bg: #14161A;
+  --surface: #1C1F26;
+  --surface-soft: #20242C;
+  --border-soft: #2A2F38;
+  --text-primary: #E6E8EB;
+  --text-secondary: #A8AFB9;
+  --text-muted: #7D8590;
+  --focus-ring: rgba(140, 108, 251, 0.32);
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.light) {
+    --bg: #14161A;
+    --surface: #1C1F26;
+    --surface-soft: #20242C;
+    --border-soft: #2A2F38;
+    --text-primary: #E6E8EB;
+    --text-secondary: #A8AFB9;
+    --text-muted: #7D8590;
+    --focus-ring: rgba(140, 108, 251, 0.32);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+button,
+input,
+select,
+textarea { font: inherit; color: inherit; }
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 14px 100px;
+}
+
+.resume-banner {
+  border: 1px solid var(--border-soft);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.shell {
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.shell-head {
+  padding: 16px 14px;
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  background-image:
+    radial-gradient(circle at 6% 26%, rgba(94, 99, 230, 0.08) 0 4px, transparent 5px),
+    radial-gradient(circle at 10% 26%, rgba(94, 99, 230, 0.08) 0 4px, transparent 5px),
+    linear-gradient(96deg, transparent 0%, rgba(94, 99, 230, 0.06) 24%, transparent 44%);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.logo {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border-soft);
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: var(--surface);
+}
+
+.logo-pulse-once {
+  animation: logoPulse 220ms ease-out 1;
+}
+
+@keyframes logoPulse {
+  0% { transform: scale(0.96); opacity: 0.84; }
+  60% { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.logo img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: block;
+}
+
+.wordmark {
+  margin: 0;
+  font-size: 18px;
+}
+
+.brand-text {
+  font-family: var(--font-brand), serif;
+  font-weight: var(--font-brand-weight);
+  letter-spacing: var(--font-brand-tracking);
+  background: linear-gradient(
+    var(--brand-gradient-angle),
+    var(--brand-gradient-start),
+    var(--brand-gradient-end)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.brand-glow {
+  filter: drop-shadow(
+    0 var(--shadow-brand-offset-y) var(--shadow-brand-blur) var(--shadow-brand-color)
+  );
+}
+
+.page-title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.page-subtitle {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.stepper {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.step-btn {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 8px 6px;
+  font-size: 11px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.step-btn.active {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background: rgba(94,99,230,0.08);
+}
+
+.step-btn.done {
+  color: var(--text-primary);
+}
+
+.shell-body {
+  padding: 14px;
+}
+
+.step-panel { display: none; }
+.step-panel.active { display: block; }
+
+.card {
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  background: var(--surface-soft);
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 14px;
+  height: 14px;
+  border-left: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+  border-radius: 0 0 0 9px;
+  background: color-mix(in srgb, var(--accent-primary) 7%, var(--surface) 93%);
+}
+
+.step-heading {
+  margin: 0;
+  font-size: 18px;
+}
+
+.step-copy {
+  margin: 7px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.form-grid {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+input,
+select,
+textarea {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 9px 10px;
+}
+
+.inline-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.tag {
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.list-card {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 10px;
+}
+
+.list-title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: 13px;
+}
+
+.list-item:last-child { border-bottom: none; }
+
+.add-btn,
+.primary-btn,
+.secondary-btn,
+.ghost-btn {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 9px 12px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.primary-btn {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.secondary-btn {
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+}
+
+.ghost-btn,
+.add-btn {
+  color: var(--text-secondary);
+}
+
+.footer {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.note {
+  margin-top: 10px;
+  border: 1px dashed var(--border-soft);
+  border-radius: 10px;
+  padding: 9px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.requirement-line {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.summary-grid {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.summary-row {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.summary-row strong { font-weight: 650; }
+
+.lock-note {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+@media (min-width: 920px) {
+  .page { padding: 32px 24px 120px; }
+  .shell-head,
+  .shell-body { padding: 18px; }
+  .page-title { font-size: 24px; }
+  .page-subtitle { font-size: 14px; }
+  .step-btn { font-size: 12px; }
+  .inline-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="resume-banner">
+    Onboarding progress is saved after each step. If you leave, you return to your last incomplete step.
+  </div>
+
+  <section class="shell" aria-label="Onboarding flow preview">
+    <header class="shell-head">
+      <div class="brand">
+        <div class="logo logo-pulse-once" aria-hidden="true"><img src="../piggy.png" alt="" /></div>
+        <p class="wordmark brand-text brand-glow">PiggyPulse</p>
+      </div>
+      <h1 class="page-title">Onboarding</h1>
+      <p class="page-subtitle">Define your core structure before entering the dashboard.</p>
+
+      <nav class="stepper" aria-label="Onboarding steps">
+        <button class="step-btn done active" data-step="period" type="button">1. Period</button>
+        <button class="step-btn" data-step="accounts" type="button">2. Accounts</button>
+        <button class="step-btn" data-step="categories" type="button">3. Categories</button>
+        <button class="step-btn" data-step="summary" type="button">4. Summary</button>
+      </nav>
+    </header>
+
+    <div class="shell-body">
+      <section class="step-panel active" data-panel="period">
+        <article class="card">
+          <h2 class="step-heading">Step 1 - Define your time structure</h2>
+          <p class="step-copy">Set how time windows are generated before transaction tracking begins.</p>
+          <form class="form-grid">
+            <label>Mode
+              <select>
+                <option>Automatic</option>
+                <option>Manual</option>
+              </select>
+            </label>
+            <div class="inline-row">
+              <label>Start day
+                <input type="number" min="1" max="28" value="1" />
+              </label>
+              <label>Duration
+                <select>
+                  <option>1 month</option>
+                  <option>2 weeks</option>
+                  <option>1 week</option>
+                </select>
+              </label>
+            </div>
+            <div class="inline-row">
+              <label>Generate ahead
+                <input type="number" min="1" max="24" value="6" />
+              </label>
+              <label>Weekend rule
+                <select>
+                  <option>Keep date</option>
+                  <option>Move to previous weekday</option>
+                  <option>Move to next weekday</option>
+                </select>
+              </label>
+            </div>
+            <label>Name pattern
+              <input type="text" value="{MONTH} {YEAR}" />
+            </label>
+          </form>
+          <p class="note">Validation ensures generated periods are structurally valid and non-overlapping.</p>
+        </article>
+        <div class="footer">
+          <button class="ghost-btn" type="button" disabled>Back</button>
+          <button class="primary-btn" type="button">Continue</button>
+        </div>
+      </section>
+
+      <section class="step-panel" data-panel="accounts">
+        <article class="card">
+          <h2 class="step-heading">Step 2 - Define your accounts</h2>
+          <p class="step-copy">Add at least one asset account with a starting balance.</p>
+          <form class="form-grid">
+            <label>Account name
+              <input type="text" value="Main Checking" />
+            </label>
+            <div class="inline-row">
+              <label>Type
+                <select>
+                  <option>Checking</option>
+                  <option>Savings</option>
+                  <option>Wallet</option>
+                </select>
+              </label>
+              <label>Currency
+                <select>
+                  <option>EUR</option>
+                  <option>USD</option>
+                  <option>GBP</option>
+                </select>
+              </label>
+            </div>
+            <label>Starting balance
+              <input type="number" value="0.00" step="0.01" />
+            </label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="add-btn" id="add-account" type="button">+ Add another account</button>
+              <button class="ghost-btn" id="remove-account" type="button">Remove account</button>
+            </div>
+          </form>
+          <div class="requirement-line">
+            <span>Asset accounts: <strong id="asset-account-count">1/1 minimum met</strong></span>
+            <span class="tag">Constraint required</span>
+          </div>
+          <p class="helper" id="asset-account-helper" style="margin-top:8px;display:none;">At least one asset account is required to proceed.</p>
+          <p class="note">Account type is immutable after creation.</p>
+        </article>
+        <div class="footer">
+          <button class="secondary-btn" type="button">Back</button>
+          <button class="primary-btn" id="accounts-continue" type="button">Continue</button>
+        </div>
+      </section>
+
+      <section class="step-panel" data-panel="categories">
+        <article class="card">
+          <h2 class="step-heading">Step 3 - Define your categories</h2>
+          <p class="step-copy">Create the minimum structural set: at least one Incoming and one Outgoing category.</p>
+          <div class="requirement-line">
+            <span>Incoming categories: <strong>1/1 minimum met</strong></span>
+            <span class="tag">Required</span>
+          </div>
+          <div class="requirement-line" style="margin-top:6px;">
+            <span>Outgoing categories: <strong>1/1 minimum met</strong></span>
+            <span class="tag">Required</span>
+          </div>
+          <div class="summary-grid">
+            <div class="list-card">
+              <p class="list-title">Incoming</p>
+              <div class="list-item"><span>Salary</span><span class="tag">Type: Incoming</span></div>
+            </div>
+            <div class="list-card">
+              <p class="list-title">Outgoing</p>
+              <div class="list-item"><span>Housing</span><span class="tag">Type: Outgoing</span></div>
+            </div>
+          </div>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="add-btn" type="button">+ Add category</button>
+            <button class="ghost-btn" type="button">+ Add subcategory</button>
+          </div>
+          <p class="note">Category type can be changed only before the first transaction exists.</p>
+        </article>
+        <div class="footer">
+          <button class="secondary-btn" type="button">Back</button>
+          <button class="primary-btn" type="button">Continue</button>
+        </div>
+      </section>
+
+      <section class="step-panel" data-panel="summary">
+        <article class="card">
+          <h2 class="step-heading">Step 4 - Structural Summary</h2>
+          <p class="step-copy">Review your configuration before entering PiggyPulse.</p>
+
+          <div class="summary-grid">
+            <div class="summary-row"><span>Period model</span><strong>Automatic (Monthly)</strong></div>
+            <div class="summary-row"><span>Accounts created</span><strong>2</strong></div>
+            <div class="summary-row"><span>Categories created</span><strong>4</strong></div>
+          </div>
+
+          <p class="note">You can continue and refine structure later. Dashboard access stays locked until onboarding is complete.</p>
+        </article>
+        <div class="footer">
+          <button class="secondary-btn" type="button">Back</button>
+          <button class="primary-btn" type="button">Enter PiggyPulse</button>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const body = document.body;
+
+  const stepButtons = document.querySelectorAll("[data-step]");
+  const panels = document.querySelectorAll("[data-panel]");
+  const addAccountBtn = document.getElementById("add-account");
+  const removeAccountBtn = document.getElementById("remove-account");
+  const accountCountText = document.getElementById("asset-account-count");
+  const accountHelper = document.getElementById("asset-account-helper");
+  const accountsContinue = document.getElementById("accounts-continue");
+  let assetAccountCount = 1;
+
+  const updateAccountRequirement = () => {
+    const met = assetAccountCount >= 1;
+    accountCountText.textContent = met ? `${assetAccountCount}/1 minimum met` : "0/1 required";
+    accountHelper.style.display = met ? "none" : "block";
+    accountsContinue.disabled = !met;
+    removeAccountBtn.disabled = assetAccountCount === 0;
+  };
+
+  addAccountBtn.addEventListener("click", () => {
+    assetAccountCount += 1;
+    updateAccountRequirement();
+  });
+
+  removeAccountBtn.addEventListener("click", () => {
+    assetAccountCount = Math.max(0, assetAccountCount - 1);
+    updateAccountRequirement();
+  });
+
+  updateAccountRequirement();
+
+  stepButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const step = btn.getAttribute("data-step");
+      stepButtons.forEach((b) => b.classList.toggle("active", b === btn));
+      panels.forEach((p) => p.classList.toggle("active", p.getAttribute("data-panel") === step));
+    });
+  });
+})();
+</script>
+</body>
+</html>

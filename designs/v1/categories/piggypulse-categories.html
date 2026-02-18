@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PiggyPulse - Categories</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-soft: #f8f9fd;
+  --border-soft: #e6e8f0;
+  --text-primary: #1a1d21;
+  --text-secondary: #5c6470;
+  --text-muted: #8b93a1;
+  --accent-primary: #5e63e6;
+  --accent-secondary: #8c6cfb;
+  --focus-ring: rgba(94, 99, 230, 0.28);
+}
+
+body.dark {
+  --bg: #14161a;
+  --surface: #1c1f26;
+  --surface-soft: #20242c;
+  --border-soft: #2a2f38;
+  --text-primary: #e6e8eb;
+  --text-secondary: #a8afb9;
+  --text-muted: #7d8590;
+  --accent-primary: #8c6cfb;
+  --accent-secondary: #5e63e6;
+  --focus-ring: rgba(140, 108, 251, 0.32);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 16px 96px;
+}
+
+.app-shell {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: var(--surface);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "main";
+}
+
+.sidebar {
+  display: none;
+  grid-area: sidebar;
+  border-right: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  padding: 16px 12px;
+}
+
+.group-title {
+  margin: 14px 8px 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.nav-list {
+  display: grid;
+  gap: 2px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-left: 4px solid transparent;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 10px 10px 10px 14px;
+}
+
+.nav-item.active {
+  border-left-color: var(--accent-primary);
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+}
+
+.nav-item .nav-icon {
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary) 74%, var(--text-secondary) 26%);
+}
+
+.main-shell {
+  grid-area: main;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+.topbar {
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+}
+
+.utility-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+.toggle-btn {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.page-head {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.page-title {
+  font-family: "Sora", "Inter", sans-serif;
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.mode-switch {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  padding: 4px;
+}
+
+.mode-link {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.mode-link.active {
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 38%, var(--border-soft) 62%);
+}
+
+.content {
+  padding: 16px;
+  display: grid;
+  gap: 16px;
+}
+
+.context-card,
+.list-card {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: var(--surface);
+  padding: 14px;
+}
+
+.context-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+
+.context-block .label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.context-block .value {
+  margin-top: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.elapsed-bar {
+  margin-top: 6px;
+  height: 4px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--border-soft);
+}
+
+.elapsed-fill {
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+}
+
+.section-title {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.section-note {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.category-row {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-soft);
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+
+.category-row:last-child {
+  border-bottom: 0;
+}
+
+.category-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.progress-wrapper {
+  margin-top: 10px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--border-soft);
+  overflow: hidden;
+}
+
+.progress-base {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+}
+
+.progress-overflow-zone {
+  width: 40px;
+  height: 6px;
+}
+
+.progress-overflow-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  opacity: 0.86;
+}
+
+.projection {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.trend {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.trend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid var(--border-soft);
+}
+
+.trend-dot.outside {
+  width: 9px;
+  height: 9px;
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+}
+
+.category-metrics {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.category-metrics div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.category-metrics span {
+  color: var(--text-muted);
+}
+
+.category-metrics strong {
+  color: var(--text-primary);
+  font-weight: 700;
+  text-align: right;
+}
+
+.unbudgeted-row {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.unbudgeted-row:last-child { border-bottom: 0; }
+
+.unbudgeted-row strong { font-weight: 600; }
+
+.mobile-footer-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  border-top: 1px solid var(--border-soft);
+  background: var(--surface);
+}
+
+.mobile-footer-nav a,
+.mobile-footer-nav button {
+  flex: 1;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.mobile-footer-nav .active {
+  border-color: color-mix(in srgb, var(--accent-primary) 42%, var(--border-soft) 58%);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+  color: var(--text-primary);
+}
+
+.mobile-footer-nav .nav-icon {
+  width: 22px;
+  height: 22px;
+  color: color-mix(in srgb, var(--accent-primary) 80%, var(--text-secondary) 20%);
+}
+
+.mobile-footer-nav .nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.drawer-layer {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 90;
+}
+
+.drawer-layer.open { display: block; }
+
+.drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.drawer-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px 14px 0 0;
+  background: var(--surface);
+  padding: 12px 14px 16px;
+}
+
+.handle {
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-soft);
+  margin: 2px auto 10px;
+}
+
+.drawer-panel h4 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.more-nav {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.more-nav a {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 9px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.more-nav .nav-icon {
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary) 76%, var(--text-secondary) 24%);
+}
+
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (min-width: 860px) {
+  .page {
+    padding: 24px 16px 64px;
+  }
+
+  .app-shell {
+    grid-template-columns: 240px 1fr;
+    grid-template-areas: "sidebar main";
+  }
+
+  .sidebar { display: block; }
+
+  .context-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: end;
+  }
+
+  .category-row {
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+  }
+
+  .mobile-footer-nav { display: none; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <div class="group-title">Core</div>
+      <nav class="nav-list">
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+      </nav>
+      <div class="group-title">Structure</div>
+      <nav class="nav-list">
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+        <a class="nav-item active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      </nav>
+      <div class="group-title">Session</div>
+      <nav class="nav-list">
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-5a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg></span><span class="nav-label">Logout</span></a>
+      </nav>
+    </aside>
+
+    <section class="main-shell" aria-label="Categories content">
+      <header class="topbar">
+        <div class="utility-row">
+          <span class="chip">Period: June 2026</span>
+          <span class="chip">Scope: All accounts</span>
+        </div>      </header>
+
+      <div class="page-head">
+        <h1 class="page-title">Categories</h1>
+        <p class="page-subtitle">Diagnostic view of category-level position and deviation.</p>
+        <nav class="mode-switch" aria-label="Categories page mode">
+          <a class="mode-link active" href="../categories/piggypulse-categories.html" aria-current="page">Overview</a>
+          <a class="mode-link" href="../category-management/piggypulse-categories-management.html">Management</a>
+        </nav>
+      </div>
+
+      <div class="content">
+        <section class="context-card" aria-label="Period context">
+          <div class="context-grid">
+            <div class="context-block">
+              <div class="label">Period</div>
+              <div class="value">June 2026</div>
+            </div>
+            <div class="context-block">
+              <div class="label">Elapsed in period</div>
+              <div class="elapsed-bar"><div class="elapsed-fill"></div></div>
+            </div>
+            <div class="context-block">
+              <div class="label">Summary</div>
+              <div class="value">$4,580 of $5,000 · Variance +$180</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="list-card" aria-label="Budgeted categories">
+          <h2 class="section-title">Budgeted Categories</h2>
+          <p class="section-note">Stability (last 3 closed periods)</p>
+
+          <article class="category-row">
+            <div>
+              <div class="category-name">Dining Out</div>
+              <div class="progress-wrapper">
+                <div class="progress-track"><div class="progress-base" style="width:100%"></div></div>
+                <div class="progress-overflow-zone"><div class="progress-overflow-fill" style="width:45%"></div></div>
+              </div>
+              <div class="projection">Projected at current pace: $650</div>
+              <div class="trend">
+                <span class="trend-dot outside"></span>
+                <span class="trend-dot outside"></span>
+                <span class="trend-dot"></span>
+              </div>
+            </div>
+            <div class="category-metrics">
+              <div><span>Budget</span><strong>$400</strong></div>
+              <div><span>Actual</span><strong>$580</strong></div>
+              <div><span>Variance</span><strong>$180</strong></div>
+              <div><span>% Used</span><strong>145%</strong></div>
+            </div>
+          </article>
+
+          <article class="category-row">
+            <div>
+              <div class="category-name">Rent</div>
+              <div class="progress-wrapper">
+                <div class="progress-track"><div class="progress-base" style="width:100%"></div></div>
+                <div class="progress-overflow-zone"></div>
+              </div>
+              <div class="trend">
+                <span class="trend-dot"></span>
+                <span class="trend-dot"></span>
+                <span class="trend-dot"></span>
+              </div>
+            </div>
+            <div class="category-metrics">
+              <div><span>Budget</span><strong>$1,500</strong></div>
+              <div><span>Actual</span><strong>$1,500</strong></div>
+              <div><span>Variance</span><strong>$0</strong></div>
+              <div><span>% Used</span><strong>100%</strong></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="list-card" aria-label="Unbudgeted categories">
+          <h2 class="section-title">Unbudgeted Categories</h2>
+          <article class="unbudgeted-row"><span>Travel</span><strong>$540 (11.8%)</strong></article>
+          <article class="unbudgeted-row"><span>Home Repair</span><strong>$310 (6.8%)</strong></article>
+          <article class="unbudgeted-row"><span>Gifts</span><strong>$220 (4.8%)</strong></article>
+          <article class="unbudgeted-row"><span>Medical</span><strong>$130 (2.8%)</strong></article>
+        </section>
+      </div>
+    </section>
+  </div>
+</main>
+
+<nav class="mobile-footer-nav" aria-label="Mobile primary navigation">
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+  <button class="active" type="button" id="open-more-nav"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></span><span class="nav-label">More</span></button>
+</nav>
+
+<div class="drawer-layer" id="mobile-drawer" aria-hidden="true">
+  <div class="drawer-backdrop" data-close="drawer"></div>
+  <section class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+    <div class="handle" aria-hidden="true"></div>
+    <h4 id="drawer-title">More</h4>
+    <nav class="more-nav" aria-label="Mobile secondary navigation">
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+    </nav>
+  </section>
+</div>
+
+<script>
+(() => {
+  const body = document.body;
+  const openMore = document.getElementById("open-more-nav");
+  const drawer = document.getElementById("mobile-drawer");
+
+  const openDrawer = () => {
+    drawer.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+  };
+
+  const closeDrawer = () => {
+    drawer.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+  };
+
+  openMore.addEventListener("click", openDrawer);
+  document.querySelectorAll("[data-close='drawer']").forEach((el) => el.addEventListener("click", closeDrawer));
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && drawer.classList.contains("open")) {
+      closeDrawer();
+    }
+  });
+})();
+</script>
+</body>
+</html>

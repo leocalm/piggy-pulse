@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PiggyPulse - Accounts Management Wireframe</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  color-scheme: light dark;
+  --accent-primary: #5E63E6;
+  --accent-secondary: #8C6CFB;
+  --bg: #F4F6FB;
+  --surface: #FFFFFF;
+  --surface-soft: #F9FAFD;
+  --border-soft: #E6E8F0;
+  --text-primary: #1A1D21;
+  --text-secondary: #5C6470;
+  --text-muted: #8B93A1;
+  --focus-ring: rgba(94, 99, 230, 0.28);
+}
+
+body.dark {
+  --bg: #14161A;
+  --surface: #1C1F26;
+  --surface-soft: #20242C;
+  --border-soft: #2A2F38;
+  --text-primary: #E6E8EB;
+  --text-secondary: #A8AFB9;
+  --text-muted: #7D8590;
+  --focus-ring: rgba(140, 108, 251, 0.32);
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.light) {
+    --bg: #14161A;
+    --surface: #1C1F26;
+    --surface-soft: #20242C;
+    --border-soft: #2A2F38;
+    --text-primary: #E6E8EB;
+    --text-secondary: #A8AFB9;
+    --text-muted: #7D8590;
+    --focus-ring: rgba(140, 108, 251, 0.32);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.shell-frame {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 16px 96px;
+}
+
+.shell-app {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: var(--surface);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "main";
+}
+
+.shell-sidebar {
+  display: none;
+  grid-area: sidebar;
+  border-right: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  padding: 16px 12px;
+}
+
+.shell-group-title {
+  margin: 14px 8px 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.shell-nav-list {
+  display: grid;
+  gap: 2px;
+}
+
+.shell-nav-item {
+  display: block;
+  border: 0;
+  border-left: 4px solid transparent;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 10px 10px 10px 14px;
+}
+
+.shell-nav-item.active {
+  border-left-color: var(--accent-primary);
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+}
+
+.shell-main {
+  grid-area: main;
+  position: relative;
+}
+
+.shell-main::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 120px;
+  height: 46px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle at 16% 50%, color-mix(in srgb, var(--accent-primary, var(--accent, #5E63E6)) 16%, transparent 84%) 0 5px, transparent 6px),
+              radial-gradient(circle at 36% 50%, color-mix(in srgb, var(--accent-primary, var(--accent, #5E63E6)) 16%, transparent 84%) 0 5px, transparent 6px),
+              linear-gradient(100deg, transparent 0%, color-mix(in srgb, var(--accent-primary, var(--accent, #5E63E6)) 12%, transparent 88%) 42%, transparent 75%);
+  opacity: 0.44;
+}
+
+
+.shell-topbar {
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+}
+
+.shell-utility-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.shell-chip {
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+.shell-mobile-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 70;
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  border-top: 1px solid var(--border-soft);
+  background: var(--surface);
+}
+
+.shell-mobile-nav a,
+.shell-mobile-nav button {
+  flex: 1;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: var(--surface);
+  padding: 8px 10px;
+  text-align: center;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.shell-mobile-nav .active {
+  border-color: color-mix(in srgb, var(--accent-primary) 40%, var(--border-soft) 60%);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+  color: var(--text-primary);
+}
+
+.shell-drawer-layer {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 75;
+}
+
+.shell-drawer-layer.open {
+  display: block;
+}
+
+.shell-drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.shell-drawer-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px 14px 0 0;
+  background: var(--surface);
+  padding: 12px 14px 16px;
+}
+
+.shell-handle {
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-soft);
+  margin: 2px auto 10px;
+}
+
+.shell-more-nav {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.shell-more-nav a {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  padding: 9px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shell-more-nav .nav-icon {
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary, var(--accent, #5E63E6)) 76%, var(--text-secondary) 24%);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 120px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.page-header-content {
+  min-width: 0;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.mode-switch {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  padding: 4px;
+}
+
+.mode-link {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.mode-link.active {
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 38%, var(--border-soft) 62%);
+}
+
+.primary-btn,
+.secondary-btn,
+.ghost-btn,
+.danger-btn {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 9px 14px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.primary-btn {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.secondary-btn {
+  background: var(--surface-soft);
+}
+
+.ghost-btn {
+  background: transparent;
+}
+
+.danger-btn {
+  border-color: rgba(94, 99, 230, 0.4);
+  background: rgba(94, 99, 230, 0.08);
+}
+
+button[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.desktop-add-label {
+  display: inline;
+}
+
+.mobile-add-label {
+  display: none;
+}
+
+.group {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.archived-group {
+  background: var(--surface-soft);
+  border-color: var(--border-soft);
+}
+
+.archived-group .group-title {
+  color: var(--text-muted);
+  border-bottom-style: dashed;
+}
+
+.archived-group .icon {
+  opacity: 0.72;
+}
+
+.group-title {
+  margin: 0;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.account-row {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr 1fr auto;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-soft);
+  align-items: center;
+}
+
+.account-row:last-child {
+  border-bottom: none;
+}
+
+.identity {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.icon {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-soft);
+  font-size: 16px;
+}
+
+.account-name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.meta {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.meta strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.metric {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.metric .value {
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  opacity: 0.75;
+}
+
+.status.archived .status-dot {
+  opacity: 0.4;
+}
+
+.row-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  background: var(--surface-soft);
+  padding: 7px 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.action-btn-delete {
+  background: transparent;
+  border-style: dashed;
+  color: var(--text-muted);
+}
+
+.state-grid {
+  margin-top: 26px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.hierarchy-strip {
+  margin-bottom: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hierarchy-pill {
+  border: 1px solid var(--border-soft);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.checklist {
+  margin-top: 20px;
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 14px 16px;
+}
+
+.checklist h2 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.checklist ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.checklist li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+
+.state-card {
+  border: 1px dashed var(--border-soft);
+  border-radius: 12px;
+  padding: 14px;
+  background: var(--surface-soft);
+  min-height: 116px;
+}
+
+.state-title {
+  margin: 0 0 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.state-body {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.ghost-loading {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.ghost-line {
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(140, 147, 161, 0.08), rgba(140, 147, 161, 0.18), rgba(140, 147, 161, 0.08));
+  background-size: 220% 100%;
+  animation: ghost-sweep 1.6s linear infinite;
+}
+
+.ghost-line.w-100 { width: 100%; }
+.ghost-line.w-80 { width: 80%; }
+.ghost-line.w-60 { width: 60%; }
+
+@keyframes ghost-sweep {
+  from { background-position: 0% 0; }
+  to { background-position: 220% 0; }
+}
+
+.inline-hint {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+kbd {
+  border: 1px solid var(--border-soft);
+  background: var(--surface);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 11px;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 14, 24, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.toast-note {
+  position: fixed;
+  right: 12px;
+  bottom: 76px;
+  z-index: 1300;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 10px 12px;
+  font-size: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.toast-note.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.overlay.open {
+  display: flex;
+}
+
+.modal {
+  width: 100%;
+  max-width: 620px;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.modal h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.modal p {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.form-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field.full {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.field input,
+.field select,
+.field textarea {
+  border: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  border-radius: 9px;
+  padding: 9px 10px;
+}
+
+.field textarea {
+  min-height: 74px;
+  resize: vertical;
+}
+
+.field .frozen {
+  border: 1px dashed var(--border-soft);
+  border-radius: 9px;
+  padding: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.helper,
+.consequence,
+.tooltip-copy {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.helper {
+  border-left: 2px solid var(--accent-primary);
+  padding-left: 8px;
+}
+
+.modal-footer {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.drawer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 18px 18px 0 0;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-bottom: none;
+  transform: translateY(105%);
+  transition: transform 0.25s ease;
+  padding: 16px;
+  max-height: 88vh;
+  overflow: auto;
+}
+
+.overlay.open .drawer {
+  transform: translateY(0);
+}
+
+.drawer-handle {
+  width: 48px;
+  height: 5px;
+  border-radius: 999px;
+  margin: 0 auto 10px;
+  background: var(--border-soft);
+}
+
+.conditional-mobile {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .account-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .metric .value,
+  .row-actions {
+    text-align: left;
+    justify-content: flex-start;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .state-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .container {
+    padding-top: 26px;
+  }
+
+  .page-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: 10px;
+    row-gap: 12px;
+  }
+
+  #addAccountButton {
+    align-self: start;
+    justify-self: end;
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .page-title {
+    font-size: 25px;
+  }
+
+  .desktop-add-label {
+    display: none;
+  }
+
+  .mobile-add-label {
+    display: inline;
+  }
+
+  .conditional-desktop {
+    display: none;
+  }
+
+  .conditional-mobile {
+    display: block;
+  }
+
+  .overlay {
+    align-items: flex-end;
+    padding: 0;
+    background: rgba(11, 14, 24, 0.35);
+  }
+}
+
+@media (min-width: 860px) {
+  .shell-frame {
+    padding: 24px 16px 64px;
+  }
+
+  .shell-app {
+    grid-template-columns: 240px 1fr;
+    grid-template-areas: "sidebar main";
+  }
+
+  .shell-sidebar {
+    display: block;
+  }
+
+  .shell-mobile-nav {
+    display: none;
+  }
+}
+
+/* shell-playful-nav */
+.page-title {
+  font-family: "Sora", "Inter", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.empty::before,
+.loading::before {
+  content: "";
+  display: block;
+  width: 74px;
+  height: 22px;
+  margin-bottom: 10px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 16% 50%, rgba(94, 99, 230, 0.18) 0 4px, transparent 5px),
+              radial-gradient(circle at 33% 50%, rgba(94, 99, 230, 0.18) 0 4px, transparent 5px),
+              linear-gradient(90deg, transparent 0%, rgba(94, 99, 230, 0.14) 42%, transparent 76%);
+}
+
+.state-pill,
+.shell-chip,
+.chip {
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.shell-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shell-nav-item .nav-icon {
+  width: 16px;
+  text-align: center;
+  opacity: 0.82;
+  font-size: 13px;
+  line-height: 1;
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary, var(--accent, #5E63E6)) 74%, var(--text-secondary) 26%);
+}
+
+.shell-nav-item.active .nav-icon {
+  opacity: 1;
+}
+
+.shell-mobile-nav a,
+.shell-mobile-nav button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.shell-mobile-nav .nav-icon {
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.9;
+  width: 22px;
+  height: 22px;
+  color: color-mix(in srgb, var(--accent-primary, var(--accent, #5E63E6)) 80%, var(--text-secondary) 20%);
+}
+
+.shell-mobile-nav .nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.shell-main {
+  position: relative;
+}
+
+.shell-main::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 120px;
+  height: 46px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle at 16% 50%, rgba(94, 99, 230, 0.12) 0 5px, transparent 6px),
+              radial-gradient(circle at 36% 50%, rgba(94, 99, 230, 0.12) 0 5px, transparent 6px),
+              linear-gradient(100deg, transparent 0%, rgba(94, 99, 230, 0.1) 42%, transparent 75%);
+  opacity: 0.44;
+}
+
+@media (max-width: 860px) {
+  .shell-main::before {
+    display: none;
+  }
+}
+
+</style>
+</head>
+<body>
+<main class="shell-frame">
+  <div class="shell-app">
+    <aside class="shell-sidebar" aria-label="Primary navigation">
+      <div class="shell-group-title">Core</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+      </nav>
+      <div class="shell-group-title">Structure</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      </nav>
+      <div class="shell-group-title">Session</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-5a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg></span><span class="nav-label">Logout</span></a>
+      </nav>
+    </aside>
+    <section class="shell-main">
+      <header class="shell-topbar">
+        <div class="shell-utility-row">
+          <span class="shell-chip">Section: Accounts</span>
+          <span class="shell-chip">Mode: Management</span>
+        </div>
+      </header>
+<div class="container">
+  <header class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">Accounts</h1>
+      <p class="page-subtitle">Define and manage your financial accounts</p>
+      <nav class="mode-switch" aria-label="Accounts page mode">
+        <a class="mode-link" href="../accounts/piggypulse-accounts.html">Overview</a>
+        <a class="mode-link active" href="../accounts-management/piggypulse-accounts-management.html" aria-current="page">Management</a>
+      </nav>
+    </div>
+    <button class="primary-btn" id="addAccountButton" type="button">
+      <span class="desktop-add-label">+ Add Account</span>
+      <span class="mobile-add-label">+</span>
+    </button>
+  </header>
+
+  <section class="hierarchy-strip" aria-label="Visual hierarchy guide">
+    <div class="hierarchy-pill">Position: account identity and type first</div>
+    <div class="hierarchy-pill">Constraint: editability and lifecycle limits second</div>
+    <div class="hierarchy-pill">Lifecycle: archive and structural adjustments last</div>
+  </section>
+
+  <section class="group" aria-label="Checking accounts">
+    <h2 class="group-title">Checking</h2>
+    <article class="account-row">
+      <div class="identity">
+        <div class="icon" aria-hidden="true">🏦</div>
+        <div>
+          <h3 class="account-name">Main Checking</h3>
+          <p class="meta">Type: <strong>Checking</strong> | Currency: <strong>EUR</strong></p>
+        </div>
+      </div>
+      <div class="metric">Starting Balance<div class="value">€1,000</div></div>
+      <div class="status"><span class="status-dot"></span>Active</div>
+      <div class="row-actions">
+        <button class="action-btn" type="button" data-open="edit">Edit</button>
+        <button class="action-btn" type="button" data-open="archive">Archive</button>
+      </div>
+    </article>
+  </section>
+
+  <section class="group" aria-label="Savings accounts">
+    <h2 class="group-title">Savings</h2>
+    <article class="account-row">
+      <div class="identity">
+        <div class="icon" aria-hidden="true">💰</div>
+        <div>
+          <h3 class="account-name">Emergency Fund</h3>
+          <p class="meta">Type: <strong>Savings</strong> | Currency: <strong>EUR</strong></p>
+        </div>
+      </div>
+      <div class="metric">Starting Balance<div class="value">€5,000</div></div>
+      <div class="status"><span class="status-dot"></span>Active</div>
+      <div class="row-actions">
+        <button class="action-btn" type="button" data-open="edit">Edit</button>
+        <button class="action-btn" type="button" data-open="archive">Archive</button>
+      </div>
+    </article>
+  </section>
+
+  <section class="group" aria-label="Allowance accounts">
+    <h2 class="group-title">Allowance</h2>
+    <article class="account-row">
+      <div class="identity">
+        <div class="icon" aria-hidden="true">👤</div>
+        <div>
+          <h3 class="account-name">Personal Allowance</h3>
+          <p class="meta">Type: <strong>Allowance</strong> | Currency: <strong>EUR</strong></p>
+        </div>
+      </div>
+      <div class="metric">Starting Balance<div class="value">€0</div></div>
+      <div class="status"><span class="status-dot"></span>Active</div>
+      <div class="row-actions">
+        <button class="action-btn" type="button" data-open="edit">Edit</button>
+        <button class="action-btn" type="button" data-open="archive">Archive</button>
+      </div>
+    </article>
+  </section>
+
+  <section class="group" aria-label="Credit card accounts">
+    <h2 class="group-title">Credit Card</h2>
+    <article class="account-row">
+      <div class="identity">
+        <div class="icon" aria-hidden="true">💳</div>
+        <div>
+          <h3 class="account-name">Shared Credit Line</h3>
+          <p class="meta">Type: <strong>Credit Card</strong> | Currency: <strong>EUR</strong></p>
+        </div>
+      </div>
+      <div class="metric">Starting Balance<div class="value">€0</div></div>
+      <div class="status"><span class="status-dot"></span>Active</div>
+      <div class="row-actions">
+        <button class="action-btn" type="button" data-open="edit">Edit</button>
+        <button class="action-btn" type="button" data-open="archive">Archive</button>
+      </div>
+    </article>
+  </section>
+
+  <section class="group" aria-label="Wallet accounts">
+    <h2 class="group-title">Wallet</h2>
+    <article class="account-row">
+      <div class="identity">
+        <div class="icon" aria-hidden="true">👛</div>
+        <div>
+          <h3 class="account-name">Cash Wallet</h3>
+          <p class="meta">Type: <strong>Wallet</strong> | Currency: <strong>EUR</strong></p>
+        </div>
+      </div>
+      <div class="metric">Starting Balance<div class="value">€120</div></div>
+      <div class="status"><span class="status-dot"></span>Active</div>
+      <div class="row-actions">
+        <button class="action-btn" type="button" data-open="edit">Edit</button>
+        <button class="action-btn" type="button" data-open="archive">Archive</button>
+        <button class="action-btn action-btn-delete" type="button" data-open="delete">Delete</button>
+      </div>
+    </article>
+  </section>
+
+  <section class="group archived-group" aria-label="Archived accounts">
+    <h2 class="group-title">Archived</h2>
+    <article class="account-row">
+      <div class="identity">
+        <div class="icon" aria-hidden="true">💳</div>
+        <div>
+          <h3 class="account-name">Old Credit Card</h3>
+          <p class="meta">Type: <strong>Credit Card</strong> | Currency: <strong>EUR</strong></p>
+        </div>
+      </div>
+      <div class="metric">Starting Balance<div class="value">€0</div></div>
+      <div class="status archived"><span class="status-dot"></span>Archived</div>
+      <div class="row-actions">
+        <button class="action-btn" type="button" data-open="edit">Edit</button>
+      </div>
+    </article>
+  </section>
+
+  <section class="state-grid" aria-label="Wireframe state coverage">
+    <article class="state-card">
+      <h3 class="state-title">Empty State</h3>
+      <p class="state-body">No accounts created yet. Add your first account to begin shaping this workspace.
+      This view will fill as your period structure unfolds.</p>
+    </article>
+
+    <article class="state-card">
+      <h3 class="state-title">Loading State</h3>
+      <div class="ghost-loading" aria-hidden="true">
+        <div class="ghost-line w-100"></div>
+        <div class="ghost-line w-80"></div>
+        <div class="ghost-line w-60"></div>
+      </div>
+      <p class="state-body">Loading account structure and edit permissions.
+      A calm snapshot will appear in place as data resolves.</p>
+      <p class="inline-hint">Placeholder rows keep layout stable while data resolves.</p>
+    </article>
+
+    <article class="state-card">
+      <h3 class="state-title">Error State</h3>
+      <p class="state-body">Accounts could not be loaded right now. Retry to bring structure and actions back into view.</p>
+      <p class="inline-hint">No destructive actions are available while state is unresolved.</p>
+    </article>
+  </section>
+
+  <p class="inline-hint">
+    Keyboard behavior: <kbd>Tab</kbd> follows field order, <kbd>Enter</kbd> submits when focused on final field, <kbd>Esc</kbd> closes dialog/drawer.
+  </p>
+
+  <section class="checklist" aria-label="Spec compliance checklist">
+    <h2>Spec Compliance Checklist</h2>
+    <ul>
+      <li>Grouped account list and archived section follow <code>ACCOUNTS_MANAGEMENT_PAGE_SPEC.md</code> and <code>ACCOUNTS_MANAGEMENT_ASCII_WIREFRAME.md</code>.</li>
+      <li>Edit constraints, immutable type, and transaction-dependent restrictions follow <code>app-core/entity_lifecycle_rules.md</code>.</li>
+      <li>Modal/drawer and destructive confirmation grammar follow <code>INTERACTION_LANGUAGE.md</code>.</li>
+      <li>Focus visibility, Enter/Esc patterns, and predictable tab flow follow <code>keyboard_navigation_spec.md</code>.</li>
+      <li>Neutral language and non-emotional visual encoding follow <code>app-core/design-system.md</code>.</li>
+    </ul>
+  </section>
+</div>
+    </section>
+  </div>
+</main>
+
+<nav class="shell-mobile-nav" aria-label="Mobile primary navigation">
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+  <button class="active" type="button" id="shell-open-more"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></span><span class="nav-label">More</span></button>
+</nav>
+
+<div class="shell-drawer-layer" id="shell-mobile-drawer" aria-hidden="true">
+  <div class="shell-drawer-backdrop" id="shell-close-more"></div>
+  <section class="shell-drawer-panel" role="dialog" aria-modal="true" aria-label="More">
+    <div class="shell-handle" aria-hidden="true"></div>
+    <nav class="shell-more-nav">
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+    </nav>
+  </section>
+</div>
+
+<div class="overlay" id="createOverlay" aria-hidden="true">
+  <div class="modal conditional-desktop" role="dialog" aria-modal="true" aria-labelledby="createTitle">
+    <h2 id="createTitle">Create Account</h2>
+    <p>Define account structure with immutable type and required starting balance.</p>
+    <form id="createForm" novalidate>
+      <div class="form-grid">
+        <div class="field full">
+          <label for="createName">Account Name</label>
+          <input id="createName" name="account_name" required />
+        </div>
+        <div class="field">
+          <label for="createType">Type</label>
+          <select id="createType" name="account_type" required>
+            <option value="checking">Checking</option>
+            <option value="savings">Savings</option>
+            <option value="credit-card">Credit Card</option>
+            <option value="wallet">Wallet</option>
+            <option value="allowance">Allowance</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="createCurrency">Currency</label>
+          <select id="createCurrency" name="currency" required>
+            <option>EUR</option>
+            <option>USD</option>
+            <option>BRL</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="createBalance">Starting Balance</label>
+          <input id="createBalance" name="starting_balance" placeholder="0.00" required />
+        </div>
+        <div class="field full">
+          <label for="createDescription">Description (optional)</label>
+          <textarea id="createDescription" name="description"></textarea>
+        </div>
+      </div>
+      <p class="helper" id="allowanceHelper" hidden>
+        This account represents a periodic personal allowance. Balance may go negative. Transfers define allowance amount.
+      </p>
+      <div class="modal-footer">
+        <button class="secondary-btn" type="button" data-close="createOverlay">Cancel</button>
+        <button class="primary-btn" id="createSubmit" type="submit">Create</button>
+      </div>
+    </form>
+  </div>
+
+  <section class="drawer conditional-mobile" role="dialog" aria-modal="true" aria-labelledby="createTitleMobile">
+    <div class="drawer-handle" aria-hidden="true"></div>
+    <h2 id="createTitleMobile">Create Account</h2>
+    <p>Mobile uses a drawer for account creation and editing.</p>
+    <form id="createFormMobile" novalidate>
+      <div class="form-grid">
+        <div class="field full">
+          <label for="createNameMobile">Account Name</label>
+          <input id="createNameMobile" required />
+        </div>
+        <div class="field">
+          <label for="createTypeMobile">Type</label>
+          <select id="createTypeMobile">
+            <option value="checking">Checking</option>
+            <option value="savings">Savings</option>
+            <option value="credit-card">Credit Card</option>
+            <option value="wallet">Wallet</option>
+            <option value="allowance">Allowance</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="createCurrencyMobile">Currency</label>
+          <select id="createCurrencyMobile">
+            <option>EUR</option>
+            <option>USD</option>
+            <option>BRL</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="createBalanceMobile">Starting Balance</label>
+          <input id="createBalanceMobile" placeholder="0.00" required />
+        </div>
+      </div>
+      <p class="helper" id="allowanceHelperMobile" hidden>
+        This account represents a periodic personal allowance. Balance may go negative. Transfers define allowance amount.
+      </p>
+      <div class="modal-footer">
+        <button class="secondary-btn" type="button" data-close="createOverlay">Cancel</button>
+        <button class="primary-btn" id="createMobileSubmit" type="submit">Create</button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<div class="overlay" id="editOverlay" aria-hidden="true">
+  <div class="modal conditional-desktop" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+    <h2 id="editTitle">Edit Account</h2>
+    <p>Name and description are editable. Type remains immutable.</p>
+    <form id="editForm" novalidate>
+      <div class="form-grid">
+        <div class="field full">
+          <label for="editName">Account Name</label>
+          <input id="editName" value="Main Checking" required />
+        </div>
+        <div class="field">
+          <label>Type</label>
+          <div class="frozen">Checking (immutable after creation)</div>
+        </div>
+        <div class="field">
+          <label>Currency</label>
+          <div class="frozen">EUR (transactions already exist)</div>
+        </div>
+        <div class="field full">
+          <label for="editDescription">Description (optional)</label>
+          <textarea id="editDescription">Primary daily spending account</textarea>
+        </div>
+      </div>
+
+      <p class="consequence">Starting Balance is locked after transactions exist. Adjustment availability depends on initial period lifecycle.</p>
+
+      <div class="row-actions" style="justify-content:flex-start; margin-top: 10px;">
+        <button class="action-btn" type="button" disabled title="Starting balance can no longer be adjusted because its initial period is closed. You may create a transaction to correct the balance.">Adjust Starting Balance</button>
+      </div>
+      <p class="tooltip-copy">Disabled action tooltip: "Starting balance can no longer be adjusted because its initial period is closed. You may create a transaction to correct the balance."</p>
+
+      <div class="modal-footer">
+        <button class="secondary-btn" type="button" data-close="editOverlay">Cancel</button>
+        <button class="primary-btn" id="editSubmit" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <section class="drawer conditional-mobile" role="dialog" aria-modal="true" aria-labelledby="editTitleMobile">
+    <div class="drawer-handle" aria-hidden="true"></div>
+    <h2 id="editTitleMobile">Edit Account</h2>
+    <p>Mobile editing keeps the same field order and invariants.</p>
+    <form id="editFormMobile" novalidate>
+      <div class="form-grid">
+        <div class="field full">
+          <label for="editNameMobile">Account Name</label>
+          <input id="editNameMobile" value="Main Checking" required />
+        </div>
+        <div class="field full">
+          <label>Type</label>
+          <div class="frozen">Checking (immutable)</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn" type="button" data-close="editOverlay">Cancel</button>
+        <button class="primary-btn" id="editMobileSubmit" type="submit">Save</button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<div class="overlay" id="adjustOverlay" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="adjustTitle">
+    <h2 id="adjustTitle">Adjust Starting Balance</h2>
+    <p>
+      The starting balance defines the base from which all account history is calculated.
+      Changing it will update all derived balances.
+    </p>
+    <form id="adjustForm" novalidate>
+      <div class="form-grid">
+        <div class="field full">
+          <label for="adjustBalance">New starting balance</label>
+          <input id="adjustBalance" placeholder="0.00" required />
+        </div>
+        <div class="field full">
+          <label for="adjustNote">Optional note</label>
+          <textarea id="adjustNote"></textarea>
+        </div>
+      </div>
+      <p class="consequence">Applying this action creates a structural adjustment entry.</p>
+      <div class="modal-footer">
+        <button class="secondary-btn" type="button" data-close="adjustOverlay">Cancel</button>
+        <button class="primary-btn" id="adjustSubmit" type="submit">Apply Adjustment</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="confirmOverlay" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <h2 id="confirmTitle">Archive Account</h2>
+    <p id="confirmText">This will archive the account. Historical transactions remain unchanged.</p>
+    <p class="consequence" id="confirmConsequence">Archived accounts remain visible in this management page and cannot receive new transactions.</p>
+    <div class="modal-footer">
+      <button class="secondary-btn" type="button" data-close="confirmOverlay">Cancel</button>
+      <button class="primary-btn" id="confirmSubmit" type="button">Confirm</button>
+    </div>
+  </div>
+</div>
+<div class="toast-note" id="actionToast" aria-live="polite"></div>
+
+<script>
+const overlays = {
+  create: document.getElementById("createOverlay"),
+  edit: document.getElementById("editOverlay"),
+  adjust: document.getElementById("adjustOverlay"),
+  confirm: document.getElementById("confirmOverlay")
+};
+const actionToast = document.getElementById("actionToast");
+let toastTimer;
+
+function showToast(message) {
+  if (!actionToast) {
+    return;
+  }
+  actionToast.textContent = message;
+  actionToast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => actionToast.classList.remove("show"), 2400);
+}
+
+function setOverlayState(overlay, isOpen) {
+  overlay.classList.toggle("open", isOpen);
+  overlay.setAttribute("aria-hidden", String(!isOpen));
+}
+
+function closeAll() {
+  Object.values(overlays).forEach((overlay) => setOverlayState(overlay, false));
+}
+
+function openByName(name) {
+  closeAll();
+  const overlay = overlays[name];
+  if (overlay) {
+    setOverlayState(overlay, true);
+    const firstInput = overlay.querySelector("input, select, textarea, button");
+    if (firstInput) {
+      firstInput.focus();
+    }
+  }
+}
+
+document.getElementById("addAccountButton").addEventListener("click", () => {
+  openByName("create");
+});
+
+document.querySelectorAll("[data-open='edit']").forEach((button) => {
+  button.addEventListener("click", () => openByName("edit"));
+});
+
+document.querySelectorAll("[data-open='adjust']").forEach((button) => {
+  button.addEventListener("click", () => openByName("adjust"));
+});
+
+function openConfirm(mode) {
+  const title = document.getElementById("confirmTitle");
+  const text = document.getElementById("confirmText");
+  const consequence = document.getElementById("confirmConsequence");
+  const submit = document.getElementById("confirmSubmit");
+
+  if (mode === "delete") {
+    title.textContent = "Delete Account";
+    text.textContent = "This account has no transactions, so permanent deletion is available.";
+    consequence.textContent = "Deletion removes this account from management and active pages.";
+    submit.textContent = "Delete";
+  } else {
+    title.textContent = "Archive Account";
+    text.textContent = "This will archive the account. Historical transactions remain unchanged.";
+    consequence.textContent = "Archived accounts remain visible in this management page and cannot receive new transactions.";
+    submit.textContent = "Archive";
+  }
+
+  openByName("confirm");
+}
+
+document.querySelectorAll("[data-open='archive']").forEach((button) => {
+  button.addEventListener("click", () => openConfirm("archive"));
+});
+
+document.querySelectorAll("[data-open='delete']").forEach((button) => {
+  button.addEventListener("click", () => openConfirm("delete"));
+});
+
+document.querySelectorAll("[data-close]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const overlay = document.getElementById(button.getAttribute("data-close"));
+    if (overlay) {
+      setOverlayState(overlay, false);
+    }
+  });
+});
+
+Object.values(overlays).forEach((overlay) => {
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) {
+      setOverlayState(overlay, false);
+    }
+  });
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeAll();
+    return;
+  }
+
+  if (event.key === "Enter") {
+    const openOverlay = Object.values(overlays).find((overlay) => overlay.classList.contains("open"));
+    if (!openOverlay) {
+      return;
+    }
+
+    const submitButton = openOverlay.querySelector("button[type='submit']");
+    if (submitButton && document.activeElement === submitButton) {
+      event.preventDefault();
+      submitButton.click();
+    }
+  }
+});
+
+function wireSubmit(formId, overlayName) {
+  const form = document.getElementById(formId);
+  if (!form) {
+    return;
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const overlay = overlays[overlayName];
+    if (overlay) {
+      setOverlayState(overlay, false);
+    }
+  });
+}
+
+wireSubmit("createForm", "create");
+wireSubmit("createFormMobile", "create");
+wireSubmit("editForm", "edit");
+wireSubmit("editFormMobile", "edit");
+wireSubmit("adjustForm", "adjust");
+document.getElementById("confirmSubmit").addEventListener("click", () => {
+  setOverlayState(overlays.confirm, false);
+  showToast("Action completed. History remains intact.");
+});
+
+function syncAllowanceHelper(selectId, helperId) {
+  const select = document.getElementById(selectId);
+  const helper = document.getElementById(helperId);
+
+  if (!select || !helper) {
+    return;
+  }
+
+  function update() {
+    helper.hidden = select.value !== "allowance";
+  }
+
+  select.addEventListener("change", update);
+  update();
+}
+
+syncAllowanceHelper("createType", "allowanceHelper");
+syncAllowanceHelper("createTypeMobile", "allowanceHelperMobile");
+
+const shellMobileDrawer = document.getElementById("shell-mobile-drawer");
+const shellOpenMore = document.getElementById("shell-open-more");
+const shellCloseMore = document.getElementById("shell-close-more");
+
+function openShellMore() {
+  shellMobileDrawer.classList.add("open");
+  shellMobileDrawer.setAttribute("aria-hidden", "false");
+}
+
+function closeShellMore() {
+  shellMobileDrawer.classList.remove("open");
+  shellMobileDrawer.setAttribute("aria-hidden", "true");
+}
+
+if (shellOpenMore) {
+  shellOpenMore.addEventListener("click", openShellMore);
+}
+
+if (shellCloseMore) {
+  shellCloseMore.addEventListener("click", closeShellMore);
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && shellMobileDrawer.classList.contains("open")) {
+    closeShellMore();
+  }
+});
+</script>
+</body>
+</html>

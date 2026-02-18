@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PiggyPulse - Vendors Management Wireframe</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  color-scheme: light dark;
+  --accent-primary: #5E63E6;
+  --accent-secondary: #8C6CFB;
+  --bg: #F4F6FB;
+  --surface: #FFFFFF;
+  --surface-soft: #F9FAFD;
+  --border-soft: #E6E8F0;
+  --text-primary: #1A1D21;
+  --text-secondary: #5C6470;
+  --text-muted: #8B93A1;
+  --focus-ring: rgba(94, 99, 230, 0.28);
+  --overlay: rgba(12, 14, 20, 0.45);
+}
+
+body.dark {
+  --bg: #14161A;
+  --surface: #1C1F26;
+  --surface-soft: #20242C;
+  --border-soft: #2A2F38;
+  --text-primary: #E6E8EB;
+  --text-secondary: #A8AFB9;
+  --text-muted: #7D8590;
+  --focus-ring: rgba(140, 108, 251, 0.32);
+  --overlay: rgba(3, 4, 7, 0.58);
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.light) {
+    --bg: #14161A;
+    --surface: #1C1F26;
+    --surface-soft: #20242C;
+    --border-soft: #2A2F38;
+    --text-primary: #E6E8EB;
+    --text-secondary: #A8AFB9;
+    --text-muted: #7D8590;
+    --focus-ring: rgba(140, 108, 251, 0.32);
+    --overlay: rgba(3, 4, 7, 0.58);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.shell-frame {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 16px 96px;
+}
+
+.shell-app {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: var(--surface);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "main";
+}
+
+.shell-sidebar { display: none; grid-area: sidebar; border-right: 1px solid var(--border-soft); background: var(--surface-soft); padding: 16px 12px; }
+.shell-group-title { margin: 14px 8px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+.shell-nav-list { display: grid; gap: 2px; }
+.shell-nav-item { display: block; border: 0; border-left: 4px solid transparent; border-radius: 10px; color: var(--text-secondary); text-decoration: none; padding: 10px 10px 10px 14px; }
+.shell-nav-item.active { border-left-color: var(--accent-primary); color: var(--text-primary); background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%); }
+.shell-main { grid-area: main; }
+.shell-topbar { border-bottom: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 16px; }
+.shell-utility-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.shell-chip { border: 1px solid var(--border-soft); border-radius: 999px; padding: 6px 10px; font-size: 12px; color: var(--text-secondary); background: var(--surface); }
+.shell-mobile-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; display: flex; gap: 6px; padding: 8px; border-top: 1px solid var(--border-soft); background: var(--surface); }
+.shell-mobile-nav a, .shell-mobile-nav button { flex: 1; border: 1px solid var(--border-soft); border-radius: 10px; color: var(--text-secondary); text-decoration: none; background: var(--surface); padding: 8px 10px; text-align: center; font-size: 12px; cursor: pointer; }
+.shell-mobile-nav .active { border-color: color-mix(in srgb, var(--accent-primary) 40%, var(--border-soft) 60%); background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%); color: var(--text-primary); }
+.shell-drawer-layer { position: fixed; inset: 0; display: none; z-index: 75; }
+.shell-drawer-layer.open { display: block; }
+.shell-drawer-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.4); }
+.shell-drawer-panel { position: absolute; left: 0; right: 0; bottom: 0; border: 1px solid var(--border-soft); border-radius: 14px 14px 0 0; background: var(--surface); padding: 12px 14px 16px; }
+.shell-handle { width: 42px; height: 4px; border-radius: 999px; background: var(--border-soft); margin: 2px auto 10px; }
+.shell-more-nav { margin-top: 12px; display: grid; gap: 8px; }
+.shell-more-nav a { border: 1px solid var(--border-soft); border-radius: 10px; text-decoration: none; color: var(--text-secondary); padding: 9px 10px; display: flex; align-items: center; gap: 8px; }
+.shell-more-nav .nav-icon { width: 18px; height: 18px; color: color-mix(in srgb, var(--accent-primary) 76%, var(--text-secondary) 24%); }
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 14px 120px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.primary-btn,
+.secondary-btn,
+.ghost-btn,
+.danger-btn {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 9px 12px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.primary-btn {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.secondary-btn {
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+}
+
+.ghost-btn {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.danger-btn {
+  border-style: dashed;
+  border-color: rgba(94, 99, 230, 0.4);
+  background: rgba(94, 99, 230, 0.08);
+  color: var(--text-secondary);
+}
+
+.desktop-add-label { display: none; }
+.mobile-add-label { display: inline; }
+
+.controls {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.search-input {
+  width: 100%;
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 11px 12px;
+}
+
+.state-switch {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.state-pill {
+  border: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.state-pill.active {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background: rgba(94, 99, 230, 0.08);
+}
+
+.state-panel { display: none; }
+.state-panel.active { display: block; }
+
+.group {
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 10px;
+  margin-bottom: 14px;
+}
+
+.group-title {
+  margin: 0 0 10px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.vendor-card {
+  border: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.vendor-card:last-child { margin-bottom: 0; }
+
+.vendor-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.vendor-name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.tx-count {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.vendor-description {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.vendor-status {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.vendor-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  border: 1px solid var(--border-soft);
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.archived-shell {
+  background: var(--surface-soft);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+}
+
+.archived-header {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  text-align: left;
+  padding: 12px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.archived-content {
+  display: none;
+  border-top: 1px dashed var(--border-soft);
+  padding: 10px;
+}
+
+.archived-content.open { display: block; }
+
+.empty,
+.loading,
+.error {
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 22px 16px;
+  color: var(--text-secondary);
+}
+
+.empty h2,
+.error h2 {
+  margin: 0 0 10px;
+  color: var(--text-primary);
+  font-size: 18px;
+}
+
+.empty p,
+.error p {
+  margin: 0 0 14px;
+  max-width: 620px;
+}
+
+.ghost-loading {
+  display: grid;
+  gap: 8px;
+}
+
+.ghost-line {
+  height: 10px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(140, 147, 161, 0.08), rgba(140, 147, 161, 0.18), rgba(140, 147, 161, 0.08));
+  background-size: 220% 100%;
+  animation: ghost-sweep 1.6s linear infinite;
+}
+
+.ghost-line.w-100 { width: 100%; }
+.ghost-line.w-80 { width: 80%; }
+.ghost-line.w-60 { width: 60%; }
+.ghost-line.block { height: 52px; border-radius: 10px; }
+
+@keyframes ghost-sweep {
+  from { background-position: 0% 0; }
+  to { background-position: 220% 0; }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  z-index: 80;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.overlay.open { display: flex; }
+
+.modal {
+  width: min(560px, 100%);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 18px;
+}
+
+.modal h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.modal p {
+  margin: 0 0 10px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.form-grid { display: grid; gap: 10px; }
+
+label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+input,
+textarea {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 9px 10px;
+}
+
+.helper {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.modal-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.drawer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface);
+  padding: 16px;
+  transform: translateY(100%);
+  transition: transform 0.2s ease;
+}
+
+.drawer.open { transform: translateY(0); }
+
+.toast-note {
+  position: fixed;
+  right: 12px;
+  bottom: 76px;
+  z-index: 1300;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 10px 12px;
+  font-size: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.toast-note.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.drawer-handle {
+  width: 44px;
+  height: 4px;
+  border-radius: 6px;
+  background: var(--border-soft);
+  margin: 0 auto 12px;
+}
+
+@media (min-width: 920px) {
+  .page {
+    padding: 36px 24px 120px;
+  }
+
+  .page-title {
+    font-size: 30px;
+  }
+
+  .page-subtitle {
+    font-size: 15px;
+  }
+
+  .desktop-add-label { display: inline; }
+  .mobile-add-label { display: none; }
+
+  .group {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .group-title {
+    margin: 0;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .vendor-card {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-soft);
+    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: minmax(240px, 2fr) auto auto;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .vendor-card:last-child {
+    border-bottom: none;
+  }
+
+  .vendor-head {
+    display: block;
+  }
+
+  .vendor-name {
+    font-size: 15px;
+  }
+
+  .tx-count {
+    text-align: right;
+    font-size: 12px;
+  }
+
+  .vendor-description {
+    margin-top: 5px;
+    max-width: 460px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .vendor-status {
+    margin: 0;
+    text-align: right;
+    min-width: 74px;
+  }
+
+  .vendor-actions {
+    margin: 0;
+    justify-content: flex-end;
+  }
+
+  .archived-header {
+    padding: 14px 16px;
+  }
+
+  .archived-content {
+    padding: 0;
+  }
+}
+
+@media (min-width: 860px) {
+  .shell-frame { padding: 24px 16px 64px; }
+  .shell-app { grid-template-columns: 240px 1fr; grid-template-areas: "sidebar main"; }
+  .shell-sidebar { display: block; }
+  .shell-mobile-nav { display: none; }
+}
+
+/* shell-playful-nav */
+.page-title {
+  font-family: "Sora", "Inter", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.empty::before,
+.loading::before {
+  content: "";
+  display: block;
+  width: 74px;
+  height: 22px;
+  margin-bottom: 10px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 16% 50%, rgba(94, 99, 230, 0.18) 0 4px, transparent 5px),
+              radial-gradient(circle at 33% 50%, rgba(94, 99, 230, 0.18) 0 4px, transparent 5px),
+              linear-gradient(90deg, transparent 0%, rgba(94, 99, 230, 0.14) 42%, transparent 76%);
+}
+
+.state-pill,
+.shell-chip,
+.chip {
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.shell-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shell-nav-item .nav-icon {
+  width: 16px;
+  text-align: center;
+  opacity: 0.82;
+  font-size: 13px;
+  line-height: 1;
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary, var(--accent, #5E63E6)) 74%, var(--text-secondary) 26%);
+}
+
+.shell-nav-item.active .nav-icon {
+  opacity: 1;
+}
+
+.shell-mobile-nav a,
+.shell-mobile-nav button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.shell-mobile-nav .nav-icon {
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.9;
+  width: 22px;
+  height: 22px;
+  color: color-mix(in srgb, var(--accent-primary, var(--accent, #5E63E6)) 80%, var(--text-secondary) 20%);
+}
+
+.shell-mobile-nav .nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.shell-main {
+  position: relative;
+}
+
+.shell-main::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 120px;
+  height: 46px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle at 16% 50%, rgba(94, 99, 230, 0.12) 0 5px, transparent 6px),
+              radial-gradient(circle at 36% 50%, rgba(94, 99, 230, 0.12) 0 5px, transparent 6px),
+              linear-gradient(100deg, transparent 0%, rgba(94, 99, 230, 0.1) 42%, transparent 75%);
+  opacity: 0.44;
+}
+
+@media (max-width: 860px) {
+  .shell-main::before {
+    display: none;
+  }
+}
+
+</style>
+</head>
+<body>
+<main class="shell-frame">
+  <div class="shell-app">
+    <aside class="shell-sidebar" aria-label="Primary navigation">
+      <div class="shell-group-title">Core</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+      </nav>
+      <div class="shell-group-title">Structure</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+        <a class="shell-nav-item active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      </nav>
+      <div class="shell-group-title">Session</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-5a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg></span><span class="nav-label">Logout</span></a>
+      </nav>
+    </aside>
+    <section class="shell-main">
+<header class="shell-topbar">
+  <div class="shell-utility-row">
+    <span class="shell-chip">Section: Vendors</span>
+    <span class="shell-chip">Mode: Management</span>
+  </div>
+</header>
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1 class="page-title">Vendors</h1>
+      <p class="page-subtitle">Track where transactions occur</p>
+    </div>
+    <button class="primary-btn" type="button" data-open="create-trigger">
+      <span class="desktop-add-label">+ Add Vendor</span>
+      <span class="mobile-add-label">+</span>
+    </button>
+  </header>
+
+  <section class="controls" aria-label="Vendor controls">
+    <input class="search-input" type="search" placeholder="Search vendors..." />
+  </section>
+
+  <section class="state-switch" aria-label="Wireframe state switcher">
+    <button class="state-pill active" type="button" data-state="default">Default</button>
+    <button class="state-pill" type="button" data-state="empty">Empty</button>
+    <button class="state-pill" type="button" data-state="loading">Loading</button>
+    <button class="state-pill" type="button" data-state="error">Error</button>
+  </section>
+
+  <section class="state-panel active" data-panel="default" aria-label="Default state">
+    <article class="group">
+      <h2 class="group-title">Active Vendors (Alphabetical)</h2>
+
+      <div class="vendor-card">
+        <div>
+          <div class="vendor-head">
+            <p class="vendor-name">Lidl</p>
+            <p class="vendor-description">Recurring grocery and household purchases</p>
+          </div>
+        </div>
+        <p class="tx-count">23 tx</p>
+        <div class="vendor-actions">
+          <button class="action-btn" type="button" data-open="edit-trigger">Edit</button>
+          <button class="action-btn" type="button" data-open="archive-confirm">Archive</button>
+        </div>
+      </div>
+
+      <div class="vendor-card">
+        <div>
+          <div class="vendor-head">
+            <p class="vendor-name">Starbucks</p>
+            <p class="vendor-description">Coffee and small food transactions</p>
+          </div>
+        </div>
+        <p class="tx-count">12 tx</p>
+        <div class="vendor-actions">
+          <button class="action-btn" type="button" data-open="edit-trigger">Edit</button>
+          <button class="action-btn" type="button" data-open="archive-confirm">Archive</button>
+        </div>
+      </div>
+
+      <div class="vendor-card">
+        <div>
+          <div class="vendor-head">
+            <p class="vendor-name">Uber</p>
+            <p class="vendor-description">Ride-share trips and occasional delivery fees</p>
+          </div>
+        </div>
+        <p class="tx-count">8 tx</p>
+        <div class="vendor-actions">
+          <button class="action-btn" type="button" data-open="edit-trigger">Edit</button>
+          <button class="action-btn" type="button" data-open="archive-confirm">Archive</button>
+        </div>
+      </div>
+
+      <div class="vendor-card">
+        <div>
+          <div class="vendor-head">
+            <p class="vendor-name">Local Market</p>
+            <p class="vendor-description">New vendor with no associated transactions</p>
+          </div>
+        </div>
+        <p class="tx-count">0 tx</p>
+        <div class="vendor-actions">
+          <button class="action-btn" type="button" data-open="edit-trigger">Edit</button>
+          <button class="action-btn" type="button" data-open="archive-confirm">Archive</button>
+          <button class="action-btn" type="button" data-open="delete-confirm">Delete</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="archived-shell">
+      <button class="archived-header" type="button" id="archived-toggle" aria-expanded="false" aria-controls="archived-content">Archived (2) ▸</button>
+      <div class="archived-content" id="archived-content">
+        <div class="vendor-card">
+          <div>
+            <div class="vendor-head">
+              <p class="vendor-name">Old Vendor</p>
+              <p class="vendor-description">Historical records remain attached to this vendor</p>
+            </div>
+            <p class="vendor-status">Archived</p>
+          </div>
+          <p class="tx-count">4 tx</p>
+          <div class="vendor-actions">
+            <button class="action-btn" type="button" data-open="edit-trigger">Edit</button>
+            <button class="action-btn" type="button">Restore</button>
+          </div>
+        </div>
+
+        <div class="vendor-card">
+          <div>
+            <div class="vendor-head">
+              <p class="vendor-name">Corner Store 2023</p>
+              <p class="vendor-description">Legacy naming retained for historical consistency</p>
+            </div>
+            <p class="vendor-status">Archived</p>
+          </div>
+          <p class="tx-count">2 tx</p>
+          <div class="vendor-actions">
+            <button class="action-btn" type="button" data-open="edit-trigger">Edit</button>
+            <button class="action-btn" type="button">Restore</button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="state-panel" data-panel="empty" aria-label="Empty state">
+    <article class="empty">
+      <h2>No vendors yet.</h2>
+      <p>Create vendors manually or let them appear from transactions.
+      This list will grow naturally as activity is recorded.</p>
+      <button class="primary-btn" type="button" data-open="create-trigger">Add Vendor</button>
+    </article>
+  </section>
+
+  <section class="state-panel" data-panel="loading" aria-label="Loading state">
+    <article class="loading">
+      <div class="ghost-loading" aria-hidden="true">
+        <div class="ghost-line w-100"></div>
+        <div class="ghost-line w-80"></div>
+        <div class="ghost-line block"></div>
+        <div class="ghost-line block"></div>
+        <div class="ghost-line block"></div>
+      </div>
+      <p class="inline-hint">Loading vendor structure</p>
+    </article>
+  </section>
+
+  <section class="state-panel" data-panel="error" aria-label="Error state">
+    <article class="error">
+      <h2>Vendors could not be loaded right now.</h2>
+      <p>Vendor history remains unchanged. Retry to restore the management view.</p>
+      <button class="secondary-btn" type="button">Retry</button>
+    </article>
+  </section>
+</div>
+    </section>
+  </div>
+</main>
+
+<nav class="shell-mobile-nav" aria-label="Mobile primary navigation">
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+  <button class="active" type="button" id="shell-open-more"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></span><span class="nav-label">More</span></button>
+</nav>
+
+<div class="shell-drawer-layer" id="shell-mobile-drawer" aria-hidden="true">
+  <div class="shell-drawer-backdrop" id="shell-close-more"></div>
+  <section class="shell-drawer-panel" role="dialog" aria-modal="true" aria-label="More">
+    <div class="shell-handle" aria-hidden="true"></div>
+    <nav class="shell-more-nav">
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+    </nav>
+  </section>
+</div>
+
+<div class="overlay" id="create-vendor-modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="create-vendor-title">
+    <h3 id="create-vendor-title">Add Vendor</h3>
+    <p>Vendors are usually created from transaction entry. This page also allows direct creation.</p>
+    <form class="form-grid" data-enter-submit="create-vendor-submit">
+      <label>Name
+        <input type="text" placeholder="Vendor name" />
+      </label>
+      <label>Description (optional)
+        <textarea rows="2" placeholder="Short reference note"></textarea>
+      </label>
+      <div class="modal-actions">
+        <button class="ghost-btn" type="button" data-close="create-vendor-modal">Cancel</button>
+        <button class="primary-btn" type="button" id="create-vendor-submit">Create</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="edit-vendor-modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="edit-vendor-title">
+    <h3 id="edit-vendor-title">Edit Vendor</h3>
+    <form class="form-grid" data-enter-submit="edit-vendor-submit">
+      <label>Name
+        <input type="text" value="Lidl" />
+      </label>
+      <label>Description (optional)
+        <textarea rows="2">Recurring grocery and household purchases</textarea>
+      </label>
+      <p class="helper">Edits update vendor labeling only. Financial history is unchanged.</p>
+      <div class="modal-actions">
+        <button class="ghost-btn" type="button" data-close="edit-vendor-modal">Cancel</button>
+        <button class="primary-btn" type="button" id="edit-vendor-submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="archive-confirm">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="archive-vendor-title">
+    <h3 id="archive-vendor-title">Archive Vendor</h3>
+    <p>This will archive the vendor.</p>
+    <p>Archived vendors are excluded from autocomplete and cannot be assigned to new transactions.</p>
+    <p>Historical transactions remain unchanged.</p>
+    <div class="modal-actions">
+      <button class="ghost-btn" type="button" data-close="archive-confirm">Cancel</button>
+      <button class="secondary-btn" type="button" id="archive-confirm-submit">Archive</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="delete-confirm">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="delete-vendor-title">
+    <h3 id="delete-vendor-title">Delete Vendor</h3>
+    <p>This vendor has no transactions. It will be permanently removed.</p>
+    <div class="modal-actions">
+      <button class="ghost-btn" type="button" data-close="delete-confirm">Cancel</button>
+      <button class="danger-btn" type="button" id="delete-confirm-submit">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="delete-blocked">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="delete-blocked-title">
+    <h3 id="delete-blocked-title">Delete Vendor</h3>
+    <p>This vendor has associated transactions. Archive is available; delete is not available.</p>
+    <div class="modal-actions">
+      <button class="secondary-btn" type="button" data-close="delete-blocked">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="mobile-drawer-overlay" aria-hidden="true"></div>
+<section class="drawer" id="mobile-create-drawer" aria-label="Mobile create vendor drawer">
+  <div class="drawer-handle" aria-hidden="true"></div>
+  <h3 style="margin:0 0 10px;font-size:18px;">Add Vendor</h3>
+  <form class="form-grid" data-enter-submit="mobile-create-submit">
+    <label>Name
+      <input type="text" placeholder="Vendor name" />
+    </label>
+    <label>Description (optional)
+      <textarea rows="2" placeholder="Short reference note"></textarea>
+    </label>
+    <div class="modal-actions" style="margin-top:6px;">
+      <button class="ghost-btn" type="button" data-close-drawer="mobile-create-drawer">Cancel</button>
+      <button class="primary-btn" type="button" id="mobile-create-submit">Create</button>
+    </div>
+  </form>
+</section>
+
+<section class="drawer" id="mobile-edit-drawer" aria-label="Mobile edit vendor drawer">
+  <div class="drawer-handle" aria-hidden="true"></div>
+  <h3 style="margin:0 0 10px;font-size:18px;">Edit Vendor</h3>
+  <form class="form-grid" data-enter-submit="mobile-edit-submit">
+    <label>Name
+      <input type="text" value="Lidl" />
+    </label>
+    <label>Description (optional)
+      <textarea rows="2">Recurring grocery and household purchases</textarea>
+    </label>
+    <p class="helper">Edits update vendor labeling only. Financial history is unchanged.</p>
+    <div class="modal-actions" style="margin-top:6px;">
+      <button class="ghost-btn" type="button" data-close-drawer="mobile-edit-drawer">Cancel</button>
+      <button class="primary-btn" type="button" id="mobile-edit-submit">Save</button>
+    </div>
+  </form>
+</section>
+<div class="toast-note" id="actionToast" aria-live="polite"></div>
+
+<script>
+(() => {
+  const body = document.body;
+  const shellMobileDrawer = document.getElementById("shell-mobile-drawer");
+  const shellOpenMore = document.getElementById("shell-open-more");
+  const shellCloseMore = document.getElementById("shell-close-more");
+  const archivedToggle = document.getElementById("archived-toggle");
+  const archivedContent = document.getElementById("archived-content");
+  const actionToast = document.getElementById("actionToast");
+  let toastTimer;
+
+  const openShellMore = () => {
+    shellMobileDrawer.classList.add("open");
+    shellMobileDrawer.setAttribute("aria-hidden", "false");
+  };
+
+  const closeShellMore = () => {
+    shellMobileDrawer.classList.remove("open");
+    shellMobileDrawer.setAttribute("aria-hidden", "true");
+  };
+
+  const showToast = (message) => {
+    if (!actionToast) {
+      return;
+    }
+    actionToast.textContent = message;
+    actionToast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => actionToast.classList.remove("show"), 2400);
+  };
+
+  if (shellOpenMore) shellOpenMore.addEventListener("click", openShellMore);
+  if (shellCloseMore) shellCloseMore.addEventListener("click", closeShellMore);
+
+  archivedToggle.addEventListener("click", () => {
+    const open = archivedContent.classList.toggle("open");
+    archivedToggle.setAttribute("aria-expanded", String(open));
+    archivedToggle.textContent = open ? "Archived (2) ▾" : "Archived (2) ▸";
+  });
+
+  document.querySelectorAll("[data-state]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const state = btn.getAttribute("data-state");
+      document.querySelectorAll("[data-state]").forEach((item) => item.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll("[data-panel]").forEach((panel) => {
+        panel.classList.toggle("active", panel.getAttribute("data-panel") === state);
+      });
+    });
+  });
+
+  const closeAllOverlays = () => {
+    document.querySelectorAll(".overlay.open").forEach((el) => el.classList.remove("open"));
+  };
+
+  const closeAllDrawers = () => {
+    document.getElementById("mobile-drawer-overlay").classList.remove("open");
+    document.getElementById("mobile-create-drawer").classList.remove("open");
+    document.getElementById("mobile-edit-drawer").classList.remove("open");
+  };
+
+  const openDrawer = (drawerId) => {
+    closeAllDrawers();
+    document.getElementById("mobile-drawer-overlay").classList.add("open");
+    document.getElementById(drawerId).classList.add("open");
+  };
+
+  document.querySelectorAll("[data-open]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-open");
+
+      if (targetId === "create-trigger") {
+        if (window.matchMedia("(max-width: 919px)").matches) {
+          openDrawer("mobile-create-drawer");
+          return;
+        }
+        closeAllOverlays();
+        document.getElementById("create-vendor-modal").classList.add("open");
+        return;
+      }
+
+      if (targetId === "edit-trigger") {
+        if (window.matchMedia("(max-width: 919px)").matches) {
+          openDrawer("mobile-edit-drawer");
+          return;
+        }
+        closeAllOverlays();
+        document.getElementById("edit-vendor-modal").classList.add("open");
+        return;
+      }
+
+      closeAllOverlays();
+      const overlay = document.getElementById(targetId);
+      if (overlay) overlay.classList.add("open");
+    });
+  });
+
+  document.querySelectorAll("[data-close]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = document.getElementById(btn.getAttribute("data-close"));
+      if (target) target.classList.remove("open");
+    });
+  });
+
+  document.querySelectorAll("[data-close-drawer]").forEach((btn) => {
+    btn.addEventListener("click", closeAllDrawers);
+  });
+
+  document.getElementById("mobile-drawer-overlay").addEventListener("click", closeAllDrawers);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeShellMore();
+      closeAllOverlays();
+      closeAllDrawers();
+    }
+  });
+
+  const archiveSubmit = document.getElementById("archive-confirm-submit");
+  if (archiveSubmit) {
+    archiveSubmit.addEventListener("click", () => {
+      document.getElementById("archive-confirm").classList.remove("open");
+      showToast("Vendor archived. History remains unchanged.");
+    });
+  }
+
+  const deleteSubmit = document.getElementById("delete-confirm-submit");
+  if (deleteSubmit) {
+    deleteSubmit.addEventListener("click", () => {
+      document.getElementById("delete-confirm").classList.remove("open");
+      showToast("Vendor removed from structure.");
+    });
+  }
+
+  document.querySelectorAll("form[data-enter-submit]").forEach((form) => {
+    const submitId = form.getAttribute("data-enter-submit");
+    const finalField = form.querySelector("textarea, input:last-of-type");
+    if (!finalField) return;
+    finalField.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        const submitButton = document.getElementById(submitId);
+        if (submitButton) submitButton.click();
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

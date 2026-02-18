@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PiggyPulse - Accounts</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-soft: #f8f9fd;
+  --border-soft: #e6e8f0;
+  --text-primary: #1a1d21;
+  --text-secondary: #5c6470;
+  --text-muted: #8b93a1;
+  --accent-primary: #5e63e6;
+  --accent-secondary: #8c6cfb;
+  --focus-ring: rgba(94, 99, 230, 0.28);
+}
+
+body.dark {
+  --bg: #14161a;
+  --surface: #1c1f26;
+  --surface-soft: #20242c;
+  --border-soft: #2a2f38;
+  --text-primary: #e6e8eb;
+  --text-secondary: #a8afb9;
+  --text-muted: #7d8590;
+  --accent-primary: #8c6cfb;
+  --accent-secondary: #5e63e6;
+  --focus-ring: rgba(140, 108, 251, 0.32);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 16px 96px;
+}
+
+.app-shell {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: var(--surface);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "main";
+}
+
+.sidebar {
+  display: none;
+  grid-area: sidebar;
+  border-right: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  padding: 16px 12px;
+}
+
+.group-title {
+  margin: 14px 8px 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.nav-list {
+  display: grid;
+  gap: 2px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-left: 4px solid transparent;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 10px 10px 10px 14px;
+}
+
+.nav-item.active {
+  border-left-color: var(--accent-primary);
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+}
+
+.nav-item .nav-icon {
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary) 74%, var(--text-secondary) 26%);
+}
+
+.main-shell {
+  grid-area: main;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+.topbar {
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+}
+
+.utility-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+.toggle-btn {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.page-head {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.page-title {
+  font-family: "Sora", "Inter", sans-serif;
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.mode-switch {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  padding: 4px;
+}
+
+.mode-link {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.mode-link.active {
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 38%, var(--border-soft) 62%);
+}
+
+.content {
+  padding: 16px;
+  display: grid;
+  gap: 16px;
+}
+
+.net-block,
+.account-card {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: var(--surface);
+  padding: 16px;
+}
+
+.net-title,
+.section-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.net-value {
+  margin-top: 10px;
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.allocation-bar {
+  margin-top: 12px;
+  height: 8px;
+  border-radius: 8px;
+  background: var(--border-soft);
+  overflow: hidden;
+}
+
+.net-fill {
+  height: 100%;
+  width: 91.6%;
+  background: var(--accent-primary);
+}
+
+.net-breakdown {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.account-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.account-balance {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.range-wrapper {
+  margin-top: 14px;
+  position: relative;
+}
+
+.range-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.range-track {
+  height: 8px;
+  border-radius: 8px;
+  background: var(--border-soft);
+  position: relative;
+}
+
+.range-track::before,
+.range-track::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: var(--text-muted);
+  opacity: 0.5;
+}
+
+.range-track::before { left: 0; }
+
+.range-track::after { right: 0; }
+
+.range-dot {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-primary) 30%, transparent);
+}
+
+.account-meta {
+  margin-top: 10px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.allowance {
+  background: color-mix(in srgb, var(--accent-primary) 6%, var(--surface) 94%);
+  border-color: color-mix(in srgb, var(--accent-primary) 26%, var(--border-soft) 74%);
+}
+
+.zero-marker {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: 16px;
+  background: var(--text-muted);
+  opacity: 0.7;
+}
+
+.allowance-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.allowance-grid strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.debt .range-dot {
+  width: 10px;
+  height: 10px;
+  background: color-mix(in srgb, var(--accent-secondary) 70%, var(--text-muted) 30%);
+  box-shadow: none;
+}
+
+.mobile-footer-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  border-top: 1px solid var(--border-soft);
+  background: var(--surface);
+}
+
+.mobile-footer-nav a,
+.mobile-footer-nav button {
+  flex: 1;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.mobile-footer-nav .active {
+  border-color: color-mix(in srgb, var(--accent-primary) 42%, var(--border-soft) 58%);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+  color: var(--text-primary);
+}
+
+.mobile-footer-nav .nav-icon {
+  width: 22px;
+  height: 22px;
+  color: color-mix(in srgb, var(--accent-primary) 80%, var(--text-secondary) 20%);
+}
+
+.mobile-footer-nav .nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.drawer-layer {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 90;
+}
+
+.drawer-layer.open { display: block; }
+
+.drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.drawer-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px 14px 0 0;
+  background: var(--surface);
+  padding: 12px 14px 16px;
+}
+
+.handle {
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-soft);
+  margin: 2px auto 10px;
+}
+
+.drawer-panel h4 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.more-nav {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.more-nav a {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 9px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.more-nav .nav-icon {
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary) 76%, var(--text-secondary) 24%);
+}
+
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (min-width: 860px) {
+  .page {
+    padding: 24px 16px 64px;
+  }
+
+  .app-shell {
+    grid-template-columns: 240px 1fr;
+    grid-template-areas: "sidebar main";
+  }
+
+  .sidebar { display: block; }
+
+  .mobile-footer-nav { display: none; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <div class="group-title">Core</div>
+      <nav class="nav-list">
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+      </nav>
+      <div class="group-title">Structure</div>
+      <nav class="nav-list">
+        <a class="nav-item active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      </nav>
+      <div class="group-title">Session</div>
+      <nav class="nav-list">
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-5a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg></span><span class="nav-label">Logout</span></a>
+      </nav>
+    </aside>
+
+    <section class="main-shell" aria-label="Accounts content">
+      <header class="topbar">
+        <div class="utility-row">
+          <span class="chip">Period: June 2026</span>
+          <span class="chip">Updated: 2h ago</span>
+        </div>      </header>
+
+      <div class="page-head">
+        <h1 class="page-title">Accounts</h1>
+        <p class="page-subtitle">Balance-level structure across liquid, allowance, protected, and debt accounts.</p>
+        <nav class="mode-switch" aria-label="Accounts page mode">
+          <a class="mode-link active" href="../accounts/piggypulse-accounts.html" aria-current="page">Overview</a>
+          <a class="mode-link" href="../accounts-management/piggypulse-accounts-management.html">Management</a>
+        </nav>
+      </div>
+
+      <div class="content">
+        <section class="net-block" aria-label="Net position">
+          <h2 class="net-title">Net Position</h2>
+          <div class="net-value">$34,330</div>
+          <div class="allocation-bar"><div class="net-fill"></div></div>
+          <div class="net-breakdown">
+            <span>Liquid $12,480</span>
+            <span>Protected $25,000</span>
+            <span>Debt -$3,150</span>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-head"><h2 class="section-title">Liquid Accounts</h2><span>$12,480</span></div>
+          <article class="account-card">
+            <div class="account-header"><div class="account-name">Main Checking</div><div class="account-balance">$4,520</div></div>
+            <div class="range-wrapper">
+              <div class="range-label">30d closing balance range</div>
+              <div class="range-track"><div class="range-dot" style="left:65%"></div></div>
+            </div>
+            <div class="account-meta">+ $320 this period</div>
+          </article>
+          <article class="account-card">
+            <div class="account-header"><div class="account-name">Joint Checking</div><div class="account-balance">$3,720</div></div>
+            <div class="range-wrapper">
+              <div class="range-label">30d closing balance range</div>
+              <div class="range-track"><div class="range-dot" style="left:52%"></div></div>
+            </div>
+            <div class="account-meta">+ $120 this period</div>
+          </article>
+        </section>
+
+        <section>
+          <div class="section-head"><h2 class="section-title">Allowance Accounts</h2><span>$1,050</span></div>
+          <article class="account-card allowance">
+            <div class="account-header"><div class="account-name">Personal</div><div class="account-balance">-$50</div></div>
+            <div class="range-wrapper">
+              <div class="range-label">30d closing balance range</div>
+              <div class="range-track">
+                <div class="zero-marker" style="left:48%"></div>
+                <div class="range-dot" style="left:35%"></div>
+              </div>
+            </div>
+            <div class="allowance-grid">
+              <div>This Period</div><div><strong>-$150</strong></div>
+              <div>Next Transfer</div><div><strong>+$100</strong></div>
+              <div>Projected After Transfer</div><div><strong>$50</strong></div>
+            </div>
+          </article>
+        </section>
+
+        <section>
+          <div class="section-head"><h2 class="section-title">Protected Accounts</h2><span>$25,000</span></div>
+          <article class="account-card">
+            <div class="account-header"><div class="account-name">Emergency Fund</div><div class="account-balance">$15,000</div></div>
+            <div class="range-wrapper">
+              <div class="range-label">30d closing balance range</div>
+              <div class="range-track"><div class="range-dot" style="left:50%"></div></div>
+            </div>
+          </article>
+        </section>
+
+        <section>
+          <div class="section-head"><h2 class="section-title">Debt Accounts</h2><span>-$3,150</span></div>
+          <article class="account-card debt">
+            <div class="account-header"><div class="account-name">Credit Card</div><div class="account-balance">-$2,200</div></div>
+            <div class="range-wrapper">
+              <div class="range-label">30d closing balance range</div>
+              <div class="range-track"><div class="range-dot" style="left:75%"></div></div>
+            </div>
+          </article>
+        </section>
+      </div>
+    </section>
+  </div>
+</main>
+
+<nav class="mobile-footer-nav" aria-label="Mobile primary navigation">
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+  <button class="active" type="button" id="open-more-nav"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></span><span class="nav-label">More</span></button>
+</nav>
+
+<div class="drawer-layer" id="mobile-drawer" aria-hidden="true">
+  <div class="drawer-backdrop" data-close="drawer"></div>
+  <section class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+    <div class="handle" aria-hidden="true"></div>
+    <h4 id="drawer-title">More</h4>
+    <nav class="more-nav" aria-label="Mobile secondary navigation">
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+    </nav>
+  </section>
+</div>
+
+<script>
+(() => {
+  const body = document.body;
+  const openMore = document.getElementById("open-more-nav");
+  const drawer = document.getElementById("mobile-drawer");
+
+  const openDrawer = () => {
+    drawer.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+  };
+
+  const closeDrawer = () => {
+    drawer.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+  };
+
+  openMore.addEventListener("click", openDrawer);
+  document.querySelectorAll("[data-close='drawer']").forEach((el) => el.addEventListener("click", closeDrawer));
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && drawer.classList.contains("open")) {
+      closeDrawer();
+    }
+  });
+})();
+</script>
+</body>
+</html>

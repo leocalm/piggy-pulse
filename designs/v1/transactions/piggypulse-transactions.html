@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PiggyPulse - Transactions</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --accent-primary: #5e63e6;
+  --accent-secondary: #8c6cfb;
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-soft: #f8f9fd;
+  --border-soft: #e6e8f0;
+  --text-primary: #1a1d21;
+  --text-secondary: #5c6470;
+  --text-muted: #8b93a1;
+  --focus-ring: rgba(94, 99, 230, 0.28);
+  --border: var(--border-soft);
+  --text: var(--text-primary);
+  --muted: var(--text-muted);
+}
+
+body.dark {
+  --bg: #14161a;
+  --surface: #1c1f26;
+  --border-soft: #2a2f38;
+  --text-primary: #e6e8eb;
+  --text-secondary: #b0b7c2;
+  --text-muted: #7d8590;
+  --focus-ring: rgba(140, 108, 251, 0.32);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, sans-serif;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 16px 96px;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.desktop-add-label { display: inline; }
+.mobile-add-label { display: none; }
+
+label {
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+input,
+select,
+button,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+select,
+input,
+textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 8px 10px;
+}
+
+button {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.primary-btn {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+button.active {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.shell-frame {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 16px 96px;
+}
+
+.shell-app {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "main";
+}
+
+.shell-sidebar { display: none; grid-area: sidebar; border-right: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 70%, var(--bg) 30%); padding: 16px 12px; }
+.shell-group-title { margin: 14px 8px 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.shell-nav-list { display: grid; gap: 2px; }
+.shell-nav-item { display: block; border: 0; border-left: 4px solid transparent; border-radius: 10px; color: var(--text-secondary); text-decoration: none; padding: 10px 10px 10px 14px; }
+.shell-nav-item.active { border-left-color: var(--accent-primary); color: var(--text); background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%); }
+.shell-main { grid-area: main; }
+.shell-topbar { border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 16px; }
+.shell-utility-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.shell-chip { border: 1px solid var(--border); border-radius: 999px; padding: 6px 10px; font-size: 12px; color: var(--text-secondary); background: var(--surface); }
+.shell-mobile-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; display: flex; gap: 6px; padding: 8px; border-top: 1px solid var(--border); background: var(--surface); }
+.shell-mobile-nav a, .shell-mobile-nav button { flex: 1; border: 1px solid var(--border); border-radius: 10px; color: var(--text-secondary); text-decoration: none; background: var(--surface); padding: 8px 10px; text-align: center; font-size: 12px; cursor: pointer; }
+.shell-mobile-nav .active { border-color: color-mix(in srgb, var(--accent-primary) 40%, var(--border) 60%); background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%); color: var(--text); }
+.shell-drawer-layer { position: fixed; inset: 0; display: none; z-index: 75; }
+.shell-drawer-layer.open { display: block; }
+.shell-drawer-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.4); }
+.shell-drawer-panel { position: absolute; left: 0; right: 0; bottom: 0; border: 1px solid var(--border); border-radius: 14px 14px 0 0; background: var(--surface); padding: 12px 14px 16px; }
+.shell-handle { width: 42px; height: 4px; border-radius: 999px; background: var(--border); margin: 2px auto 10px; }
+.shell-more-nav { margin-top: 12px; display: grid; gap: 8px; }
+.shell-more-nav a { border: 1px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text-secondary); padding: 9px 10px; display: flex; align-items: center; gap: 8px; }
+.shell-more-nav .nav-icon { width: 18px; height: 18px; color: color-mix(in srgb, var(--accent-primary) 76%, var(--text-secondary) 24%); }
+
+.scope {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filters {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.meta {
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: visible;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14px;
+  background: var(--surface);
+}
+
+th,
+td {
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: left;
+}
+
+th.amount,
+td.amount,
+th.balance,
+td.balance {
+  text-align: right;
+}
+
+.group-row td {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: color-mix(in srgb, var(--surface) 85%, var(--bg) 15%);
+}
+
+.bulk-row input,
+.bulk-row select {
+  width: 100%;
+  border-radius: 6px;
+  padding: 6px 7px;
+  background: color-mix(in srgb, var(--surface) 86%, var(--bg) 14%);
+}
+
+.bulk-amount-wrap {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 2px 7px;
+  margin-left: 8px;
+}
+
+.notes-cell-desktop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.notes-content {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.row-menu-wrap {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.row-menu-btn {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 2px 8px;
+  min-width: 30px;
+  line-height: 1;
+}
+
+.row-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  min-width: 108px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 4px;
+  display: none;
+  z-index: 5;
+}
+
+.row-menu.open {
+  display: block;
+}
+
+.row-menu button {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  padding: 7px 8px;
+}
+
+.row-menu button:hover {
+  background: color-mix(in srgb, var(--accent-primary) 10%, transparent);
+}
+
+.row-menu button[data-row-action="delete"] {
+  border-top: 1px solid var(--border);
+  margin-top: 3px;
+  padding-top: 9px;
+}
+
+th.actions-col,
+td.actions-cell {
+  width: 54px;
+  text-align: right;
+}
+
+td.actions-cell {
+  overflow: visible;
+  white-space: normal;
+}
+
+.amount-sign {
+  font-weight: 600;
+}
+
+.amount-sign.in {
+  color: color-mix(in srgb, var(--accent-primary) 70%, var(--text) 30%);
+}
+
+.running-note {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.inline-error {
+  margin-top: 8px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.mobile-list {
+  display: none;
+}
+
+.desktop-only {
+  display: inline-flex;
+}
+
+/* add modal / mobile drawer shared overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 50;
+}
+
+.overlay.open {
+  display: block;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(760px, calc(100% - 24px));
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.panel h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.panel .form-grid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.panel-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.handle {
+  display: none;
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border);
+  margin: 2px auto 10px;
+}
+
+@media (min-width: 860px) {
+  .shell-frame { padding: 24px 16px 64px; }
+  .shell-app { grid-template-columns: 240px 1fr; grid-template-areas: "sidebar main"; }
+  .shell-sidebar { display: block; }
+  .shell-mobile-nav { display: none; }
+}
+
+@media (max-width: 980px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .panel .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .container {
+    padding-bottom: 112px;
+  }
+
+  .panel {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    transform: none;
+    width: 100%;
+    border-radius: 14px 14px 0 0;
+    max-height: 90vh;
+    overflow: auto;
+  }
+
+  .handle {
+    display: block;
+  }
+
+  .panel .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .header {
+    align-items: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+
+  .scope {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .scope select {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #open-add {
+    padding: 8px 10px;
+  }
+
+  .desktop-add-label { display: none; }
+  .mobile-add-label { display: inline; font-weight: 700; }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .table-wrap {
+    display: none;
+  }
+
+  .mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mobile-item {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    padding: 11px;
+  }
+
+  .mobile-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .mobile-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .mobile-amount {
+    font-size: 15px;
+    font-weight: 650;
+    color: var(--text);
+  }
+
+  .mobile-meta,
+  .mobile-submeta {
+    margin-top: 4px;
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+
+.mobile-submeta {
+  color: var(--muted);
+}
+
+.mobile-actions {
+  margin-top: 9px;
+  display: flex;
+  gap: 8px;
+}
+
+.mobile-action-btn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  padding: 5px 9px;
+  font-size: 12px;
+}
+
+.mobile-action-btn.delete {
+  border-style: dashed;
+}
+
+.mobile-empty {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+    padding: 12px;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+}
+
+/* shell-playful-nav */
+.page-title {
+  font-family: "Sora", "Inter", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.ghost-loading {
+  display: grid;
+  gap: 8px;
+}
+
+.ghost-line {
+  height: 10px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(140, 147, 161, 0.08), rgba(140, 147, 161, 0.18), rgba(140, 147, 161, 0.08));
+  background-size: 220% 100%;
+  animation: ghost-sweep 1.6s linear infinite;
+}
+
+.ghost-line.w-100 { width: 100%; }
+.ghost-line.w-80  { width: 80%; }
+.ghost-line.w-60  { width: 60%; }
+.ghost-line.block { height: 52px; border-radius: 10px; }
+
+@keyframes ghost-sweep {
+  from { background-position: 0% 0; }
+  to   { background-position: 220% 0; }
+}
+
+.state-pill,
+.shell-chip,
+.chip {
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.shell-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shell-nav-item .nav-icon {
+  width: 16px;
+  text-align: center;
+  opacity: 0.82;
+  font-size: 13px;
+  line-height: 1;
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary) 74%, var(--text-secondary) 26%);
+}
+
+.shell-nav-item.active .nav-icon {
+  opacity: 1;
+}
+
+.shell-mobile-nav a,
+.shell-mobile-nav button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.shell-mobile-nav .nav-icon {
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.9;
+  width: 22px;
+  height: 22px;
+  color: color-mix(in srgb, var(--accent-primary) 80%, var(--text-secondary) 20%);
+}
+
+.shell-mobile-nav .nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.shell-main {
+  position: relative;
+}
+
+.shell-main::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 120px;
+  height: 46px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle at 16% 50%, rgba(94, 99, 230, 0.12) 0 5px, transparent 6px),
+              radial-gradient(circle at 36% 50%, rgba(94, 99, 230, 0.12) 0 5px, transparent 6px),
+              linear-gradient(100deg, transparent 0%, rgba(94, 99, 230, 0.1) 42%, transparent 75%);
+  opacity: 0.44;
+}
+
+@media (max-width: 860px) {
+  .shell-main::before {
+    width: 88px;
+    height: 36px;
+    opacity: 0.34;
+  }
+}
+
+</style>
+</head>
+<body>
+<main class="shell-frame">
+  <div class="shell-app">
+    <aside class="shell-sidebar" aria-label="Primary navigation">
+      <div class="shell-group-title">Core</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+        <a class="shell-nav-item active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+      </nav>
+      <div class="shell-group-title">Structure</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      </nav>
+      <div class="shell-group-title">Session</div>
+      <nav class="shell-nav-list">
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+        <a class="shell-nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-5a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg></span><span class="nav-label">Logout</span></a>
+      </nav>
+    </aside>
+    <section class="shell-main">
+<header class="shell-topbar">
+  <div class="shell-utility-row">
+    <span class="shell-chip">Section: Transactions</span>
+    <span class="shell-chip">Scope-aware table</span>
+  </div>
+</header>
+<div class="container">
+  <div class="header">
+    <div class="title">Transactions</div>
+    <div class="actions">
+      <div class="scope">
+        <label for="scope-select" style="margin:0;">Scope</label>
+        <select id="scope-select" style="width:auto; min-width:210px;">
+          <option value="all">All accounts</option>
+          <option value="Main Checking">Main Checking</option>
+          <option value="Savings">Savings</option>
+          <option value="Credit Card">Credit Card</option>
+        </select>
+      </div>
+      <button id="open-add" class="primary-btn" type="button">
+        <span class="desktop-add-label">+ Add Transaction</span>
+        <span class="mobile-add-label">+</span>
+      </button>
+      <button id="toggle-bulk" class="desktop-only" type="button">Bulk Add</button>
+    </div>
+  </div>
+
+  <section class="filters" aria-label="Transaction filters">
+    <div class="grid">
+      <div>
+        <label for="f-account">Account</label>
+        <select id="f-account"></select>
+      </div>
+      <div>
+        <label for="f-category">Category</label>
+        <select id="f-category"></select>
+      </div>
+      <div>
+        <label for="f-vendor">Vendor (optional)</label>
+        <select id="f-vendor"></select>
+      </div>
+      <div>
+        <label for="f-from">Date from</label>
+        <input id="f-from" type="date" />
+      </div>
+      <div>
+        <label for="f-to">Date to</label>
+        <input id="f-to" type="date" />
+      </div>
+    </div>
+  </section>
+
+  <div class="meta" id="table-meta"></div>
+
+  <div class="table-wrap">
+    <table>
+      <thead id="table-head"></thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+  <div id="mobile-list" class="mobile-list"></div>
+  <div class="running-note" id="running-note" style="display:none;"></div>
+</div>
+    </section>
+  </div>
+</main>
+
+<nav class="shell-mobile-nav" aria-label="Mobile primary navigation">
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+  <a class="active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+  <button type="button" id="shell-open-more"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></span><span class="nav-label">More</span></button>
+</nav>
+
+<div class="shell-drawer-layer" id="shell-mobile-drawer" aria-hidden="true">
+  <div class="shell-drawer-backdrop" id="shell-close-more"></div>
+  <section class="shell-drawer-panel" role="dialog" aria-modal="true" aria-label="More">
+    <div class="shell-handle" aria-hidden="true"></div>
+    <nav class="shell-more-nav">
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+    </nav>
+  </section>
+</div>
+
+<div class="overlay" id="entry-overlay" aria-hidden="true">
+  <div class="backdrop" id="entry-backdrop"></div>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="entry-title">
+    <div class="handle" aria-hidden="true"></div>
+    <h2 id="entry-title">Add transaction</h2>
+    <div class="form-grid">
+      <div>
+        <label for="q-type">Entry type</label>
+        <select id="q-type">
+          <option value="transaction">Transaction</option>
+          <option value="transfer">Transfer</option>
+        </select>
+      </div>
+      <div id="q-account-wrap">
+        <label for="q-account">Account</label>
+        <select id="q-account"></select>
+      </div>
+      <div id="q-from-wrap" style="display:none;">
+        <label for="q-from-account">From account</label>
+        <select id="q-from-account"></select>
+      </div>
+      <div id="q-to-wrap" style="display:none;">
+        <label for="q-to-account">To account</label>
+        <select id="q-to-account"></select>
+      </div>
+      <div id="q-category-wrap">
+        <label for="q-category">Category</label>
+        <select id="q-category"></select>
+      </div>
+      <div>
+        <label for="q-vendor">Vendor</label>
+        <select id="q-vendor"></select>
+      </div>
+      <div>
+        <label for="q-date">Date</label>
+        <input id="q-date" type="date" />
+      </div>
+      <div>
+        <label for="q-notes">Notes</label>
+        <input id="q-notes" type="text" placeholder="Notes" />
+      </div>
+      <div>
+        <label for="q-amount">Amount</label>
+        <input id="q-amount" type="number" min="0" step="0.01" placeholder="0.00" />
+      </div>
+      <div>
+        <label for="q-allowance">Allowance spending</label>
+        <select id="q-allowance">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+      </div>
+    </div>
+    <div class="inline-error" id="q-error" aria-live="polite"></div>
+    <div class="panel-actions">
+      <button type="button" id="q-cancel">Cancel</button>
+      <button type="button" class="primary-btn" id="q-add">Add</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const accounts = ["Main Checking", "Savings", "Credit Card"];
+  const categories = ["Income", "Food", "Dining", "Housing", "Utilities", "Transport", "Health", "Transfer"];
+  const vendors = ["Employer", "Market", "Restaurant", "Cafe", "Landlord", "ISP", "Station", "Gym", "Utility Co", "-"];
+
+  const accountBalances = {
+    "Main Checking": 4380.00,
+    "Savings": 8200.00,
+    "Credit Card": -310.00
+  };
+
+  const transactions = [
+    { date: "2026-02-15", notes: "Groceries", category: "Food", account: "Main Checking", vendor: "Market", direction: "out", amount: 140, allowance: true },
+    { date: "2026-02-15", notes: "Transfer to savings", category: "Transfer", account: "Main Checking", vendor: "-", direction: "out", amount: 500, allowance: false },
+    { date: "2026-02-15", notes: "Transfer from checking", category: "Transfer", account: "Savings", vendor: "-", direction: "in", amount: 500, allowance: false },
+    { date: "2026-02-14", notes: "Dinner", category: "Dining", account: "Main Checking", vendor: "Restaurant", direction: "out", amount: 75, allowance: false },
+    { date: "2026-02-13", notes: "Fuel", category: "Transport", account: "Credit Card", vendor: "Station", direction: "out", amount: 45, allowance: false },
+    { date: "2026-02-12", notes: "Rent", category: "Housing", account: "Main Checking", vendor: "Landlord", direction: "out", amount: 1200, allowance: false },
+    { date: "2026-02-10", notes: "Salary", category: "Income", account: "Main Checking", vendor: "Employer", direction: "in", amount: 2000, allowance: false }
+  ];
+  let nextTxId = 1;
+  transactions.forEach((t) => { t.id = nextTxId++; });
+
+  const MOBILE_BREAKPOINT = 820;
+
+  const scopeSelect = document.getElementById("scope-select");
+  const tableHead = document.getElementById("table-head");
+  const tableBody = document.getElementById("table-body");
+  const tableMeta = document.getElementById("table-meta");
+  const runningNote = document.getElementById("running-note");
+  const mobileList = document.getElementById("mobile-list");
+
+  const fAccount = document.getElementById("f-account");
+  const fCategory = document.getElementById("f-category");
+  const fVendor = document.getElementById("f-vendor");
+  const fFrom = document.getElementById("f-from");
+  const fTo = document.getElementById("f-to");
+
+  const openAdd = document.getElementById("open-add");
+  const toggleBulk = document.getElementById("toggle-bulk");
+
+  const overlay = document.getElementById("entry-overlay");
+  const backdrop = document.getElementById("entry-backdrop");
+  const shellMobileDrawer = document.getElementById("shell-mobile-drawer");
+  const shellOpenMore = document.getElementById("shell-open-more");
+  const shellCloseMore = document.getElementById("shell-close-more");
+
+  const qType = document.getElementById("q-type");
+  const qAccount = document.getElementById("q-account");
+  const qFromAccount = document.getElementById("q-from-account");
+  const qToAccount = document.getElementById("q-to-account");
+  const qCategory = document.getElementById("q-category");
+  const qVendor = document.getElementById("q-vendor");
+  const qDate = document.getElementById("q-date");
+  const qNotes = document.getElementById("q-notes");
+  const qAmount = document.getElementById("q-amount");
+  const qAllowance = document.getElementById("q-allowance");
+  const qError = document.getElementById("q-error");
+
+  const qAccountWrap = document.getElementById("q-account-wrap");
+  const qFromWrap = document.getElementById("q-from-wrap");
+  const qToWrap = document.getElementById("q-to-wrap");
+  const qCategoryWrap = document.getElementById("q-category-wrap");
+
+  let bulkMode = false;
+
+  const openShellMore = () => {
+    shellMobileDrawer.classList.add("open");
+    shellMobileDrawer.setAttribute("aria-hidden", "false");
+  };
+
+  const closeShellMore = () => {
+    shellMobileDrawer.classList.remove("open");
+    shellMobileDrawer.setAttribute("aria-hidden", "true");
+  };
+
+  const fmtDate = (iso) => {
+    const d = new Date(`${iso}T00:00:00`);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  };
+
+  const signedAmount = (direction, amount) => (direction === "in" ? amount : -amount);
+  const fmtSigned = (direction, amount) => `${direction === "in" ? "+" : "-"}$${Number(amount).toFixed(2)}`;
+  const fmtCurrency = (value) => `${value < 0 ? "-" : ""}$${Math.abs(value).toFixed(2)}`;
+  const inferDirectionFromCategory = (category) => (category === "Income" ? "in" : "out");
+
+  const isMobile = () => window.innerWidth <= MOBILE_BREAKPOINT;
+
+  const setOptions = (el, values, includeAll) => {
+    const opts = [];
+    if (includeAll) opts.push('<option value="all">All</option>');
+    values.forEach((v) => opts.push(`<option value="${v}">${v}</option>`));
+    el.innerHTML = opts.join("");
+  };
+
+  const initOptions = () => {
+    setOptions(fAccount, accounts, true);
+    setOptions(fCategory, categories.filter((c) => c !== "Transfer"), true);
+    setOptions(fVendor, vendors.filter((v) => v !== "-"), true);
+
+    setOptions(qAccount, accounts, false);
+    setOptions(qFromAccount, accounts, false);
+    setOptions(qToAccount, accounts, false);
+    setOptions(qCategory, categories.filter((c) => c !== "Transfer"), false);
+    setOptions(qVendor, vendors.filter((v) => v !== "-"), false);
+
+    qDate.value = "2026-02-17";
+  };
+
+  const getFilteredRows = () => {
+    const scope = scopeSelect.value;
+
+    return transactions
+      .filter((t) => (scope === "all" ? true : t.account === scope))
+      .filter((t) => (fAccount.value === "all" ? true : t.account === fAccount.value))
+      .filter((t) => (fCategory.value === "all" ? true : t.category === fCategory.value))
+      .filter((t) => (fVendor.value === "all" ? true : t.vendor === fVendor.value))
+      .filter((t) => (fFrom.value ? t.date >= fFrom.value : true))
+      .filter((t) => (fTo.value ? t.date <= fTo.value : true))
+      .sort((a, b) => (a.date < b.date ? 1 : -1));
+  };
+
+  const renderHead = () => {
+    const scope = scopeSelect.value;
+    const cols = scope === "all"
+      ? ["Date", "Notes", "Category", "Account", "Vendor", "Amount", ""]
+      : ["Date", "Notes", "Category", "Vendor", "Amount", "Running Balance", ""];
+
+    tableHead.innerHTML = `<tr>${cols.map((c) => {
+      if (!c) return `<th class="actions-col"></th>`;
+      const lc = c.toLowerCase();
+      if (lc.includes("amount")) return `<th class="amount">${c}</th>`;
+      if (lc.includes("running")) return `<th class="balance">${c}</th>`;
+      return `<th>${c}</th>`;
+    }).join("")}</tr>`;
+
+    tableMeta.textContent = scope === "all"
+      ? "Global view columns: Date | Notes | Category | Account | Vendor | Amount"
+      : "Single-account view columns: Date | Notes | Category | Vendor | Amount | Running Balance";
+  };
+
+  const renderBulkRow = () => {
+    const scope = scopeSelect.value;
+    const tr = document.createElement("tr");
+    tr.className = "bulk-row";
+
+    if (scope === "all") {
+      tr.innerHTML = `
+        <td><input type="date" id="b-date" /></td>
+        <td><input type="text" id="b-notes" placeholder="Notes" /></td>
+        <td>
+          <select id="b-category"></select>
+        </td>
+        <td>
+          <select id="b-account"></select>
+        </td>
+        <td>
+          <select id="b-vendor"></select>
+        </td>
+        <td class="amount">
+          <div class="bulk-amount-wrap">
+            <input type="number" id="b-amount" min="0" step="0.01" placeholder="0.00" />
+          </div>
+          <div class="inline-error" id="b-error"></div>
+        </td>
+        <td class="actions-cell"></td>
+      `;
+    } else {
+      tr.innerHTML = `
+        <td><input type="date" id="b-date" /></td>
+        <td><input type="text" id="b-notes" placeholder="Notes" /></td>
+        <td>
+          <select id="b-category"></select>
+        </td>
+        <td>
+          <select id="b-vendor"></select>
+        </td>
+        <td class="amount">
+          <div class="bulk-amount-wrap">
+            <input type="number" id="b-amount" min="0" step="0.01" placeholder="0.00" />
+          </div>
+          <div class="inline-error" id="b-error"></div>
+        </td>
+        <td class="balance"></td>
+        <td class="actions-cell"></td>
+      `;
+    }
+
+    tableBody.appendChild(tr);
+
+    const bDate = tr.querySelector("#b-date");
+    const bCategory = tr.querySelector("#b-category");
+    const bVendor = tr.querySelector("#b-vendor");
+    const bAccount = tr.querySelector("#b-account");
+    const bAmount = tr.querySelector("#b-amount");
+    const bError = tr.querySelector("#b-error");
+
+    setOptions(bCategory, categories.filter((c) => c !== "Transfer"), false);
+    setOptions(bVendor, vendors.filter((v) => v !== "-"), false);
+    if (bAccount) setOptions(bAccount, accounts, false);
+
+    bDate.value = qDate.value || "2026-02-17";
+
+    const fields = Array.from(tr.querySelectorAll("input,select"));
+
+    const validateBulk = () => {
+      const raw = bAmount.value.trim();
+      const num = Number(raw);
+      if (raw.startsWith("-")) {
+        bError.textContent = "Amount must be positive.";
+        return false;
+      }
+      if (!raw || Number.isNaN(num) || num <= 0) {
+        bError.textContent = "Amount must be greater than 0.";
+        return false;
+      }
+      bError.textContent = "";
+      return true;
+    };
+
+    const submitBulk = () => {
+      if (!validateBulk()) return;
+
+      transactions.unshift({
+        id: nextTxId++,
+        date: bDate.value,
+        notes: tr.querySelector("#b-notes").value || "",
+        category: bCategory.value,
+        account: bAccount ? bAccount.value : scope,
+        vendor: bVendor.value,
+        direction: inferDirectionFromCategory(bCategory.value),
+        amount: Number(bAmount.value),
+        allowance: false
+      });
+
+      tr.querySelector("#b-notes").value = "";
+      bAmount.value = "";
+      bError.textContent = "Added.";
+      render();
+      const newNotes = document.querySelector("#b-notes");
+      if (newNotes) newNotes.focus();
+    };
+
+    fields.forEach((field, idx) => {
+      field.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          submitBulk();
+          return;
+        }
+
+        if (event.key === "Tab" && idx === fields.length - 1 && !event.shiftKey) {
+          event.preventDefault();
+          fields[0].focus();
+        }
+      });
+    });
+
+    bAmount.addEventListener("input", () => {
+      if (bAmount.value.startsWith("-")) {
+        bAmount.value = bAmount.value.replace(/^-+/, "");
+      }
+      validateBulk();
+    });
+
+    const notes = tr.querySelector("#b-notes");
+    if (notes) notes.focus();
+  };
+
+  const renderBody = () => {
+    const rows = getFilteredRows();
+    const scope = scopeSelect.value;
+    tableBody.innerHTML = "";
+    mobileList.innerHTML = "";
+
+    if (bulkMode && !isMobile()) {
+      renderBulkRow();
+    }
+
+    if (!rows.length) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td colspan="7">No transactions in this filter set yet. This table will fill as your period activity is recorded.</td>`;
+      tableBody.appendChild(tr);
+      mobileList.innerHTML = '<div class="mobile-empty">No transactions in this filter set yet. This table will fill as your period activity is recorded.</div>';
+      runningNote.style.display = "none";
+      return;
+    }
+
+    let currentDate = "";
+    let rolling = scope === "all" ? null : (accountBalances[scope] || 0);
+
+    rows.forEach((t) => {
+      if (t.date !== currentDate) {
+        currentDate = t.date;
+        const group = document.createElement("tr");
+        group.className = "group-row";
+        group.innerHTML = `<td colspan="7">${fmtDate(t.date)}</td>`;
+        tableBody.appendChild(group);
+      }
+
+      const allowanceBadge = t.allowance ? '<span class="badge">Allowance</span>' : "";
+      const amountHtml = `<span class="amount-sign ${t.direction}">${fmtSigned(t.direction, t.amount)}</span>`;
+      const tr = document.createElement("tr");
+      tr.className = "tx-row";
+      const actionsMenuHtml = `
+        <td class="actions-cell">
+          <span class="row-menu-wrap">
+            <button type="button" class="row-menu-btn" aria-label="Row actions">...</button>
+            <span class="row-menu">
+              <button type="button" data-row-action="edit" data-tx-id="${t.id}">Edit</button>
+              <button type="button" data-row-action="delete" data-tx-id="${t.id}">Delete</button>
+            </span>
+          </span>
+        </td>
+      `;
+
+      if (scope === "all") {
+        tr.innerHTML = `
+          <td class="cell date-cell" data-label="Date">${fmtDate(t.date)}</td>
+          <td class="cell notes-cell notes-cell-desktop" data-label="Notes"><span class="notes-main notes-content">${t.notes || "-"}${allowanceBadge}</span></td>
+          <td class="cell category-cell" data-label="Category">${t.category}</td>
+          <td class="cell account-cell" data-label="Account">${t.account}</td>
+          <td class="cell vendor-cell" data-label="Vendor">${t.vendor}</td>
+          <td class="cell amount" data-label="Amount">${amountHtml}</td>
+          ${actionsMenuHtml}
+        `;
+      } else {
+        const rowBalance = rolling;
+        rolling = rolling - signedAmount(t.direction, t.amount);
+
+        tr.innerHTML = `
+          <td class="cell date-cell" data-label="Date">${fmtDate(t.date)}</td>
+          <td class="cell notes-cell notes-cell-desktop" data-label="Notes"><span class="notes-main notes-content">${t.notes || "-"}${allowanceBadge}</span></td>
+          <td class="cell category-cell" data-label="Category">${t.category}</td>
+          <td class="cell vendor-cell" data-label="Vendor">${t.vendor}</td>
+          <td class="cell amount" data-label="Amount">${amountHtml}</td>
+          <td class="cell balance" data-label="Running Balance"><span class="balance-value">${fmtCurrency(rowBalance)}</span></td>
+          ${actionsMenuHtml}
+        `;
+      }
+
+      tableBody.appendChild(tr);
+    });
+
+    let mobileRolling = scope === "all" ? null : (accountBalances[scope] || 0);
+    rows.forEach((t) => {
+      const amount = fmtSigned(t.direction, t.amount);
+      const allowanceBadge = t.allowance ? ' <span class="badge">Allowance</span>' : "";
+      const dateText = fmtDate(t.date);
+      let runningBalanceLine = "";
+
+      let subMeta = `${t.category} \u00b7 ${t.vendor}`;
+      if (scope === "all") {
+        subMeta = `${t.account} \u00b7 ${subMeta}`;
+      } else {
+        const rowBalance = mobileRolling;
+        mobileRolling = mobileRolling - signedAmount(t.direction, t.amount);
+        runningBalanceLine = `<div class="mobile-submeta">Running balance: ${fmtCurrency(rowBalance)}</div>`;
+      }
+
+      const card = document.createElement("article");
+      card.className = "mobile-item";
+      card.innerHTML = `
+        <div class="mobile-top">
+          <div class="mobile-title">${t.notes || "-"}${allowanceBadge}</div>
+          <div class="mobile-amount">${amount}</div>
+        </div>
+        <div class="mobile-meta">${dateText} \u00b7 ${subMeta}</div>
+        ${runningBalanceLine}
+        <div class="mobile-actions">
+          <button type="button" class="mobile-action-btn">Edit</button>
+          <button type="button" class="mobile-action-btn delete">Delete</button>
+        </div>
+      `;
+      mobileList.appendChild(card);
+    });
+
+    if (scope !== "all") {
+      runningNote.style.display = "block";
+      runningNote.textContent = `Running balance derived from ${scope} current balance ${fmtCurrency(accountBalances[scope] || 0)}.`;
+    } else {
+      runningNote.style.display = "none";
+    }
+  };
+
+  const validateAmount = () => {
+    const raw = qAmount.value.trim();
+    const num = Number(raw);
+    if (raw.startsWith("-")) {
+      qError.textContent = "Amount must be positive. Remove the negative sign.";
+      return false;
+    }
+    if (!raw || Number.isNaN(num) || num <= 0) {
+      qError.textContent = "Amount must be greater than 0.";
+      return false;
+    }
+    qError.textContent = "";
+    return true;
+  };
+
+  const refreshAddForm = () => {
+    const isTransfer = qType.value === "transfer";
+    const isGlobal = scopeSelect.value === "all";
+
+    qAccountWrap.style.display = isTransfer ? "none" : "block";
+    qCategoryWrap.style.display = isTransfer ? "none" : "block";
+
+    qFromWrap.style.display = isTransfer ? "block" : "none";
+    qToWrap.style.display = isTransfer ? "block" : "none";
+
+    if (isTransfer && !isGlobal) {
+      qFromAccount.value = scopeSelect.value;
+      qFromAccount.disabled = true;
+    } else {
+      qFromAccount.disabled = false;
+    }
+  };
+
+  const openAddPanel = () => {
+    overlay.classList.add("open");
+    overlay.setAttribute("aria-hidden", "false");
+    qError.textContent = "";
+    qNotes.focus();
+  };
+
+  const closeAddPanel = () => {
+    overlay.classList.remove("open");
+    overlay.setAttribute("aria-hidden", "true");
+    openAdd.focus();
+  };
+
+  const addFromForm = () => {
+    if (!validateAmount()) return;
+
+    const isTransfer = qType.value === "transfer";
+    const amount = Number(qAmount.value);
+
+    if (isTransfer) {
+      const from = qFromAccount.value;
+      const to = qToAccount.value;
+      if (!from || !to || from === to) {
+        qError.textContent = "Select different from/to accounts for transfer.";
+        return;
+      }
+
+      transactions.unshift({
+        id: nextTxId++,
+        date: qDate.value,
+        notes: qNotes.value || "Transfer",
+        category: "Transfer",
+        account: from,
+        vendor: "-",
+        direction: "out",
+        amount,
+        allowance: false
+      });
+
+      transactions.unshift({
+        id: nextTxId++,
+        date: qDate.value,
+        notes: qNotes.value || "Transfer",
+        category: "Transfer",
+        account: to,
+        vendor: "-",
+        direction: "in",
+        amount,
+        allowance: false
+      });
+    } else {
+      transactions.unshift({
+        id: nextTxId++,
+        date: qDate.value,
+        notes: qNotes.value || "",
+        category: qCategory.value,
+        account: qAccount.value,
+        vendor: qVendor.value,
+        direction: inferDirectionFromCategory(qCategory.value),
+        amount,
+        allowance: qAllowance.value === "yes"
+      });
+    }
+
+    qError.textContent = "Added.";
+    qNotes.value = "";
+    qAmount.value = "";
+    render();
+  };
+
+  const render = () => {
+    if (isMobile() && bulkMode) {
+      bulkMode = false;
+      toggleBulk.classList.remove("active");
+    }
+
+    refreshAddForm();
+    renderHead();
+    renderBody();
+  };
+
+  initOptions();
+  render();
+
+  [scopeSelect, fAccount, fCategory, fVendor, fFrom, fTo].forEach((el) => {
+    el.addEventListener("change", render);
+  });
+
+  const closeRowMenus = () => {
+    tableBody.querySelectorAll(".row-menu.open").forEach((menu) => menu.classList.remove("open"));
+  };
+
+  tableBody.addEventListener("click", (event) => {
+    const menuTrigger = event.target.closest(".row-menu-btn");
+    if (menuTrigger) {
+      event.stopPropagation();
+      const menu = menuTrigger.parentElement.querySelector(".row-menu");
+      const isOpen = menu.classList.contains("open");
+      closeRowMenus();
+      if (!isOpen) {
+        menu.classList.add("open");
+      }
+      return;
+    }
+
+    const actionBtn = event.target.closest("[data-row-action]");
+    if (!actionBtn) {
+      return;
+    }
+
+    const txId = Number(actionBtn.getAttribute("data-tx-id"));
+    const action = actionBtn.getAttribute("data-row-action");
+    const tx = transactions.find((item) => item.id === txId);
+    closeRowMenus();
+
+    if (!tx) {
+      return;
+    }
+
+    if (action === "delete") {
+      const idx = transactions.findIndex((item) => item.id === txId);
+      if (idx >= 0) {
+        transactions.splice(idx, 1);
+        tableMeta.textContent = "Deleted.";
+        render();
+      }
+      return;
+    }
+
+    tableMeta.textContent = `Edit requested for ${tx.notes || "transaction"}.`;
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".row-menu-wrap")) {
+      closeRowMenus();
+    }
+  });
+
+  qType.addEventListener("change", refreshAddForm);
+
+  qAmount.addEventListener("input", () => {
+    if (qAmount.value.startsWith("-")) {
+      qAmount.value = qAmount.value.replace(/^-+/, "");
+    }
+    validateAmount();
+  });
+
+  openAdd.addEventListener("click", openAddPanel);
+  document.getElementById("q-cancel").addEventListener("click", closeAddPanel);
+  backdrop.addEventListener("click", closeAddPanel);
+  document.getElementById("q-add").addEventListener("click", addFromForm);
+
+  toggleBulk.addEventListener("click", () => {
+    if (isMobile()) return;
+    bulkMode = !bulkMode;
+    toggleBulk.classList.toggle("active", bulkMode);
+    render();
+  });
+
+  if (shellOpenMore) shellOpenMore.addEventListener("click", openShellMore);
+  if (shellCloseMore) shellCloseMore.addEventListener("click", closeShellMore);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeShellMore();
+      closeRowMenus();
+    }
+    if (event.key === "Escape" && overlay.classList.contains("open")) {
+      closeAddPanel();
+    }
+  });
+
+  window.addEventListener("resize", render);
+})();
+</script>
+</body>
+</html>

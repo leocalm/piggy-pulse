@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PiggyPulse – Advanced Charts</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --indigo:#5E63E6;
+  --bg:#14161A;
+  --surface:#1C1F26;
+  --border:#2A2F38;
+  --text:#E6E8EB;
+  --text-secondary:#B0B7C2;
+  --muted:#7D8590;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,sans-serif;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:60px 28px 120px;
+}
+
+h2{
+  margin:80px 0 24px;
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--muted);
+}
+
+/* Chart Block */
+
+.chart-block{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px 16px 32px 16px;
+  position:relative;
+}
+
+.chart-wrapper{
+  position:relative;
+}
+
+svg{
+  width:100%;
+  height:280px;
+  display:block;
+}
+
+/* Y Axis Labels */
+
+.y-label{
+  position:absolute;
+  left:0;
+  font-size:12px;
+  color:var(--muted);
+  transform:translateY(-50%);
+}
+
+/* Tooltip */
+
+.tooltip{
+  position:absolute;
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:8px 12px;
+  font-size:12px;
+  border-radius:6px;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .15s ease;
+  white-space:nowrap;
+}
+
+.crosshair{
+  position:absolute;
+  top:0;
+  width:1px;
+  background:var(--border);
+  opacity:0;
+  pointer-events:none;
+}
+
+.projection-line{
+  stroke-dasharray:6 6;
+  stroke-width:2;
+  stroke:var(--indigo);
+  opacity:.6;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ===================== -->
+<h2>Debt Account – Normalized (Health Direction)</h2>
+
+<div class="chart-block">
+<div class="chart-wrapper" id="debtChart">
+
+<svg viewBox="0 0 600 280">
+
+  <!-- Zero baseline -->
+  <line x1="0" y1="240" x2="600" y2="240"
+        stroke="#2A2F38"
+        stroke-dasharray="4 4"/>
+
+  <!-- Area (normalized magnitude) -->
+  <path id="debtArea"
+        fill="rgba(94,99,230,0.15)"></path>
+
+  <!-- Line -->
+  <path id="debtLine"
+        fill="none"
+        stroke="#5E63E6"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"></path>
+
+</svg>
+
+<div class="crosshair" id="debtCrosshair"></div>
+<div class="tooltip" id="debtTooltip"></div>
+
+</div>
+</div>
+
+<!-- ===================== -->
+<h2>Allowance – Projection Visualization</h2>
+
+<div class="chart-block">
+<div class="chart-wrapper" id="allowanceChart">
+
+<svg viewBox="0 0 600 280">
+
+  <!-- Zero baseline -->
+  <line x1="0" y1="140" x2="600" y2="140"
+        stroke="#2A2F38"
+        stroke-dasharray="4 4"/>
+
+  <!-- Area -->
+  <path id="allowanceArea"
+        fill="rgba(94,99,230,0.15)"></path>
+
+  <!-- Line -->
+  <path id="allowanceLine"
+        fill="none"
+        stroke="#5E63E6"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"></path>
+
+  <!-- Projection -->
+  <line id="projectionLine"
+        class="projection-line"
+        x1="480"
+        y1="170"
+        x2="600"
+        y2="120"></line>
+
+</svg>
+
+<div class="crosshair" id="allowanceCrosshair"></div>
+<div class="tooltip" id="allowanceTooltip"></div>
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+/* ======================
+   Debt Normalized Chart
+   ====================== */
+
+/*
+Raw balances:
+-2000 → -1500 → -1800 → -1300 → -900
+Health improves toward zero.
+We normalize using Y = -balance.
+*/
+
+const debtBalances = [-2000,-1500,-1800,-1300,-900];
+const debtNormalized = debtBalances.map(v => -v);
+
+renderChart(
+  "debtChart",
+  "debtLine",
+  "debtArea",
+  "debtCrosshair",
+  "debtTooltip",
+  debtNormalized,
+  false
+);
+
+/* ======================
+   Allowance Chart
+   ====================== */
+
+/*
+Balance crosses zero.
+Projection from last point upward.
+*/
+
+const allowanceBalances = [50,20,-30,-80,-50];
+renderChart(
+  "allowanceChart",
+  "allowanceLine",
+  "allowanceArea",
+  "allowanceCrosshair",
+  "allowanceTooltip",
+  allowanceBalances,
+  true
+);
+
+/* ======================
+   Generic Chart Renderer
+   ====================== */
+
+function renderChart(wrapperId,lineId,areaId,crosshairId,tooltipId,data,centerZero){
+
+  const wrapper = document.getElementById(wrapperId);
+  const svg = wrapper.querySelector("svg");
+  const line = document.getElementById(lineId);
+  const area = document.getElementById(areaId);
+  const crosshair = document.getElementById(crosshairId);
+  const tooltip = document.getElementById(tooltipId);
+
+  const width = 600;
+  const height = 280;
+  const paddingBottom = 40;
+
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+
+  const range = max - min || 1;
+
+  const points = data.map((v,i)=>{
+    const x = (i/(data.length-1))*width;
+    const y = height - paddingBottom - ((v-min)/range)*(height-80);
+    return {x,y,value:v};
+  });
+
+  // Build line path
+  const pathLine = points.map((p,i)=>
+    `${i===0?'M':'L'}${p.x} ${p.y}`
+  ).join(" ");
+
+  line.setAttribute("d",pathLine);
+
+  // Build area
+  const areaPath = pathLine + ` L${width} ${height} L0 ${height} Z`;
+  area.setAttribute("d",areaPath);
+
+  /* Hover interaction */
+
+  wrapper.addEventListener("mousemove",(e)=>{
+    const rect = wrapper.getBoundingClientRect();
+    const x = ((e.clientX - rect.left)/rect.width)*width;
+
+    let closest = points[0];
+    for(const p of points){
+      if(Math.abs(p.x - x) < Math.abs(closest.x - x)){
+        closest = p;
+      }
+    }
+
+    crosshair.style.left = (closest.x/width*rect.width) + "px";
+    crosshair.style.height = rect.height + "px";
+    crosshair.style.opacity = 1;
+
+    tooltip.innerHTML = `$${Math.round(closest.value)}`;
+    tooltip.style.left = (closest.x/width*rect.width + 10) + "px";
+    tooltip.style.top = (closest.y/height*rect.height - 10) + "px";
+    tooltip.style.opacity = 1;
+  });
+
+  wrapper.addEventListener("mouseleave",()=>{
+    crosshair.style.opacity = 0;
+    tooltip.style.opacity = 0;
+  });
+}
+
+</script>
+
+</body>
+</html>

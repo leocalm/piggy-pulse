@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PiggyPulse - Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-soft: #f8f9fd;
+  --border-soft: #e6e8f0;
+  --text-primary: #1a1d21;
+  --text-secondary: #5c6470;
+  --text-muted: #8b93a1;
+  --accent-primary: #5e63e6;
+  --accent-secondary: #8c6cfb;
+  --focus-ring: rgba(94, 99, 230, 0.28);
+}
+
+body.dark {
+  --bg: #14161a;
+  --surface: #1c1f26;
+  --surface-soft: #20242c;
+  --border-soft: #2a2f38;
+  --text-primary: #e6e8eb;
+  --text-secondary: #a8afb9;
+  --text-muted: #7d8590;
+  --accent-primary: #8c6cfb;
+  --accent-secondary: #5e63e6;
+  --focus-ring: rgba(140, 108, 251, 0.32);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 16px 96px;
+}
+
+.app-shell {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: var(--surface);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "main";
+}
+
+.sidebar {
+  display: none;
+  grid-area: sidebar;
+  border-right: 1px solid var(--border-soft);
+  background: var(--surface-soft);
+  padding: 16px 12px;
+}
+
+.group-title {
+  margin: 14px 8px 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.nav-list {
+  display: grid;
+  gap: 2px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-left: 4px solid transparent;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 10px 10px 10px 14px;
+}
+
+.nav-item.active {
+  border-left-color: var(--accent-primary);
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+}
+
+.nav-item .nav-icon {
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary) 74%, var(--text-secondary) 26%);
+}
+
+.main-shell {
+  grid-area: main;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+.topbar {
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+}
+
+.utility-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+.toggle-btn {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.page-head {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.page-title {
+  font-family: "Sora", "Inter", sans-serif;
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.content {
+  padding: 16px;
+  display: grid;
+  gap: 16px;
+}
+
+.card {
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  background: var(--surface);
+  padding: 22px;
+}
+
+.period-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent-primary) 12%, var(--surface) 88%), color-mix(in srgb, var(--accent-secondary) 9%, var(--surface) 91%));
+}
+
+.pig-mark {
+  position: absolute;
+  top: -40px;
+  right: -36px;
+  width: 220px;
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.period-amount {
+  margin: 14px 0 0;
+  font-size: clamp(38px, 6vw, 68px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.period-meta {
+  margin-top: 8px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.period-remaining,
+.period-projection {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.progress-bar {
+  margin-top: 16px;
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--border-soft) 85%, var(--surface) 15%);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 68%;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+}
+
+.lower-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+
+.value-hero {
+  margin: 16px 0 0;
+  font-size: 46px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.meta {
+  margin-top: 10px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.stability-strip {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.block {
+  width: 14px;
+  height: 16px;
+  border-radius: 6px;
+  background: var(--border-soft);
+}
+
+.block.outside { background: var(--accent-secondary); }
+
+.block.current {
+  background: transparent;
+  border: 2px solid var(--accent-primary);
+}
+
+.net-grid {
+  margin-top: 14px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+
+.net-right {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.net-distribution {
+  margin-top: 14px;
+  height: 6px;
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  background: color-mix(in srgb, var(--border-soft) 82%, var(--surface) 18%);
+}
+
+.segment { height: 100%; }
+
+.segment.liquid { width: 42%; background: var(--accent-primary); opacity: 0.68; }
+
+.segment.protected { width: 48%; background: var(--accent-secondary); opacity: 0.6; }
+
+.segment.debt { width: 10%; background: color-mix(in srgb, var(--accent-secondary) 70%, var(--border-soft) 30%); opacity: 0.5; }
+
+.mobile-footer-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  border-top: 1px solid var(--border-soft);
+  background: var(--surface);
+}
+
+.mobile-footer-nav a,
+.mobile-footer-nav button {
+  flex: 1;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.mobile-footer-nav .active {
+  border-color: color-mix(in srgb, var(--accent-primary) 42%, var(--border-soft) 58%);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+  color: var(--text-primary);
+}
+
+.mobile-footer-nav .nav-icon {
+  width: 22px;
+  height: 22px;
+  color: color-mix(in srgb, var(--accent-primary) 80%, var(--text-secondary) 20%);
+}
+
+.mobile-footer-nav .nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.drawer-layer {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 90;
+}
+
+.drawer-layer.open { display: block; }
+
+.drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.drawer-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px 14px 0 0;
+  background: var(--surface);
+  padding: 12px 14px 16px;
+}
+
+.handle {
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-soft);
+  margin: 2px auto 10px;
+}
+
+.drawer-panel h4 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.more-nav {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.more-nav a {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 9px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.more-nav .nav-icon {
+  width: 18px;
+  height: 18px;
+  color: color-mix(in srgb, var(--accent-primary) 76%, var(--text-secondary) 24%);
+}
+
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (min-width: 860px) {
+  .page {
+    padding: 24px 16px 64px;
+  }
+
+  .app-shell {
+    grid-template-columns: 240px 1fr;
+    grid-template-areas: "sidebar main";
+  }
+
+  .sidebar {
+    display: block;
+  }
+
+  .lower-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .net-grid {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+  }
+
+  .mobile-footer-nav {
+    display: none;
+  }
+
+  .pig-mark {
+    top: -70px;
+    right: -60px;
+    width: 330px;
+  }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <div class="group-title">Core</div>
+      <nav class="nav-list">
+        <a class="nav-item active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+      </nav>
+      <div class="group-title">Structure</div>
+      <nav class="nav-list">
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      </nav>
+      <div class="group-title">Session</div>
+      <nav class="nav-list">
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-5a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg></span><span class="nav-label">Logout</span></a>
+      </nav>
+    </aside>
+
+    <section class="main-shell" aria-label="Dashboard content">
+      <header class="topbar">
+        <div class="utility-row">
+          <span class="chip">Period: June 2026</span>
+          <span class="chip">Scope: All accounts</span>
+        </div>      </header>
+
+      <div class="page-head">
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">Current position, deviation, and period trajectory.</p>
+      </div>
+
+      <div class="content">
+        <article class="card period-card">
+          <img src="../piggy.png" class="pig-mark" alt="" />
+          <h2>Current Period</h2>
+          <p class="period-amount">$4,580</p>
+          <p class="period-meta">of $5,000</p>
+          <p class="period-remaining">12 days remaining. $420 remaining in this period.</p>
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <p class="period-projection">Projected spend at current pace: $5,240</p>
+        </article>
+
+        <div class="lower-grid">
+          <article class="card">
+            <h2>Budget Stability</h2>
+            <p class="value-hero">78%</p>
+            <p class="meta">Within range in 18 of 23 periods</p>
+            <div class="stability-strip">
+              <span class="block"></span>
+              <span class="block outside"></span>
+              <span class="block"></span>
+              <span class="block current"></span>
+            </div>
+            <p class="meta">4 of the last 6 closed periods were outside tolerance.</p>
+          </article>
+
+          <article class="card">
+            <h2>Net Position</h2>
+            <div class="net-grid">
+              <div>
+                <p class="value-hero">$30,320</p>
+                <p class="meta">+$320 this period</p>
+              </div>
+              <div class="net-right">
+                <div>Across 4 accounts</div>
+                <div>Last updated 2h ago</div>
+              </div>
+            </div>
+            <div class="net-distribution">
+              <span class="segment liquid"></span>
+              <span class="segment protected"></span>
+              <span class="segment debt"></span>
+            </div>
+            <p class="meta">Liquid $12,800 · Protected $15,200 · Debt -$3,000</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<nav class="mobile-footer-nav" aria-label="Mobile primary navigation">
+  <a class="active" href="#" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7"/></svg></span><span class="nav-label">Dashboard</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></span><span class="nav-label">Transactions</span></a>
+  <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span><span class="nav-label">Periods</span></a>
+  <button type="button" id="open-more-nav"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></span><span class="nav-label">More</span></button>
+</nav>
+
+<div class="drawer-layer" id="mobile-drawer" aria-hidden="true">
+  <div class="drawer-backdrop" data-close="drawer"></div>
+  <section class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+    <div class="handle" aria-hidden="true"></div>
+    <h4 id="drawer-title">More</h4>
+    <nav class="more-nav" aria-label="Mobile secondary navigation">
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2"/><path d="M4 10h16"/><path d="M9 14h6"/></svg></span><span class="nav-label">Accounts</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 11h16"/><path d="M9 15h2"/><path d="M13 15h4"/></svg></span><span class="nav-label">Categories</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9l1 -4h16l1 4"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10"/><path d="M10 13h4v7h-4z"/></svg></span><span class="nav-label">Vendors</span></a>
+      <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h10"/><path d="M14 16h6"/><path d="M6 12h14"/><path d="M8 8v8"/><path d="M16 12v8"/></svg></span><span class="nav-label">Settings</span></a>
+    </nav>
+  </section>
+</div>
+
+<script>
+(() => {
+  const body = document.body;
+  const openMore = document.getElementById("open-more-nav");
+  const drawer = document.getElementById("mobile-drawer");
+
+  const openDrawer = () => {
+    drawer.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+  };
+
+  const closeDrawer = () => {
+    drawer.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+  };
+
+  openMore.addEventListener("click", openDrawer);
+
+  document.querySelectorAll("[data-close='drawer']").forEach((el) => {
+    el.addEventListener("click", closeDrawer);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && drawer.classList.contains("open")) {
+      closeDrawer();
+    }
+  });
+})();
+</script>
+</body>
+</html>

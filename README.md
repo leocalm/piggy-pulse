@@ -76,10 +76,10 @@ The author previously contributed to Lyra, a Password Hashing Competition candid
 ## Repository Structure
 
 Backend:
-https://github.com/leocalm/budget
+https://github.com/leocalm/piggy-pulse-api
 
 Frontend:
-https://github.com/leocalm/budget-app
+https://github.com/leocalm/piggy-pulse-api-app
 
 API documentation:
 https://docs.piggy-pulse.com
