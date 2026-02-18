@@ -99,6 +99,24 @@ a:focus-visible {
 .shell-topbar { border-bottom: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 16px; }
 .shell-utility-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .shell-chip { border: 1px solid var(--border-soft); border-radius: 999px; padding: 6px 10px; font-size: 12px; color: var(--text-secondary); background: var(--surface); }
+
+.period-selector-root { width: 320px; max-width: 100%; }
+.period-trigger { width: 100%; border: 1px solid transparent; border-radius: 12px; padding: 10px 12px; background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(120deg, color-mix(in srgb, var(--accent-primary) 36%, transparent), color-mix(in srgb, var(--accent-secondary) 36%, transparent)) border-box; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--text-primary); text-align: left; }
+.period-trigger-main { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.period-trigger-label { font-size: 13px; font-weight: 700; line-height: 1.2; }
+.period-trigger-meta { font-size: 11px; color: var(--text-secondary); line-height: 1.2; }
+.period-trigger-icon { width: 16px; height: 16px; color: var(--text-muted); flex-shrink: 0; }
+
+.period-dropdown { position: absolute; top: calc(100% + 8px); right: 0; z-index: 40; width: 340px; max-width: min(340px, calc(100vw - 48px)); border: 1px solid var(--border-soft, var(--border)); border-radius: 12px; background: var(--surface); padding: 10px; box-shadow: 0 10px 30px rgba(10, 14, 22, 0.12); }
+.period-year { margin-top: 8px; margin-bottom: 6px; font-size: 11px; font-weight: 700; color: var(--text-muted, var(--muted)); letter-spacing: 0.06em; text-transform: uppercase; }
+.period-option { width: 100%; border: 1px solid var(--border-soft, var(--border)); border-radius: 10px; background: var(--surface-soft, color-mix(in srgb, var(--surface) 88%, var(--bg) 12%)); padding: 9px 10px; margin-bottom: 6px; cursor: pointer; color: var(--text-secondary); text-align: left; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.period-option.active { border-color: color-mix(in srgb, var(--accent-primary) 48%, var(--border-soft, var(--border)) 52%); background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%); color: var(--text-primary, var(--text)); }
+.period-option-main { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.period-name { font-size: 13px; font-weight: 600; color: var(--text-primary, var(--text)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.period-range { font-size: 11px; color: var(--text-muted, var(--muted)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.active-pill { border: 1px solid color-mix(in srgb, var(--accent-primary) 40%, var(--border-soft, var(--border)) 60%); border-radius: 999px; padding: 2px 6px; font-size: 10px; color: var(--accent-primary); font-weight: 700; flex-shrink: 0; }
+.period-footer { border-top: 1px solid var(--border-soft, var(--border)); margin-top: 8px; padding-top: 8px; }
+.period-manage-link { display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border-soft, var(--border)); border-radius: 10px; padding: 8px 10px; text-decoration: none; color: var(--text-secondary); font-size: 12px; background: var(--surface-soft, color-mix(in srgb, var(--surface) 88%, var(--bg) 12%)); width: 100%; }
 .shell-mobile-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; display: flex; gap: 6px; padding: 8px; border-top: 1px solid var(--border-soft); background: var(--surface); }
 .shell-mobile-nav a, .shell-mobile-nav button { flex: 1; border: 1px solid var(--border-soft); border-radius: 10px; color: var(--text-secondary); text-decoration: none; background: var(--surface); padding: 8px 10px; text-align: center; font-size: 12px; cursor: pointer; }
 .shell-mobile-nav .active { border-color: color-mix(in srgb, var(--accent-primary) 40%, var(--border-soft) 60%); background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%); color: var(--text-primary); }
@@ -794,8 +812,24 @@ textarea {
     <section class="shell-main">
 <header class="shell-topbar">
   <div class="shell-utility-row">
-    <span class="shell-chip">Section: Periods</span>
     <span class="shell-chip">Mode: Management</span>
+  </div>
+  <div class="period-selector-root" id="periodSelectorRoot">
+    <button class="period-trigger" id="periodTrigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="periodDropdown">
+      <span class="period-trigger-main">
+        <span class="period-trigger-label" id="periodTriggerLabel">June 2026</span>
+        <span class="period-trigger-meta" id="periodTriggerMeta">Jun 1 - Jul 1 • 12 days remaining</span>
+      </span>
+      <svg class="period-trigger-icon" id="periodTriggerChevron" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 9l6 6l6 -6" />
+      </svg>
+    </button>
+    <div class="period-dropdown" id="periodDropdown" hidden role="listbox" aria-label="Choose budget period">
+      <div class="period-list" id="periodListDesktop"></div>
+      <div class="period-footer">
+        <a class="period-manage-link" href="../period-management/piggypulse-period-management.html">Manage periods</a>
+      </div>
+    </div>
   </div>
 </header>
 <div class="page">
@@ -1309,6 +1343,89 @@ textarea {
       }
     });
   });
+
+  /* __period_selector_init__ */
+  {
+    const root = document.getElementById("periodSelectorRoot");
+    const trigger = document.getElementById("periodTrigger");
+    const triggerLabel = document.getElementById("periodTriggerLabel");
+    const triggerMeta = document.getElementById("periodTriggerMeta");
+    const triggerChevron = document.getElementById("periodTriggerChevron");
+    const dropdown = document.getElementById("periodDropdown");
+    const list = document.getElementById("periodListDesktop");
+
+    if (root && trigger && triggerLabel && triggerMeta && triggerChevron && dropdown && list) {
+      const periods = [
+        { id: "period-2026-06", year: "2026", name: "June 2026", rangeShort: "Jun 1 - Jul 1", daysLabel: "12 days remaining" },
+        { id: "period-2026-05", year: "2026", name: "May 2026", rangeShort: "May 1 - Jun 1", daysLabel: "Closed" },
+        { id: "period-2026-04", year: "2026", name: "April 2026", rangeShort: "Apr 1 - May 1", daysLabel: "Closed" }
+      ];
+      let selectedPeriodId = "period-2026-06";
+
+      const closeDropdown = () => {
+        dropdown.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+        triggerChevron.innerHTML = "<path d=\"M6 9l6 6l6 -6\" />";
+      };
+
+      const openDropdown = () => {
+        dropdown.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+        triggerChevron.innerHTML = "<path d=\"M6 15l6 -6l6 6\" />";
+      };
+
+      const grouped = () => {
+        const byYear = {};
+        periods.forEach((p) => {
+          if (!byYear[p.year]) byYear[p.year] = [];
+          byYear[p.year].push(p);
+        });
+        return Object.keys(byYear).sort((a, b) => b.localeCompare(a)).map((year) => ({ year, items: byYear[year] }));
+      };
+
+      const selected = () => periods.find((p) => p.id === selectedPeriodId) || periods[0];
+
+      const optionHtml = (period) => {
+        const active = period.id === selectedPeriodId;
+        return "<button class=\"period-option" + (active ? " active" : "") + "\" type=\"button\" data-period-id=\"" + period.id + "\" role=\"option\" aria-selected=\"" + (active ? "true" : "false") + "\">" +
+          "<span class=\"period-option-main\"><span class=\"period-name\">" + period.name + "</span><span class=\"period-range\">" + period.rangeShort + "</span></span>" +
+          (active ? "<span class=\"active-pill\">Active</span>" : "") +
+          "</button>";
+      };
+
+      const render = () => {
+        let html = "";
+        grouped().forEach((group) => {
+          html += "<div class=\"period-year\">" + group.year + "</div>";
+          group.items.forEach((p) => { html += optionHtml(p); });
+        });
+        list.innerHTML = html;
+        const current = selected();
+        triggerLabel.textContent = current.name;
+        triggerMeta.textContent = current.rangeShort + " • " + current.daysLabel;
+      };
+
+      trigger.addEventListener("click", () => {
+        if (dropdown.hidden) openDropdown(); else closeDropdown();
+      });
+
+      list.addEventListener("click", (event) => {
+        const btn = event.target.closest("[data-period-id]");
+        if (!btn) return;
+        selectedPeriodId = btn.getAttribute("data-period-id");
+        render();
+        closeDropdown();
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!dropdown.hidden && !root.contains(event.target)) closeDropdown();
+      });
+
+      render();
+      closeDropdown();
+    }
+  }
+
 })();
 </script>
 </body>

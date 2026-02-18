@@ -163,6 +163,24 @@ a:focus-visible {
 }
 
 .shell-chip {
+
+.period-selector-root { width: 320px; max-width: 100%; }
+.period-trigger { width: 100%; border: 1px solid transparent; border-radius: 12px; padding: 10px 12px; background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(120deg, color-mix(in srgb, var(--accent-primary) 36%, transparent), color-mix(in srgb, var(--accent-secondary) 36%, transparent)) border-box; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--text-primary); text-align: left; }
+.period-trigger-main { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.period-trigger-label { font-size: 13px; font-weight: 700; line-height: 1.2; }
+.period-trigger-meta { font-size: 11px; color: var(--text-secondary); line-height: 1.2; }
+.period-trigger-icon { width: 16px; height: 16px; color: var(--text-muted); flex-shrink: 0; }
+
+.period-dropdown { position: absolute; top: calc(100% + 8px); right: 0; z-index: 40; width: 340px; max-width: min(340px, calc(100vw - 48px)); border: 1px solid var(--border-soft, var(--border)); border-radius: 12px; background: var(--surface); padding: 10px; box-shadow: 0 10px 30px rgba(10, 14, 22, 0.12); }
+.period-year { margin-top: 8px; margin-bottom: 6px; font-size: 11px; font-weight: 700; color: var(--text-muted, var(--muted)); letter-spacing: 0.06em; text-transform: uppercase; }
+.period-option { width: 100%; border: 1px solid var(--border-soft, var(--border)); border-radius: 10px; background: var(--surface-soft, color-mix(in srgb, var(--surface) 88%, var(--bg) 12%)); padding: 9px 10px; margin-bottom: 6px; cursor: pointer; color: var(--text-secondary); text-align: left; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.period-option.active { border-color: color-mix(in srgb, var(--accent-primary) 48%, var(--border-soft, var(--border)) 52%); background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%); color: var(--text-primary, var(--text)); }
+.period-option-main { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.period-name { font-size: 13px; font-weight: 600; color: var(--text-primary, var(--text)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.period-range { font-size: 11px; color: var(--text-muted, var(--muted)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.active-pill { border: 1px solid color-mix(in srgb, var(--accent-primary) 40%, var(--border-soft, var(--border)) 60%); border-radius: 999px; padding: 2px 6px; font-size: 10px; color: var(--accent-primary); font-weight: 700; flex-shrink: 0; }
+.period-footer { border-top: 1px solid var(--border-soft, var(--border)); margin-top: 8px; padding-top: 8px; }
+.period-manage-link { display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border-soft, var(--border)); border-radius: 10px; padding: 8px 10px; text-decoration: none; color: var(--text-secondary); font-size: 12px; background: var(--surface-soft, color-mix(in srgb, var(--surface) 88%, var(--bg) 12%)); width: 100%; }
   border: 1px solid var(--border-soft);
   border-radius: 999px;
   padding: 6px 10px;
@@ -993,9 +1011,25 @@ kbd {
     <section class="shell-main">
       <header class="shell-topbar">
         <div class="shell-utility-row">
-          <span class="shell-chip">Section: Accounts</span>
           <span class="shell-chip">Mode: Management</span>
         </div>
+        <div class="period-selector-root" id="periodSelectorRoot">
+    <button class="period-trigger" id="periodTrigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="periodDropdown">
+      <span class="period-trigger-main">
+        <span class="period-trigger-label" id="periodTriggerLabel">June 2026</span>
+        <span class="period-trigger-meta" id="periodTriggerMeta">Jun 1 - Jul 1 • 12 days remaining</span>
+      </span>
+      <svg class="period-trigger-icon" id="periodTriggerChevron" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 9l6 6l6 -6" />
+      </svg>
+    </button>
+    <div class="period-dropdown" id="periodDropdown" hidden role="listbox" aria-label="Choose budget period">
+      <div class="period-list" id="periodListDesktop"></div>
+      <div class="period-footer">
+        <a class="period-manage-link" href="../period-management/piggypulse-period-management.html">Manage periods</a>
+      </div>
+    </div>
+  </div>
       </header>
 <div class="container">
   <header class="page-header">

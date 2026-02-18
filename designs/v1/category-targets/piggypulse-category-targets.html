@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PiggyPulse - Category Targets</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --accent-primary: #5e63e6;
+      --accent-secondary: #8c6cfb;
+      --bg: #f4f6fb;
+      --surface: #ffffff;
+      --surface-soft: #f8f9fd;
+      --border-soft: #e6e8f0;
+      --text-primary: #1a1d21;
+      --text-secondary: #5c6470;
+      --text-muted: #8b93a1;
+      --focus-ring: rgba(94, 99, 230, 0.28);
+    }
+
+    body.dark {
+      --bg: #14161a;
+      --surface: #1c1f26;
+      --surface-soft: #20242c;
+      --border-soft: #2a2f38;
+      --text-primary: #e6e8eb;
+      --text-secondary: #a8afb9;
+      --text-muted: #7d8590;
+      --focus-ring: rgba(140, 108, 251, 0.32);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+      color: inherit;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 4px var(--focus-ring);
+    }
+
+    .shell-frame {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 16px 96px;
+    }
+
+    .shell-app {
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      background: var(--surface);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-areas: "main";
+    }
+
+    .shell-sidebar {
+      display: none;
+      grid-area: sidebar;
+      border-right: 1px solid var(--border-soft);
+      background: var(--surface-soft);
+      padding: 16px 12px;
+    }
+
+    .shell-group-title {
+      margin: 14px 8px 6px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .shell-nav-list {
+      display: grid;
+      gap: 2px;
+    }
+
+    .shell-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-left: 4px solid transparent;
+      border-radius: 10px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 10px 10px 10px 14px;
+    }
+
+    .shell-nav-item.active {
+      border-left-color: var(--accent-primary);
+      color: var(--text-primary);
+      background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+    }
+
+    .shell-nav-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: color-mix(in srgb, var(--accent-primary) 74%, var(--text-secondary) 26%);
+    }
+
+    .shell-nav-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .shell-main {
+      grid-area: main;
+    }
+
+    .shell-topbar {
+      border-bottom: 1px solid var(--border-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+    }
+
+    .shell-utility-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .shell-chip {
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: var(--surface);
+    }
+
+    .page-wrap {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .page-title {
+      margin: 0;
+      font-family: "Sora", "Inter", sans-serif;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+    }
+
+    .page-subtitle {
+      margin: 6px 0 0;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .mode-switch {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      background: var(--surface-soft);
+      padding: 4px;
+    }
+
+    .mode-link {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    .mode-link.active {
+      color: var(--text-primary);
+      background: var(--surface);
+      border: 1px solid color-mix(in srgb, var(--accent-primary) 38%, var(--border-soft) 62%);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .period-selector-root {
+      position: relative;
+      width: 320px;
+      max-width: 100%;
+    }
+
+    .period-trigger {
+      width: 100%;
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: var(--surface);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--text-primary);
+      text-align: left;
+    }
+
+    .period-trigger-main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .period-trigger-label {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .period-trigger-meta {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .period-trigger-icon {
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .period-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      z-index: 40;
+      width: 340px;
+      max-width: min(340px, calc(100vw - 48px));
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      background: var(--surface);
+      padding: 10px;
+      box-shadow: 0 10px 30px rgba(10, 14, 22, 0.12);
+    }
+
+    .period-year {
+      margin-top: 8px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .period-option {
+      width: 100%;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      background: var(--surface-soft);
+      padding: 9px 10px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .period-option.active {
+      border-color: color-mix(in srgb, var(--accent-primary) 48%, var(--border-soft) 52%);
+      background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+      color: var(--text-primary);
+    }
+
+    .period-option-main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .period-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .period-range {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .active-pill {
+      border: 1px solid color-mix(in srgb, var(--accent-primary) 40%, var(--border-soft) 60%);
+      border-radius: 999px;
+      padding: 2px 6px;
+      font-size: 10px;
+      color: var(--accent-primary);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .period-gap-note {
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      background: var(--surface-soft);
+      padding: 10px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .period-footer {
+      border-top: 1px solid var(--border-soft);
+      margin-top: 8px;
+      padding-top: 8px;
+    }
+
+    .period-manage-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 8px 10px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 12px;
+      background: var(--surface-soft);
+      width: 100%;
+    }
+
+    .btn,
+    .btn-primary {
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 9px 12px;
+      background: var(--surface);
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      border-color: var(--accent-primary);
+      background: var(--accent-primary);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .context-card,
+    .panel {
+      border: 1px solid var(--border-soft);
+      border-radius: 14px;
+      background: var(--surface);
+      padding: 12px;
+    }
+
+    .section-gap {
+      margin-top: 16px;
+    }
+
+    .context-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .meta-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .meta-value {
+      margin-top: 4px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .progress-track {
+      margin-top: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border-soft);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 62%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    }
+
+    .helper {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .state-switch {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .state-pill {
+      border: 1px solid var(--border-soft);
+      background: var(--surface-soft);
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .state-pill.active {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      background: color-mix(in srgb, var(--accent-primary) 10%, var(--surface) 90%);
+    }
+
+    .state-panel {
+      display: none;
+    }
+
+    .state-panel.active {
+      display: block;
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .target-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .target-table th,
+    .target-table td {
+      border-bottom: 1px solid var(--border-soft);
+      padding: 10px 8px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .target-table th {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .target-table td {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .target-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .category-name {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .subline {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .amount-field {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      background: var(--surface-soft);
+      padding: 0 10px;
+      min-width: 150px;
+    }
+
+    .amount-field span {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .amount-field input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 9px 6px;
+      font-size: 14px;
+    }
+
+    .amount-field input:focus {
+      outline: none;
+    }
+
+    .delta {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .locked-row {
+      opacity: 0.72;
+    }
+
+    .lock-tag {
+      border: 1px dashed var(--border-soft);
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .banner {
+      border: 1px solid color-mix(in srgb, var(--accent-primary) 32%, var(--border-soft) 68%);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+    }
+
+    .actions-row {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .actions-note {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .row-actions {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .row-action-btn {
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      background: var(--surface-soft);
+      color: var(--text-secondary);
+      font-size: 12px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    .list-placeholder {
+      display: grid;
+      gap: 10px;
+    }
+
+    .skeleton {
+      height: 56px;
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      background: linear-gradient(90deg, var(--surface-soft) 20%, color-mix(in srgb, var(--surface-soft) 70%, #fff 30%) 40%, var(--surface-soft) 60%);
+      background-size: 240% 100%;
+      animation: shimmer 1.4s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -40% 0;
+      }
+    }
+
+    .empty,
+    .error,
+    .locked {
+      border: 1px dashed var(--border-soft);
+      border-radius: 12px;
+      background: var(--surface-soft);
+      padding: 16px;
+    }
+
+    .empty h3,
+    .error h3,
+    .locked h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .empty p,
+    .error p,
+    .locked p {
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .keyboard-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .shell-mobile-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 70;
+      display: flex;
+      gap: 6px;
+      padding: 8px;
+      border-top: 1px solid var(--border-soft);
+      background: var(--surface);
+    }
+
+    .shell-mobile-nav a,
+    .shell-mobile-nav button {
+      flex: 1;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      background: var(--surface);
+      padding: 8px 10px;
+      text-align: center;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+    }
+
+    .shell-mobile-nav .active {
+      border-color: color-mix(in srgb, var(--accent-primary) 40%, var(--border-soft) 60%);
+      color: var(--text-primary);
+      background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+    }
+
+    .shell-mobile-nav .nav-icon {
+      width: 22px;
+      height: 22px;
+      color: color-mix(in srgb, var(--accent-primary) 80%, var(--text-secondary) 20%);
+    }
+
+    .shell-mobile-nav .nav-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .shell-mobile-nav .nav-label {
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    .shell-drawer-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 75;
+      display: none;
+    }
+
+    .shell-drawer-layer.open {
+      display: block;
+    }
+
+    .shell-drawer-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 14, 22, 0.42);
+    }
+
+    .shell-drawer-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 14px 14px 0 0;
+      padding: 12px 14px 16px;
+    }
+
+    .shell-handle {
+      width: 42px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--border-soft);
+      margin: 2px auto 10px;
+    }
+
+    .shell-more-nav {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .shell-more-nav a {
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      padding: 9px 10px;
+    }
+
+    .period-drawer-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .period-drawer-list {
+      margin-top: 10px;
+      max-height: 46vh;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    @media (max-width: 860px) {
+      .page-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .period-selector-root {
+        width: 100%;
+      }
+
+      .context-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .target-table thead {
+        display: none;
+      }
+
+      .target-table,
+      .target-table tbody,
+      .target-table tr,
+      .target-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .target-table tr {
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        background: var(--surface);
+      }
+
+      .target-table td {
+        border: none;
+        padding: 8px 10px;
+      }
+
+      .target-table td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+      }
+
+      .amount-field {
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 860px) {
+      .shell-app {
+        grid-template-columns: 240px 1fr;
+        grid-template-areas: "sidebar main";
+      }
+
+      .shell-sidebar {
+        display: block;
+      }
+
+      .shell-mobile-nav,
+      .shell-drawer-layer {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell-frame">
+    <div class="shell-app">
+      <aside class="shell-sidebar" aria-label="Sidebar navigation">
+        <div class="shell-group-title">Core</div>
+        <nav class="shell-nav-list">
+          <a class="shell-nav-item" href="#"><span class="shell-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                <path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7" />
+              </svg></span><span>Dashboard</span></a>
+          <a class="shell-nav-item" href="#"><span class="shell-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                <path d="M9 6h11" />
+                <path d="M9 12h11" />
+                <path d="M9 18h11" />
+                <path d="M5 6v.01" />
+                <path d="M5 12v.01" />
+                <path d="M5 18v.01" />
+              </svg></span><span>Transactions</span></a>
+          <a class="shell-nav-item" href="#"><span class="shell-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
+                <path d="M16 3v4" />
+                <path d="M8 3v4" />
+                <path d="M4 11h16" />
+              </svg></span><span>Periods</span></a>
+        </nav>
+
+        <div class="shell-group-title">Structure</div>
+        <nav class="shell-nav-list">
+          <a class="shell-nav-item" href="#"><span class="shell-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                <path d="M6 7h12a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2" />
+                <path d="M4 10h16" />
+                <path d="M9 14h6" />
+              </svg></span><span>Accounts</span></a>
+          <a class="shell-nav-item active" href="#" aria-current="page"><span class="shell-nav-icon"
+              aria-hidden="true"><svg viewBox="0 0 24 24">
+                <path d="M4 7h16v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
+                <path d="M4 11h16" />
+                <path d="M9 15h2" />
+                <path d="M13 15h4" />
+              </svg></span><span>Categories</span></a>
+          <a class="shell-nav-item" href="#"><span class="shell-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                <path d="M3 9l1 -4h16l1 4" />
+                <path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1v-10" />
+                <path d="M10 13h4v7h-4z" />
+              </svg></span><span>Vendors</span></a>
+        </nav>
+
+        <div class="shell-group-title">Session</div>
+        <nav class="shell-nav-list">
+          <a class="shell-nav-item" href="#"><span class="shell-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                <path d="M4 8h10" />
+                <path d="M14 16h6" />
+                <path d="M6 12h14" />
+                <path d="M8 8v8" />
+                <path d="M16 12v8" />
+              </svg></span><span>Settings</span></a>
+          <a class="shell-nav-item" href="#"><span class="shell-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+                <path d="M14 8v-2a2 2 0 0 0 -2 -2h-5a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h5a2 2 0 0 0 2 -2v-2" />
+                <path d="M9 12h12l-3 -3" />
+                <path d="M18 15l3 -3" />
+              </svg></span><span>Log out</span></a>
+        </nav>
+      </aside>
+
+      <main class="shell-main">
+        <header class="shell-topbar">
+          <div class="shell-utility-row">
+            <span class="shell-chip">Scope: All accounts</span>
+          </div>
+          <div class="period-selector-root" id="periodSelectorRoot">
+            <button class="period-trigger" id="periodTrigger" type="button" aria-haspopup="listbox"
+              aria-expanded="false" aria-controls="periodDropdown">
+              <span class="period-trigger-main">
+                <span class="period-trigger-label" id="periodTriggerLabel">February 2026</span>
+                <span class="period-trigger-meta" id="periodTriggerMeta">Feb 1 - Mar 1 • 12 days remaining</span>
+              </span>
+              <svg class="period-trigger-icon" id="periodTriggerChevron" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 9l6 6l6 -6" />
+              </svg>
+            </button>
+            <div class="period-dropdown" id="periodDropdown" hidden role="listbox" aria-label="Choose period">
+              <div class="period-gap-note" id="periodGapNote" hidden>
+                No active period is covering today. Reporting stays available, and you can manage periods to restore an
+                open window.
+              </div>
+              <div class="period-list" id="periodListDesktop"></div>
+              <div class="period-footer">
+                <a class="period-manage-link" href="../period-management/piggypulse-period-management.html">Manage
+                  periods</a>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section class="page-wrap" aria-labelledby="pageTitle">
+          <header class="page-header">
+            <div>
+              <h1 class="page-title" id="pageTitle" tabindex="-1">Categories</h1>
+              <p class="page-subtitle">Set target amounts for each category in the selected period.</p>
+              <nav class="mode-switch" aria-label="Categories page mode">
+                <a class="mode-link" href="../categories/piggypulse-categories.html">Overview</a>
+                <a class="mode-link" href="../category-management/piggypulse-categories-management.html">Management</a>
+                <a class="mode-link active" href="#" aria-current="page">Targets</a>
+              </nav>
+            </div>
+          </header>
+
+          <section class="context-card" aria-label="Period context">
+            <div class="context-grid">
+              <div>
+                <div class="meta-label">Period</div>
+                <div class="meta-value" id="contextPeriod">February 1, 2026 - March 1, 2026</div>
+              </div>
+              <div>
+                <div class="meta-label">Current position</div>
+                <div class="meta-value" id="contextPosition">$1,920 of $3,120 set</div>
+              </div>
+              <div>
+                <div class="meta-label">Categories with targets</div>
+                <div class="meta-value" id="contextCoverage">12 of 16 active categories</div>
+              </div>
+              <div>
+                <div class="meta-label">Period progress</div>
+                <div class="meta-value" id="contextProgressText">62% elapsed</div>
+                <div class="progress-track" aria-hidden="true">
+                  <div class="progress-fill" id="contextProgressFill"></div>
+                </div>
+              </div>
+            </div>
+            <p class="helper">Targets are initialized from the previous period. Amounts are entered as positive values.
+              Direction is derived from category type.</p>
+          </section>
+
+          <div class="state-switch" role="tablist" aria-label="Wireframe states">
+            <button class="state-pill active" type="button" data-state="active" role="tab"
+              aria-selected="true">Active</button>
+            <button class="state-pill" type="button" data-state="loading" role="tab"
+              aria-selected="false">Loading</button>
+            <button class="state-pill" type="button" data-state="empty" role="tab" aria-selected="false">Empty</button>
+            <button class="state-pill" type="button" data-state="error" role="tab" aria-selected="false">Error</button>
+            <button class="state-pill" type="button" data-state="locked" role="tab"
+              aria-selected="false">Locked</button>
+          </div>
+
+          <section class="state-panel active" data-panel="active" aria-labelledby="activePanelTitle">
+            <div class="panel">
+              <h2 class="section-title" id="activePanelTitle">Outgoing categories</h2>
+              <form id="targetsForm">
+                <table class="target-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Category</th>
+                      <th scope="col">Previous target</th>
+                      <th scope="col">Current target</th>
+                      <th scope="col">Projected variance</th>
+                      <th scope="col">Target scope</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td data-label="Category">
+                        <div class="category-name">Housing</div>
+                        <div class="subline">Outgoing • Parent category</div>
+                      </td>
+                      <td data-label="Previous target">$1,200</td>
+                      <td data-label="Current target">
+                        <label class="amount-field" for="target-housing">
+                          <span>$</span>
+                          <input id="target-housing" name="housing" type="text" inputmode="decimal" value="1200" />
+                        </label>
+                      </td>
+                      <td data-label="Projected variance" class="delta">+4.8%</td>
+                      <td data-label="Target scope">
+                        <div class="row-actions">
+                          <button class="row-action-btn" type="button" data-exclude="Housing">Mark as excluded</button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td data-label="Category">
+                        <div class="category-name">Groceries</div>
+                        <div class="subline">Outgoing • Parent category</div>
+                      </td>
+                      <td data-label="Previous target">$420</td>
+                      <td data-label="Current target">
+                        <label class="amount-field" for="target-groceries">
+                          <span>$</span>
+                          <input id="target-groceries" name="groceries" type="text" inputmode="decimal" value="460" />
+                        </label>
+                      </td>
+                      <td data-label="Projected variance" class="delta">+2.2%</td>
+                      <td data-label="Target scope">
+                        <div class="row-actions">
+                          <button class="row-action-btn" type="button" data-exclude="Groceries">Mark as
+                            excluded</button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td data-label="Category">
+                        <div class="category-name">Dining</div>
+                        <div class="subline">Outgoing • Parent category</div>
+                      </td>
+                      <td data-label="Previous target">$260</td>
+                      <td data-label="Current target">
+                        <label class="amount-field" for="target-dining">
+                          <span>$</span>
+                          <input id="target-dining" name="dining" type="text" inputmode="decimal" value="240" />
+                        </label>
+                      </td>
+                      <td data-label="Projected variance" class="delta">+7.1%</td>
+                      <td data-label="Target scope">
+                        <div class="row-actions">
+                          <button class="row-action-btn" type="button" data-exclude="Dining">Mark as excluded</button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td data-label="Category">
+                        <div class="category-name">Education</div>
+                        <div class="subline">Outgoing • No target defined yet</div>
+                      </td>
+                      <td data-label="Previous target">None</td>
+                      <td data-label="Current target">
+                        <label class="amount-field" for="target-education">
+                          <span>$</span>
+                          <input id="target-education" name="education" type="text" inputmode="decimal" value=""
+                            placeholder="0.00" />
+                        </label>
+                      </td>
+                      <td data-label="Projected variance" class="delta">—</td>
+                      <td data-label="Target scope">
+                        <div class="row-actions">
+                          <button class="row-action-btn" type="button" data-exclude="Education">Mark as
+                            excluded</button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="locked-row">
+                      <td data-label="Category">
+                        <div class="category-name">Old Utilities <span class="lock-tag">Archived</span></div>
+                        <div class="subline">Outgoing • Hidden from new target assignment</div>
+                      </td>
+                      <td data-label="Previous target">$95</td>
+                      <td data-label="Current target">Unavailable</td>
+                      <td data-label="Deviation if unchanged">-</td>
+                      <td data-label="Target scope">-</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="helper">Use <strong>Mark as excluded</strong> when a category should remain outside target
+                  tracking for this period.</p>
+                <div class="actions-row">
+                  <p class="actions-note" id="saveStatus">No unsaved changes.</p>
+                  <div class="header-actions">
+                    <button class="btn" type="reset">Reset</button>
+                    <button class="btn-primary" type="submit" id="saveBottom">Save targets</button>
+                  </div>
+                </div>
+              </form>
+              <p class="keyboard-note">Keyboard: Tab moves field to field; Enter on the final amount saves; Escape
+                closes overlays.</p>
+            </div>
+
+            <div class="panel section-gap">
+              <h2 class="section-title">Categories excluded from target assignment</h2>
+              <table class="target-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Category</th>
+                    <th scope="col">Target status</th>
+                    <th scope="col">Reason</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td data-label="Category">
+                      <div class="category-name">Internal Transfers</div>
+                      <div class="subline">System-managed category</div>
+                    </td>
+                    <td data-label="Target status">Excluded</td>
+                    <td data-label="Reason">This category never participates in target tracking.</td>
+                    <td data-label="Action">System rule</td>
+                  </tr>
+                  <tr>
+                    <td data-label="Category">
+                      <div class="category-name">Reimbursement Pass-through</div>
+                      <div class="subline">Outgoing • User-marked exclusion</div>
+                    </td>
+                    <td data-label="Target status">Excluded</td>
+                    <td data-label="Reason">Category is intentionally tracked without target comparison.</td>
+                    <td data-label="Action">
+                      <div class="row-actions">
+                        <button class="row-action-btn" type="button" data-include="Reimbursement Pass-through">Include
+                          in targets</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="panel section-gap">
+              <h2 class="section-title">Incoming categories</h2>
+              <table class="target-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Category</th>
+                    <th scope="col">Previous target</th>
+                    <th scope="col">Current target</th>
+                    <th scope="col">Deviation if unchanged</th>
+                    <th scope="col">Target scope</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td data-label="Category">
+                      <div class="category-name">Salary</div>
+                      <div class="subline">Incoming • Parent category</div>
+                    </td>
+                    <td data-label="Previous target">$2,800</td>
+                    <td data-label="Current target">
+                      <label class="amount-field" for="target-salary">
+                        <span>$</span>
+                        <input id="target-salary" name="salary" type="text" inputmode="decimal" value="2800" />
+                      </label>
+                    </td>
+                    <td data-label="Projected variance" class="delta">-1.3%</td>
+                    <td data-label="Target scope">
+                      <div class="row-actions">
+                        <button class="row-action-btn" type="button" data-exclude="Salary">Mark as excluded</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="banner" id="updateBanner" hidden>Updated values reflect your recent changes.</div>
+          </section>
+
+          <section class="state-panel" data-panel="loading" aria-label="Loading state">
+            <div class="panel">
+              <h2 class="section-title">Loading targets</h2>
+              <div class="list-placeholder">
+                <div class="skeleton" aria-hidden="true"></div>
+                <div class="skeleton" aria-hidden="true"></div>
+                <div class="skeleton" aria-hidden="true"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="state-panel" data-panel="empty" aria-label="Empty state">
+            <div class="panel empty">
+              <h2>No active categories available for target assignment.</h2>
+              <p>Create or restore categories first, then return to this page to define targets.</p>
+              <div class="actions-row">
+                <span class="actions-note">Historical calculations remain unchanged until new targets are saved.</span>
+                <button class="btn" type="button">Open categories management</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="state-panel" data-panel="error" aria-label="Error state">
+            <div class="panel error">
+              <h2>Category targets could not be loaded.</h2>
+              <p>Your current configuration remains unchanged. Try loading again.</p>
+              <div class="actions-row">
+                <span class="actions-note">If this continues, check API availability for <code>/api/v1</code>.</span>
+                <button class="btn" type="button">Retry</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="state-panel" data-panel="locked" aria-label="Locked state">
+            <div class="panel locked">
+              <h2>Targets require an open period.</h2>
+              <p>Select or create a current period to define targets for category-level reflection.</p>
+              <div class="actions-row">
+                <span class="actions-note">Period boundaries are structural and are managed in Periods.</span>
+                <button class="btn" type="button">Open periods</button>
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <nav class="shell-mobile-nav" aria-label="Mobile navigation">
+    <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+          <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+          <path d="M5 12v7a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1 -1v-7" />
+        </svg></span><span class="nav-label">Dashboard</span></a>
+    <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+          <path d="M9 6h11" />
+          <path d="M9 12h11" />
+          <path d="M9 18h11" />
+          <path d="M5 6v.01" />
+          <path d="M5 12v.01" />
+          <path d="M5 18v.01" />
+        </svg></span><span class="nav-label">Transactions</span></a>
+    <a href="#"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+          <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
+          <path d="M16 3v4" />
+          <path d="M8 3v4" />
+          <path d="M4 11h16" />
+        </svg></span><span class="nav-label">Periods</span></a>
+    <button id="moreBtn" type="button" class="active"><span class="nav-icon" aria-hidden="true"><svg
+          viewBox="0 0 24 24">
+          <path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+          <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+          <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+        </svg></span><span class="nav-label">More</span></button>
+  </nav>
+
+  <div class="shell-drawer-layer" id="moreDrawer" aria-hidden="true">
+    <div class="shell-drawer-backdrop" data-close="moreDrawer"></div>
+    <div class="shell-drawer-panel" role="dialog" aria-modal="true" aria-label="More pages">
+      <div class="shell-handle" aria-hidden="true"></div>
+      <strong>More</strong>
+      <nav class="shell-more-nav">
+        <a href="#">Accounts</a>
+        <a href="#" aria-current="page">Categories</a>
+        <a href="#">Vendors</a>
+        <a href="#">Settings</a>
+      </nav>
+      <div class="actions-row">
+        <span class="actions-note">Escape closes this drawer.</span>
+        <button class="btn" type="button" data-close="moreDrawer">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell-drawer-layer" id="periodDrawer" aria-hidden="true">
+    <div class="shell-drawer-backdrop" data-close="periodDrawer"></div>
+    <div class="shell-drawer-panel" role="dialog" aria-modal="true" aria-label="Choose period">
+      <div class="shell-handle" aria-hidden="true"></div>
+      <h2 class="period-drawer-title">Choose period</h2>
+      <div class="period-gap-note" id="periodGapNoteMobile" hidden>
+        No active period is covering today. Reporting stays available, and you can manage periods to restore an open
+        window.
+      </div>
+      <div class="period-drawer-list" id="periodListMobile"></div>
+      <div class="period-footer">
+        <a class="period-manage-link" href="../period-management/piggypulse-period-management.html">Manage periods</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.body;
+      var pageTitle = document.getElementById("pageTitle");
+      var statePills = Array.prototype.slice.call(document.querySelectorAll(".state-pill"));
+      var statePanels = Array.prototype.slice.call(document.querySelectorAll(".state-panel"));
+      var periodSelectorRoot = document.getElementById("periodSelectorRoot");
+      var periodTrigger = document.getElementById("periodTrigger");
+      var periodTriggerLabel = document.getElementById("periodTriggerLabel");
+      var periodTriggerMeta = document.getElementById("periodTriggerMeta");
+      var periodTriggerChevron = document.getElementById("periodTriggerChevron");
+      var periodDropdown = document.getElementById("periodDropdown");
+      var periodListDesktop = document.getElementById("periodListDesktop");
+      var periodListMobile = document.getElementById("periodListMobile");
+      var periodDrawer = document.getElementById("periodDrawer");
+      var periodGapNote = document.getElementById("periodGapNote");
+      var periodGapNoteMobile = document.getElementById("periodGapNoteMobile");
+      var contextPeriod = document.getElementById("contextPeriod");
+      var contextPosition = document.getElementById("contextPosition");
+      var contextCoverage = document.getElementById("contextCoverage");
+      var contextProgressText = document.getElementById("contextProgressText");
+      var contextProgressFill = document.getElementById("contextProgressFill");
+      var moreBtn = document.getElementById("moreBtn");
+      var moreDrawer = document.getElementById("moreDrawer");
+      var closeMoreBtns = Array.prototype.slice.call(document.querySelectorAll("[data-close='moreDrawer']"));
+      var closePeriodBtns = Array.prototype.slice.call(document.querySelectorAll("[data-close='periodDrawer']"));
+      var form = document.getElementById("targetsForm");
+      var saveStatus = document.getElementById("saveStatus");
+      var updateBanner = document.getElementById("updateBanner");
+      var amountInputs = Array.prototype.slice.call(document.querySelectorAll(".amount-field input"));
+      var excludeBtns = Array.prototype.slice.call(document.querySelectorAll("[data-exclude]"));
+      var includeBtns = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
+
+      if (pageTitle) {
+        pageTitle.focus();
+      }
+
+      var periods = [
+        {
+          id: "period-2026-02",
+          year: "2026",
+          name: "February 2026",
+          rangeShort: "Feb 1 - Mar 1",
+          rangeLong: "February 1, 2026 - March 1, 2026",
+          daysLabel: "12 days remaining",
+          position: "$1,920 of $3,120 set",
+          coverage: "12 of 16 active categories",
+          progressPercent: 62,
+          status: "active"
+        },
+        {
+          id: "period-2026-01",
+          year: "2026",
+          name: "January 2026",
+          rangeShort: "Jan 1 - Feb 1",
+          rangeLong: "January 1, 2026 - February 1, 2026",
+          daysLabel: "Closed",
+          position: "$3,040 of $3,080 set",
+          coverage: "15 of 16 active categories",
+          progressPercent: 100,
+          status: "closed"
+        },
+        {
+          id: "period-2025-12",
+          year: "2025",
+          name: "December 2025",
+          rangeShort: "Dec 1 - Jan 1",
+          rangeLong: "December 1, 2025 - January 1, 2026",
+          daysLabel: "Closed",
+          position: "$2,860 of $2,980 set",
+          coverage: "14 of 16 active categories",
+          progressPercent: 100,
+          status: "closed"
+        }
+      ];
+      var selectedPeriodId = "period-2026-02";
+
+      function isMobileViewport() {
+        return window.matchMedia("(max-width: 860px)").matches;
+      }
+
+      function selectedPeriod() {
+        for (var i = 0; i < periods.length; i += 1) {
+          if (periods[i].id === selectedPeriodId) return periods[i];
+        }
+        return periods[0];
+      }
+
+      function renderGapNotice() {
+        var hasActive = false;
+        for (var i = 0; i < periods.length; i += 1) {
+          if (periods[i].status === "active") {
+            hasActive = true;
+            break;
+          }
+        }
+        var showGap = !hasActive;
+        periodGapNote.hidden = !showGap;
+        periodGapNoteMobile.hidden = !showGap;
+      }
+
+      function updatePeriodContext() {
+        var period = selectedPeriod();
+        periodTriggerLabel.textContent = period.name;
+        periodTriggerMeta.textContent = period.rangeShort + " • " + period.daysLabel;
+        contextPeriod.textContent = period.rangeLong;
+        contextPosition.textContent = period.position;
+        contextCoverage.textContent = period.coverage;
+        contextProgressText.textContent = period.progressPercent + "% elapsed";
+        contextProgressFill.style.width = period.progressPercent + "%";
+      }
+
+      function groupedPeriods() {
+        var map = {};
+        periods.forEach(function (period) {
+          if (!map[period.year]) map[period.year] = [];
+          map[period.year].push(period);
+        });
+        return Object.keys(map).sort(function (a, b) { return b.localeCompare(a); }).map(function (year) {
+          return { year: year, items: map[year] };
+        });
+      }
+
+      function periodOptionHtml(period) {
+        var active = period.id === selectedPeriodId;
+        return (
+          '<button class="period-option' + (active ? " active" : "") + '" type="button" data-period-id="' + period.id + '">' +
+          '<span class="period-option-main">' +
+          '<span class="period-name">' + period.name + "</span>" +
+          '<span class="period-range">' + period.rangeShort + "</span>" +
+          "</span>" +
+          (active ? '<span class="active-pill">Active</span>' : "") +
+          "</button>"
+        );
+      }
+
+      function renderPeriodLists() {
+        var groups = groupedPeriods();
+        var html = "";
+        groups.forEach(function (group) {
+          html += '<div class="period-year">' + group.year + "</div>";
+          group.items.forEach(function (period) {
+            html += periodOptionHtml(period);
+          });
+        });
+        periodListDesktop.innerHTML = html;
+        periodListMobile.innerHTML = html;
+      }
+
+      function closePeriodDropdown() {
+        periodDropdown.hidden = true;
+        periodTrigger.setAttribute("aria-expanded", "false");
+        periodTriggerChevron.innerHTML = '<path d="M6 9l6 6l6 -6" />';
+      }
+
+      function openPeriodDropdown() {
+        periodDropdown.hidden = false;
+        periodTrigger.setAttribute("aria-expanded", "true");
+        periodTriggerChevron.innerHTML = '<path d="M6 15l6 -6l6 6" />';
+      }
+
+      function openPeriodDrawer() {
+        periodDrawer.classList.add("open");
+        periodDrawer.setAttribute("aria-hidden", "false");
+      }
+
+      function closePeriodDrawer() {
+        periodDrawer.classList.remove("open");
+        periodDrawer.setAttribute("aria-hidden", "true");
+        periodTrigger.focus();
+      }
+
+      function handlePeriodSelectionClick(event) {
+        var btn = event.target.closest("[data-period-id]");
+        if (!btn) return;
+        // Guard: if form is dirty, confirm before switching period
+        if (saveStatus && saveStatus.textContent === "Unsaved changes.") {
+          if (!window.confirm("Switch period?\nYour unsaved target changes will not be saved.")) return;
+          saveStatus.textContent = "No unsaved changes.";
+        }
+        selectedPeriodId = btn.getAttribute("data-period-id");
+        renderPeriodLists();
+        updatePeriodContext();
+        closePeriodDropdown();
+        closePeriodDrawer();
+      }
+
+      periodTrigger.addEventListener("click", function () {
+        if (isMobileViewport()) {
+          openPeriodDrawer();
+          return;
+        }
+        if (periodDropdown.hidden) {
+          openPeriodDropdown();
+        } else {
+          closePeriodDropdown();
+        }
+      });
+
+      periodListDesktop.addEventListener("click", handlePeriodSelectionClick);
+      periodListMobile.addEventListener("click", handlePeriodSelectionClick);
+
+      closePeriodBtns.forEach(function (btn) {
+        btn.addEventListener("click", closePeriodDrawer);
+      });
+
+      document.addEventListener("click", function (event) {
+        if (periodDropdown.hidden) return;
+        if (!periodSelectorRoot.contains(event.target)) {
+          closePeriodDropdown();
+        }
+      });
+
+      window.addEventListener("resize", function () {
+        if (!isMobileViewport()) {
+          closePeriodDrawer();
+        }
+      });
+
+      renderPeriodLists();
+      renderGapNotice();
+      updatePeriodContext();
+      closePeriodDropdown();
+
+
+      statePills.forEach(function (pill) {
+        pill.addEventListener("click", function () {
+          var state = pill.getAttribute("data-state");
+          statePills.forEach(function (item) {
+            item.classList.toggle("active", item === pill);
+            item.setAttribute("aria-selected", item === pill ? "true" : "false");
+          });
+          statePanels.forEach(function (panel) {
+            panel.classList.toggle("active", panel.getAttribute("data-panel") === state);
+          });
+        });
+      });
+
+      amountInputs.forEach(function (input, index) {
+        input.addEventListener("input", function () {
+          input.value = input.value.replace(/[^0-9.]/g, "");
+          saveStatus.textContent = "Unsaved changes.";
+          updateBanner.hidden = true;
+        });
+
+        input.addEventListener("keydown", function (event) {
+          if (event.key === "Enter" && index === amountInputs.length - 1) {
+            event.preventDefault();
+            form.requestSubmit();
+          }
+        });
+      });
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        saveStatus.textContent = "Saved.";
+        updateBanner.hidden = false;
+        updateBanner.textContent = "Updated values reflect your recent changes.";
+      });
+
+      excludeBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var category = btn.getAttribute("data-exclude");
+          saveStatus.textContent = "Unsaved changes.";
+          updateBanner.hidden = false;
+          updateBanner.textContent = category + " will be excluded from target tracking after save.";
+        });
+      });
+
+      includeBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var category = btn.getAttribute("data-include");
+          saveStatus.textContent = "Unsaved changes.";
+          updateBanner.hidden = false;
+          updateBanner.textContent = category + " will be included in target tracking after save.";
+        });
+      });
+
+      function openDrawer() {
+        moreDrawer.classList.add("open");
+        moreDrawer.setAttribute("aria-hidden", "false");
+      }
+
+      function closeDrawer() {
+        moreDrawer.classList.remove("open");
+        moreDrawer.setAttribute("aria-hidden", "true");
+        moreBtn.focus();
+      }
+
+      moreBtn.addEventListener("click", openDrawer);
+      closeMoreBtns.forEach(function (btn) {
+        btn.addEventListener("click", closeDrawer);
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          if (moreDrawer.classList.contains("open")) {
+            closeDrawer();
+          }
+          if (periodDrawer.classList.contains("open")) {
+            closePeriodDrawer();
+          }
+          if (!periodDropdown.hidden) {
+            closePeriodDropdown();
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+
+</html>

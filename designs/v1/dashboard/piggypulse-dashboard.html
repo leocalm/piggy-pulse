@@ -150,6 +150,161 @@ a:focus-visible {
   background: var(--surface);
 }
 
+.period-selector-root {
+  position: relative;
+  width: 320px;
+  max-width: 100%;
+}
+
+.period-trigger {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 10px 12px;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(120deg, color-mix(in srgb, var(--accent-primary) 36%, transparent), color-mix(in srgb, var(--accent-secondary) 36%, transparent)) border-box;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--text-primary);
+  text-align: left;
+}
+
+.period-trigger-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.period-trigger-label {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.period-trigger-meta {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.period-trigger-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.period-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 40;
+  width: 340px;
+  max-width: min(340px, calc(100vw - 48px));
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 10px;
+  box-shadow: 0 10px 30px rgba(10, 14, 22, 0.12);
+}
+
+.period-year {
+  margin-top: 8px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.period-option {
+  width: 100%;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  padding: 9px 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.period-option.active {
+  border-color: color-mix(in srgb, var(--accent-primary) 48%, var(--border-soft) 52%);
+  background: color-mix(in srgb, var(--accent-primary) 8%, var(--surface) 92%);
+  color: var(--text-primary);
+}
+
+.period-option-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.period-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.period-range {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.active-pill {
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 40%, var(--border-soft) 60%);
+  border-radius: 999px;
+  padding: 2px 6px;
+  font-size: 10px;
+  color: var(--accent-primary);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.period-footer {
+  border-top: 1px solid var(--border-soft);
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.period-manage-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 8px 10px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  background: var(--surface-soft);
+  width: 100%;
+}
+
 .toggle-btn {
   border: 1px solid var(--border-soft);
   border-radius: 10px;
@@ -498,9 +653,27 @@ a:focus-visible {
     <section class="main-shell" aria-label="Dashboard content">
       <header class="topbar">
         <div class="utility-row">
-          <span class="chip">Period: June 2026</span>
           <span class="chip">Scope: All accounts</span>
-        </div>      </header>
+        </div>
+        <div class="period-selector-root" id="periodSelectorRoot">
+          <button class="period-trigger" id="periodTrigger" type="button" aria-haspopup="listbox" aria-expanded="false"
+            aria-controls="periodDropdown">
+            <span class="period-trigger-main">
+              <span class="period-trigger-label" id="periodTriggerLabel">June 2026</span>
+              <span class="period-trigger-meta" id="periodTriggerMeta">Jun 1 - Jul 1 • 12 days remaining</span>
+            </span>
+            <svg class="period-trigger-icon" id="periodTriggerChevron" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 9l6 6l6 -6" />
+            </svg>
+          </button>
+          <div class="period-dropdown" id="periodDropdown" hidden role="listbox" aria-label="Choose budget period">
+            <div class="period-list" id="periodListDesktop"></div>
+            <div class="period-footer">
+              <a class="period-manage-link" href="../period-management/piggypulse-period-management.html">Manage periods</a>
+            </div>
+          </div>
+        </div>
+      </header>
 
       <div class="page-head">
         <h1 class="page-title">Dashboard</h1>
@@ -578,11 +751,38 @@ a:focus-visible {
   </section>
 </div>
 
+<div class="drawer-layer" id="period-drawer" aria-hidden="true">
+  <div class="drawer-backdrop" data-close="period"></div>
+  <section class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="period-drawer-title">
+    <div class="handle" aria-hidden="true"></div>
+    <h4 id="period-drawer-title">Choose budget period</h4>
+    <div class="period-list" id="periodListMobile"></div>
+    <div class="period-footer">
+      <a class="period-manage-link" href="../period-management/piggypulse-period-management.html">Manage periods</a>
+    </div>
+  </section>
+</div>
+
 <script>
 (() => {
-  const body = document.body;
   const openMore = document.getElementById("open-more-nav");
   const drawer = document.getElementById("mobile-drawer");
+  const periodRoot = document.getElementById("periodSelectorRoot");
+  const periodTrigger = document.getElementById("periodTrigger");
+  const periodTriggerLabel = document.getElementById("periodTriggerLabel");
+  const periodTriggerMeta = document.getElementById("periodTriggerMeta");
+  const periodTriggerChevron = document.getElementById("periodTriggerChevron");
+  const periodDropdown = document.getElementById("periodDropdown");
+  const periodListDesktop = document.getElementById("periodListDesktop");
+  const periodListMobile = document.getElementById("periodListMobile");
+  const periodDrawer = document.getElementById("period-drawer");
+
+  const periods = [
+    { id: "period-2026-06", year: "2026", name: "June 2026", rangeShort: "Jun 1 - Jul 1", daysLabel: "12 days remaining" },
+    { id: "period-2026-05", year: "2026", name: "May 2026", rangeShort: "May 1 - Jun 1", daysLabel: "Closed" },
+    { id: "period-2026-04", year: "2026", name: "April 2026", rangeShort: "Apr 1 - May 1", daysLabel: "Closed" }
+  ];
+  let selectedPeriodId = "period-2026-06";
 
   const openDrawer = () => {
     drawer.classList.add("open");
@@ -594,17 +794,119 @@ a:focus-visible {
     drawer.setAttribute("aria-hidden", "true");
   };
 
+  const openPeriodDrawer = () => {
+    periodDrawer.classList.add("open");
+    periodDrawer.setAttribute("aria-hidden", "false");
+  };
+
+  const closePeriodDrawer = () => {
+    periodDrawer.classList.remove("open");
+    periodDrawer.setAttribute("aria-hidden", "true");
+    periodTrigger.focus();
+  };
+
+  const closePeriodDropdown = () => {
+    periodDropdown.hidden = true;
+    periodTrigger.setAttribute("aria-expanded", "false");
+    periodTriggerChevron.innerHTML = '<path d="M6 9l6 6l6 -6" />';
+  };
+
+  const openPeriodDropdown = () => {
+    periodDropdown.hidden = false;
+    periodTrigger.setAttribute("aria-expanded", "true");
+    periodTriggerChevron.innerHTML = '<path d="M6 15l6 -6l6 6" />';
+  };
+
+  const groupedPeriods = () => {
+    const byYear = {};
+    periods.forEach((p) => {
+      if (!byYear[p.year]) byYear[p.year] = [];
+      byYear[p.year].push(p);
+    });
+    return Object.keys(byYear).sort((a, b) => b.localeCompare(a)).map((year) => ({ year, items: byYear[year] }));
+  };
+
+  const selectedPeriod = () => periods.find((p) => p.id === selectedPeriodId) || periods[0];
+
+  const periodOptionHtml = (period) => {
+    const active = period.id === selectedPeriodId;
+    return `<button class="period-option${active ? " active" : ""}" type="button" data-period-id="${period.id}" role="option" aria-selected="${active ? "true" : "false"}">
+      <span class="period-option-main"><span class="period-name">${period.name}</span><span class="period-range">${period.rangeShort}</span></span>
+      ${active ? '<span class="active-pill">Active</span>' : ""}
+    </button>`;
+  };
+
+  const renderPeriodLists = () => {
+    let html = "";
+    groupedPeriods().forEach((group) => {
+      html += `<div class="period-year">${group.year}</div>`;
+      group.items.forEach((p) => {
+        html += periodOptionHtml(p);
+      });
+    });
+    periodListDesktop.innerHTML = html;
+    periodListMobile.innerHTML = html;
+    const current = selectedPeriod();
+    periodTriggerLabel.textContent = current.name;
+    periodTriggerMeta.textContent = `${current.rangeShort} • ${current.daysLabel}`;
+  };
+
+  const handlePeriodSelection = (event) => {
+    const btn = event.target.closest("[data-period-id]");
+    if (!btn) return;
+    selectedPeriodId = btn.getAttribute("data-period-id");
+    renderPeriodLists();
+    closePeriodDropdown();
+    closePeriodDrawer();
+  };
+
+  periodTrigger.addEventListener("click", () => {
+    if (window.matchMedia("(max-width: 859px)").matches) {
+      openPeriodDrawer();
+      return;
+    }
+    if (periodDropdown.hidden) {
+      openPeriodDropdown();
+    } else {
+      closePeriodDropdown();
+    }
+  });
+
+  periodListDesktop.addEventListener("click", handlePeriodSelection);
+  periodListMobile.addEventListener("click", handlePeriodSelection);
+
+  document.querySelectorAll("[data-close='period']").forEach((el) => {
+    el.addEventListener("click", closePeriodDrawer);
+  });
+
   openMore.addEventListener("click", openDrawer);
 
   document.querySelectorAll("[data-close='drawer']").forEach((el) => {
     el.addEventListener("click", closeDrawer);
   });
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && drawer.classList.contains("open")) {
-      closeDrawer();
+  document.addEventListener("click", (event) => {
+    if (!periodDropdown.hidden && !periodRoot.contains(event.target)) {
+      closePeriodDropdown();
     }
   });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      if (drawer.classList.contains("open")) closeDrawer();
+      if (periodDrawer.classList.contains("open")) closePeriodDrawer();
+      if (!periodDropdown.hidden) closePeriodDropdown();
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (!window.matchMedia("(max-width: 859px)").matches) {
+      closePeriodDrawer();
+    }
+  });
+
+  renderPeriodLists();
+  closePeriodDropdown();
 })();
 </script>
 </body>
