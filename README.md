@@ -79,10 +79,10 @@ Backend:
 https://github.com/leocalm/piggy-pulse-api
 
 Frontend:
-https://github.com/leocalm/piggy-pulse-api-app
+https://github.com/leocalm/piggy-pulse-app
 
 API documentation:
-https://docs.piggy-pulse.com
+https://github.com/leocalm/piggy-pulse-docs
 
 ---
 
