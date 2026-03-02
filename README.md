@@ -23,7 +23,7 @@ PiggyPulse is designed around three core principles:
 The system is composed of:
 
 - `piggy-pulse-api` — Rust backend service
-- `piggy-pulse-web` — React frontend client
+- `piggy-pulse-app` — React frontend client
 - `piggy-pulse-docs` — OpenAPI documentation (static)
 
 Each component is deployed independently.
