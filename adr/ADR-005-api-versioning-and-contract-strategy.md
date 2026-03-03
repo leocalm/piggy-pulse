@@ -7,7 +7,7 @@ PiggyPulse exposes a versioned REST API consumed by its own SPA frontend and pot
 Adopt the following API versioning and contract strategy:
 - **Versioning scheme:** URI path prefix (`/api/v1`, `/api/v2`, …)
 - **Breaking‑change policy:** Breaking changes require a major version bump; no silent breaking changes
-- **Contract format:** OpenAPI 3.x, generated code‑first from Rocket route definitions
+- **Contract format:** OpenAPI 3.x, generated code‑first from Rocket route definitions via `rocket_okapi`
 - **Contract review:** OpenAPI spec reviewed before release — treated as a public boundary
 - **Spec hosting:** Static Swagger UI served from `piggy-pulse-docs`
 
@@ -26,7 +26,7 @@ Adopt the following API versioning and contract strategy:
 - **Hybrid (generated then hand‑edited):** Captures code reality and allows manual refinement, but hand‑edits are overwritten on next generation unless a merge workflow is maintained.
 - **No formal contract:** Lowest overhead, but consumers have no reliable reference, and breaking changes are discovered at runtime.
 
-*Code‑first generation was chosen because it guarantees the spec always reflects the actual implementation — no drift, no stale documentation. The spec is generated from Rocket route definitions and Rust types, leveraging the compiler's type safety. Pre‑release review of the generated spec serves as the intentionality check.*
+*Code‑first generation was chosen because it guarantees the spec always reflects the actual implementation — no drift, no stale documentation. Contract generation is implemented via `rocket_okapi`, which derives OpenAPI specs from Rocket route definitions and Rust types using `mount_endpoints_and_merged_docs!` and `SwaggerUIConfig`. Pre‑release review of the generated spec serves as the intentionality check.*
 
 ### Breaking‑Change Policy
 - **Semantic versioning with deprecation windows:** Formal deprecation period before removal — appropriate for public APIs with many consumers, but heavyweight for a single‑consumer SPA where the frontend and API are deployed in lockstep.

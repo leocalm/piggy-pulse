@@ -13,7 +13,7 @@ Adopt the following deployment infrastructure for the PiggyPulse API:
 The pipeline works as follows:
 1. **PR opened / push to main** → GitHub Actions runs `cargo fmt`, `cargo clippy`, `cargo test`, and SQLx compile‑time checks.
 2. **Merge to main** → GitHub Actions builds the production Docker image and pushes it to GHCR.
-3. **Drone CI on Hetzner** polls GHCR for new images, pulls them, and applies the update (container restart with health checks).
+3. **Drone CI on Hetzner** receives a webhook event from GitHub, pulls the new image from GHCR, and applies the update (container restart with health checks).
 
 This architecture eliminates the need to open SSH or any inbound deployment port on the production server. Drone initiates all connections outbound.
 
@@ -33,7 +33,7 @@ This architecture eliminates the need to open SSH or any inbound deployment port
 - **Full Drone CI (CI + CD):** Single pipeline tool, but Drone's GitHub integration for PR checks is weaker than native GH Actions, and running CI builds on the production server wastes its resources.
 - **ArgoCD / FluxCD:** GitOps‑native CD, but designed for Kubernetes — overkill for a single‑container VPS deployment.
 
-*The GH Actions (CI + build) → Drone (CD via pull) split was chosen because it eliminates inbound server access, leverages GH Actions' native PR integration for CI, and uses Drone's polling model for secure, pull‑based deployment. The production server never accepts incoming connections for deployment.*
+*The GH Actions (CI + build) → Drone (CD via pull) split was chosen because it eliminates inbound server access, leverages GH Actions' native PR integration for CI, and uses Drone's outbound webhook model for secure, event‑driven deployment. The production server never accepts incoming connections for deployment.*
 
 ### Container Registry
 - **Docker Hub:** Widely used, but rate limits on free tier and less integration with GitHub‑native workflows.
@@ -53,7 +53,7 @@ This architecture eliminates the need to open SSH or any inbound deployment port
 
 ### Negative
 - **Two CI systems:** Maintaining both GH Actions workflows and Drone pipeline configuration adds cognitive overhead.
-- **Polling latency:** Drone's pull‑based model introduces a small delay between image push and deployment (seconds to minutes depending on poll interval).
+- **Webhook dependency:** Drone's event‑driven model depends on GitHub webhook delivery; missed or delayed webhooks could delay deployment (mitigated by GitHub's reliable webhook infrastructure).
 - **Self‑hosted Drone maintenance:** Drone on Hetzner requires updates and monitoring as an additional service.
 - **Single‑server risk:** No managed orchestration means failover and scaling require manual intervention.
 

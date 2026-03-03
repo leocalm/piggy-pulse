@@ -8,7 +8,7 @@ Adopt the following repository structure:
 - **Repository structure:** Multi‑repo with a root overview repository
 - **Repositories:**
   - `piggy-pulse-api` — Rust backend (independent CI/CD to Hetzner)
-  - `piggy-pulse-web` — React frontend (independent CI/CD to Cloudflare Pages)
+  - `piggy-pulse-app` — React frontend (independent CI/CD to Cloudflare Pages)
   - `piggy-pulse-docs` — Static OpenAPI/Swagger documentation
   - `piggy-pulse` (this repo) — Product‑level documentation, ADRs, design specs, wireframes, and cross‑cutting governance
 
