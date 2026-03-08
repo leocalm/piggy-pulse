@@ -24,6 +24,7 @@ The system is composed of:
 
 - `piggy-pulse-api` — Rust backend service
 - `piggy-pulse-app` — React frontend client
+- `piggy-pulse-ios` - iOS app
 - `piggy-pulse-docs` — OpenAPI documentation (static)
 
 Each component is deployed independently.
