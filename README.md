@@ -37,7 +37,7 @@ High-level structure:
 
 Browser Client  
 ↓  
-Versioned API (`/api/v1`)  
+Versioned API (`/v1`)  
 ↓  
 Domain Layer  
 ↓  
@@ -104,7 +104,7 @@ Deployment is reproducible via Docker.
 
 ## API Governance
 
-- Versioned under `/api/v1`
+- Versioned under `/v1`
 - Breaking changes require version bump
 - OpenAPI contract reviewed before release
 - No silent breaking changes

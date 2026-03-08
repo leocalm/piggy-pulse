@@ -65,7 +65,7 @@ References: `references/doctrine/interaction_language.md`, `references/doctrine/
 - Design: thin client, no sensitive token storage in browser, cookie-based auth, version-bound API usage
 
 ### API
-- Versioned under `/api/v1`
+- Versioned under `/v1`
 - Breaking changes require version bump
 - OpenAPI contract reviewed before release — treated as a public boundary
 - No silent breaking changes

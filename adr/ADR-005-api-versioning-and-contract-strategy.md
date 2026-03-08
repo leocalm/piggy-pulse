@@ -5,7 +5,7 @@ PiggyPulse exposes a versioned REST API consumed by its own SPA frontend and pot
 
 ## Decision
 Adopt the following API versioning and contract strategy:
-- **Versioning scheme:** URI path prefix (`/api/v1`, `/api/v2`, …)
+- **Versioning scheme:** URI path prefix (`/v1`, `/v2`, …)
 - **Breaking‑change policy:** Breaking changes require a major version bump; no silent breaking changes
 - **Contract format:** OpenAPI 3.x, generated code‑first from Rocket route definitions via `rocket_okapi`
 - **Contract review:** OpenAPI spec reviewed before release — treated as a public boundary
