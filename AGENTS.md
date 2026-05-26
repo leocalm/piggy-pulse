@@ -1,109 +1,122 @@
 # AGENTS.md
 
-## What This Repo Is
+## Purpose
 
-PiggyPulse is a security-informed SaaS platform for personal financial clarity. This root repository is the portfolio/overview layer. The actual components live in separate repositories:
+This repo is the PiggyPulse product, architecture, ADR, design, and agent-reference repo. Agents should use it for product intent, design specs, governance, and architectural rationale, while treating AgentBrain as durable memory and implementation repos as source of truth for shipped code.
 
-- `piggy-pulse-api` — Rust + Rocket backend service
-- `piggy-pulse-web` — React + Vite frontend client
-- `piggy-pulse-docs` — OpenAPI documentation (static)
+## Memory-first workflow
 
-## Design System
+AgentBrain is the durable project memory source. Before meaningful work:
 
-All product specs, wireframes, and HTML mocks live in `designs/`. This is the canonical source for UI behavior, interaction language, and visual conventions.
+1. Read the memory manifest.
+2. Read PiggyPulse project context.
+3. Read relevant project memory files.
+4. Search decisions.
+5. Check open questions.
+6. Inspect this repo.
 
-- Active v1 specs: `designs/v1/` (feature folders, each with spec + wireframe + HTML mock)
-- Exploratory prototypes: `designs/prototypes/`
-- Product doctrine: `references/doctrine/` (interaction language, governance, keyboard nav, design decisions)
-- Agent role contracts: `references/agents/`
-- Figma tokens/components: `references/figma/`
-- Architecture decisions: `adr/`
-- Product alignment: `piggypulse_product_alignment_docs/`
+If AgentBrain, this repo, and implementation code disagree, stop and report the mismatch. Do not silently update specs to match assumptions.
 
-**Before generating any UI, spec, or wireframe — read `designs/v1/design-system.md` and the relevant feature spec.**
+## Required memory reads
 
-## Product Thesis
+- Always: `Context.md`, `ArchitectureOverview.md`, `ProductPrinciples.md`, `DesignSystem.md`, `KnownIssues.md`.
+- Architecture/ADR work: `Backend.md`, `Frontend.md`, `APIConventions.md`, `SecurityModel.md`, `DataModel.md`, `Deployment.md`, relevant decisions.
+- Design/spec work: `DesignSystem.md`, `ProductPrinciples.md`, relevant `Features/*`.
+- Backend/frontend/mobile coordination: the relevant repo memory under `Repos/` plus feature files.
 
-PiggyPulse is a reflective financial clarity platform:
-- Descriptive, not advisory
-- Neutral, not judgmental
-- No gamification
-- Magnitude over morality
+## Memory write-back rules
 
-Core doctrine: `references/doctrine/calm_reflection_principles.md`
+After meaningful work, record durable decisions, open questions, interaction/session summaries, and requested daily/global summaries.
 
-## Non-Negotiable UX Rules
+Use MCP tools if available: `record_decision`, `upsert_open_question`, `record_interaction`, `append_daily_log`, `append_global_daily_summary`.
 
-- Never coach users — no "you should", no punitive framing, no moral labels
-- No red/green emotional coding for financial performance
-- Period is the cognitive anchor; no silent scope switching
-- Transfer semantics = single logical entity in UI
-- Amounts are always positive in inputs; direction comes from context/category
+If MCP is unavailable, write to `AgentBrain/10_Projects/PiggyPulse/`. Do not store secrets, `.env` contents, credentials, private keys, tokens, signing material, or raw chain-of-thought.
 
-References: `references/doctrine/interaction_language.md`, `references/doctrine/notes_on_design_decisions.md`
+## Repo overview
 
-## Source-of-Truth Precedence
+Product/reference repo containing ADRs, design specs, wireframes, doctrine, agent role references, architecture notes, and product alignment docs for PiggyPulse.
 
-1. Feature specs in `designs/v1/**/*.md`
-2. Governance + lifecycle rules: `references/doctrine/governance.md`, `designs/v1/entity_lifecycle_rules.md`
-3. Wireframes (`*_wireframe.md`, HTML mocks)
-4. Figma docs (`references/figma/*`) — implementation aids only, not behavioral authority
+## Important directories
 
-## Tech Stack
+- `adr/` - architecture decision records.
+- `designs/v1/` - v1 product specs, wireframes, HTML mocks, and tracking.
+- `references/doctrine/` - product doctrine, governance, interaction language, and keyboard navigation.
+- `references/agents/` - agent role contracts.
+- `references/figma/` - Figma-related references if present.
+- `docs/plans/` - implementation/design plans.
+- `piggypulse_product_alignment_docs/` - vision, mission, epics, and dashboard strategy.
+- `ARCHITECTURE.md`, `SECURITY.md`, `README.md` - overview docs.
 
-### Backend (`piggy-pulse-api`)
-- Language: Rust
-- Framework: Rocket
-- Database: PostgreSQL + SQLx
-- Auth: HttpOnly cookie sessions, Argon2 hashing, optional 2FA
-- Design: explicit DTO separation, compile-time guarantees, SQL transparency, stateless requests
+## Commands
 
-### Frontend (`piggy-pulse-web`)
-- Framework: React + Vite
-- UI: Mantine
-- Deployment: Cloudflare Pages
-- Design: thin client, no sensitive token storage in browser, cookie-based auth, version-bound API usage
+No package manager, build, test, lint, or format tooling is verified in this repo.
 
-### API
-- Versioned under `/v1`
-- Breaking changes require version bump
-- OpenAPI contract reviewed before release — treated as a public boundary
-- No silent breaking changes
+### Install
 
-## Coding Conventions
+No install command is verified.
 
-### Backend
-- Domain types are never exposed directly — always map through DTOs
-- No silent data mutations; all writes are explicit
-- Errors are typed and propagated structurally, not swallowed
-- SQL queries are explicit (no heavy ORM magic); use SQLx with typed queries
-- Security-sensitive endpoints must have rate limiting
-- No secrets in source; use environment variables
+### Development
 
-### Frontend
-- API calls go through a versioned client layer — never call endpoints ad hoc
-- No sensitive data in localStorage or sessionStorage
-- Currency formatting must use the global currency context (not hardcoded symbols)
-- Components are thin — business logic belongs in hooks or services
-- Follow the visual system baseline from `designs/v1/design-system.md`
+No development command is verified.
 
-## Visual System Baseline (for Frontend)
-- Max content width: 1100px
-- Desktop nav: left sidebar (240px) — Core / Structure / Session groups
-- Mobile nav: fixed bottom bar — Dashboard, Transactions, Periods, More
-- `More` opens a bottom drawer: Accounts, Categories, Vendors, Settings
-- Loading states: ghost skeleton shimmer
-- Page titles use `Sora`; body/data copy stays sober
-- No theme toggle controls in production wireframes
+### Build
 
-Full reference: `designs/v1/ux-infrastructure/ux_infrastructure_spec.md`
+No build command is verified.
 
-## Naming Conventions (Design Files)
-- Specs: `snake_case_spec.md`
-- Wireframes: `snake_case_wireframe.md`
-- HTML mocks: `piggypulse-<page>.html` in `designs/v1/<feature>/`
-- HTML prototypes: `piggypulse_<page>_vNN_<label>.html` in `designs/prototypes/`
+### Test
 
-## Active Tracking
-- v1 page status: `designs/v1/piggypulse_v1_master_tracking.md`
-- Architecture decisions: `adr/`
+No test command is verified.
+
+### Lint / format
+
+No lint or format command is verified.
+
+### Database / migrations
+
+Not applicable.
+
+### Mobile platform commands
+
+Not applicable.
+
+## Conventions
+
+- Keep specs concise and tied to implementation repos or AgentBrain references.
+- Product tone is descriptive, not prescriptive; informative, not judgmental; no shame-based financial language.
+- Design direction is calm Nebula finance UI with soft purple, dusty rose, and muted blue accents.
+- For UI work, read `designs/v1/design-system.md`, the relevant feature spec, and `references/doctrine/interaction_language.md`.
+- ADRs should record decisions, context, consequences, and affected repos.
+- Do not treat old design mocks as implementation truth when they conflict with AgentBrain or current code.
+
+## Testing expectations
+
+For docs/spec changes, review affected cross-references and verify links/filenames. If a spec claims implementation behavior, inspect the relevant implementation repo or mark it as a TODO/open question.
+
+## Security / privacy rules
+
+- Never commit secrets or `.env` values.
+- Do not include signing keys, provisioning profiles, keystores, API tokens, service-account files, passwords, or private certificates.
+- Public-facing security/privacy claims must be checked against `SecurityModel.md` and implementation repos.
+- Follow `PrivacyRules.md` only if the task touches personal/career/user memory; otherwise project security rules apply.
+
+## Environment variables
+
+None documented for this repo.
+
+## When to stop and ask/report
+
+Stop and report if memory contradicts source, implementation repos contradict specs, a public API/security claim is uncertain, required commands are missing, legal/privacy text needs owner approval, or the requested change conflicts with recorded decisions.
+
+## Completion checklist
+
+Before final response, verify:
+
+- [ ] Relevant AgentBrain memory was read.
+- [ ] Relevant source files were inspected.
+- [ ] Existing decisions and open questions were checked.
+- [ ] Commands run are listed.
+- [ ] Tests/lint/build were run where appropriate, or skipped with reason.
+- [ ] Durable decisions were recorded or proposed.
+- [ ] Open questions were recorded or proposed.
+- [ ] No secrets or `.env` values were exposed.
+- [ ] Any memory/code contradictions were reported.

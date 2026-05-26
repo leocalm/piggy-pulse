@@ -1,0 +1,382 @@
+<!doctype html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Non-Allowance Range Wireframe</title>
+      <style>
+        :root {
+          --bg: #eef3f6;
+          --card: #f7fafc;
+          --text: #1f2933;
+          --muted: #61707f;
+          --line: #d6dee7;
+          --line-strong: #a5b3c1;
+          --accent: #0e9fbc;
+          --accent-soft: rgba(14, 159, 188, 0.18);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+          margin: 0;
+          background:
+            radial-gradient(1200px 520px at 20% -20%, #ffffff 0%, transparent 65%),
+            linear-gradient(180deg, #f2f6f9 0%, var(--bg) 100%);
+          color: var(--text);
+          font-family: "Avenir Next", "Segoe UI Variable", "Segoe UI", sans-serif;
+        }
+
+        .page {
+          max-width: 920px;
+          margin: 0 auto;
+          padding: 28px 16px 42px;
+          display: grid;
+          gap: 16px;
+        }
+
+        .group-head {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          font-size: 12px;
+          color: var(--muted);
+          font-weight: 700;
+        }
+
+        .card {
+          background: var(--card);
+          border: 1px solid var(--line);
+          border-radius: 16px;
+          padding: 18px;
+          box-shadow: 0 8px 24px rgba(33, 53, 71, 0.06);
+        }
+
+        .top {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          gap: 12px;
+        }
+
+        .name { font-size: 30px; font-weight: 700; line-height: 1.1; }
+        .balance { font-size: 38px; font-weight: 700; line-height: 1; }
+
+        .range-label {
+          margin-top: 14px;
+          font-size: 12px;
+          color: var(--muted);
+        }
+
+        .track-wrap { margin-top: 8px; }
+
+        .track {
+          position: relative;
+          height: 10px;
+          border-radius: 999px;
+          background: linear-gradient(180deg, #dce3eb 0%, #d2dae4 100%);
+        }
+
+        .track::before,
+        .track::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          width: 2px;
+          height: 100%;
+          background: var(--line-strong);
+        }
+
+        .track::before { left: 0; border-radius: 999px; }
+        .track::after { right: 0; border-radius: 999px; }
+
+        .marker {
+          position: absolute;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        .marker.current {
+          width: 14px;
+          height: 14px;
+          border-radius: 999px;
+          background: var(--accent);
+          box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        .marker.zero {
+          width: 2px;
+          height: 20px;
+          border-radius: 999px;
+          background: var(--line-strong);
+        }
+
+        .axis {
+          margin-top: 8px;
+          display: flex;
+          justify-content: space-between;
+          gap: 10px;
+          font-size: 12px;
+          color: var(--muted);
+        }
+
+        .legend {
+          margin-top: 8px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 14px;
+          font-size: 12px;
+          color: var(--muted);
+        }
+
+        .legend-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .legend-dot.current {
+          width: 10px;
+          height: 10px;
+          border-radius: 999px;
+          background: var(--accent);
+        }
+
+        .legend-line.zero {
+          width: 2px;
+          height: 12px;
+          border-radius: 999px;
+          background: var(--line-strong);
+        }
+
+        .context {
+          margin-top: 10px;
+          font-size: 13px;
+          color: var(--muted);
+        }
+
+        .rows {
+          margin-top: 12px;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          row-gap: 8px;
+          column-gap: 12px;
+          font-size: 15px;
+        }
+
+        .rows .label { color: var(--muted); }
+        .rows .value { font-weight: 700; }
+
+        .states {
+          border: 1px solid var(--line);
+          border-radius: 12px;
+          background: #f7fafc;
+          padding: 12px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .states-title {
+          width: 100%;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          font-size: 12px;
+          color: var(--muted);
+          font-weight: 700;
+        }
+
+        .state-btn {
+          border: 1px solid var(--line-strong);
+          background: #fff;
+          border-radius: 999px;
+          padding: 7px 10px;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        .state-btn[aria-pressed="true"] {
+          border-color: color-mix(in srgb, var(--accent) 50%, #8ea0b2 50%);
+        }
+
+        .state-btn:focus-visible {
+          outline: 2px solid color-mix(in srgb, var(--accent) 48%, #fff 52%);
+          outline-offset: 1px;
+        }
+
+        @media (max-width: 700px) {
+          .name { font-size: 24px; }
+          .balance { font-size: 30px; }
+        }
+      </style>
+    </head>
+    <body>
+      <main class="page">
+        <header class="group-head">
+          <span>Liquid Accounts</span>
+          <span>$12,480</span>
+        </header>
+
+        <section class="card" aria-labelledby="accountName">
+          <div class="top">
+            <h1 id="accountName" class="name">Main Checking</h1>
+            <div id="balanceText" class="balance">$4,520</div>
+          </div>
+
+          <div class="range-label">30-day closing balance range</div>
+
+          <div class="track-wrap">
+            <div id="track" class="track" role="img" aria-label=""></div>
+
+            <div class="axis">
+              <span id="lowText">Low $2,800</span>
+              <span id="highText">High $5,100</span>
+            </div>
+
+            <div class="legend">
+              <span class="legend-item">
+                <span class="legend-dot current"></span>
+                <span id="currentLegend">Current $4,520</span>
+              </span>
+              <span class="legend-item" id="zeroLegendWrap" hidden>
+                <span class="legend-line zero"></span>
+                <span>Zero</span>
+              </span>
+            </div>
+          </div>
+
+          <div id="contextText" class="context">
+            Current is within this account’s 30-day closing range.
+          </div>
+
+          <div class="rows">
+            <div class="label">Net change this period</div>
+            <div id="periodValue" class="value">+$320</div>
+          </div>
+        </section>
+
+        <section class="states" aria-label="Wireframe states">
+          <div class="states-title">State preview</div>
+          <button class="state-btn" data-state="within" aria-pressed="true">Within Range</button>
+          <button class="state-btn" data-state="above" aria-pressed="false">Above High</button>
+          <button class="state-btn" data-state="below" aria-pressed="false">Below Low</button>
+        </section>
+      </main>
+
+      <script>
+        const fmt = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 0
+        });
+
+        const states = {
+          within: { name: "Main Checking", current: 4520, periodChange: 320, histLow: 2800, histHigh: 5100, decimalPlaces: 2 },
+          above: { name: "Main Checking", current: 5480, periodChange: 600, histLow: 2800, histHigh: 5100, decimalPlaces: 2 },
+          below: { name: "Main Checking", current: 2400, periodChange: -450, histLow: 2800, histHigh: 5100, decimalPlaces: 2 }
+        };
+
+        const els = {
+          accountName: document.getElementById("accountName"),
+          balanceText: document.getElementById("balanceText"),
+          track: document.getElementById("track"),
+          lowText: document.getElementById("lowText"),
+          highText: document.getElementById("highText"),
+          currentLegend: document.getElementById("currentLegend"),
+          zeroLegendWrap: document.getElementById("zeroLegendWrap"),
+          contextText: document.getElementById("contextText"),
+          periodValue: document.getElementById("periodValue")
+        };
+
+        function money(v) { return fmt.format(v); }
+        function signedMoney(v) { return `${v >= 0 ? "+" : "-"}${fmt.format(Math.abs(v))}`; }
+
+        function clamp(n, min, max) { return Math.min(max, Math.max(min, n)); }
+
+        function toPercent(value, low, high) {
+          if (high <= low) return 50;
+          return clamp(((value - low) / (high - low)) * 100, 0, 100);
+        }
+
+        function render(stateKey) {
+          const s = states[stateKey];
+          let low = s.histLow;
+          let high = s.histHigh;
+
+          if (low === high) {
+            const unit = 10 ** s.decimalPlaces;
+            low -= unit;
+            high += unit;
+          }
+
+          const rawPct = high > low ? ((s.current - low) / (high - low)) * 100 : 50;
+          const currentPct = toPercent(s.current, low, high);
+
+          const isAbove = s.current > high;
+          const isBelow = s.current < low;
+
+          els.accountName.textContent = s.name;
+          els.balanceText.textContent = money(s.current);
+          els.lowText.textContent = `Low ${money(low)}`;
+          els.highText.textContent = `High ${money(high)}`;
+          els.currentLegend.textContent = `Current ${money(s.current)}`;
+          els.periodValue.textContent = signedMoney(s.periodChange);
+
+          els.track.querySelectorAll(".marker").forEach((n) => n.remove());
+
+          const showZero = low <= 0 && high >= 0;
+          if (showZero) {
+            const zero = document.createElement("span");
+            zero.className = "marker zero";
+            zero.style.left = `${toPercent(0, low, high)}%`;
+            zero.setAttribute("aria-hidden", "true");
+            els.track.appendChild(zero);
+            els.zeroLegendWrap.hidden = false;
+          } else {
+            els.zeroLegendWrap.hidden = true;
+          }
+
+          const current = document.createElement("span");
+          current.className = "marker current";
+          current.style.left = `${currentPct}%`;
+          current.setAttribute("aria-hidden", "true");
+          els.track.appendChild(current);
+
+          if (isAbove) {
+            const delta = s.current - high;
+            els.contextText.textContent = `Current is above 30-day high by ${money(delta)}.`;
+          } else if (isBelow) {
+            const delta = low - s.current;
+            els.contextText.textContent = `Current is below 30-day low by ${money(delta)}.`;
+          } else {
+            els.contextText.textContent = "Current is within this account’s 30-day closing range.";
+          }
+
+          const outOfRangeText = isAbove
+            ? `above high by ${money(s.current - high)}`
+            : isBelow
+            ? `below low by ${money(low - s.current)}`
+            : "within range";
+
+          els.track.setAttribute(
+            "aria-label",
+            `30-day closing range low ${money(low)}, high ${money(high)}, current ${money(s.current)}, ${outOfRangeText}. Marker position ${Math.round(clamp(rawPct, 0, 100))} percent.`
+          );
+        }
+
+        const buttons = Array.from(document.querySelectorAll(".state-btn"));
+        buttons.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            buttons.forEach((b) => b.setAttribute("aria-pressed", "false"));
+            btn.setAttribute("aria-pressed", "true");
+            render(btn.dataset.state);
+          });
+        });
+
+        render("within");
+      </script>
+    </body>
+  </html>

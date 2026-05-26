@@ -1,0 +1,486 @@
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>PiggyPulse Allowance Range Wireframe</title>
+      <style>
+        :root {
+          --bg: #eef3f6;
+          --card: #f7fafc;
+          --text: #1e2732;
+          --muted: #5f6b78;
+          --line: #d6dde6;
+          --line-strong: #9aa9b8;
+          --accent: #0e9fbc;
+          --accent-soft: rgba(14, 159, 188, 0.18);
+          --radius: 16px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+          margin: 0;
+          background:
+            radial-gradient(1200px 500px at 20% -20%, #ffffff 0%, transparent 65%),
+            linear-gradient(180deg, #f2f6f9 0%, var(--bg) 100%);
+          color: var(--text);
+          font-family: "Avenir Next", "Segoe UI Variable", "Segoe UI", sans-serif;
+        }
+
+        .page {
+          max-width: 920px;
+          margin: 0 auto;
+          padding: 28px 16px 44px;
+          display: grid;
+          gap: 16px;
+        }
+
+        .group-head {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          font-size: 12px;
+          color: var(--muted);
+          font-weight: 700;
+        }
+
+        .card {
+          background: var(--card);
+          border: 1px solid var(--line);
+          border-radius: var(--radius);
+          padding: 18px 18px 16px;
+          box-shadow: 0 8px 24px rgba(33, 53, 71, 0.06);
+          animation: enter 280ms ease-out both;
+        }
+
+        @keyframes enter {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .top {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          gap: 12px;
+        }
+
+        .name {
+          font-size: 30px;
+          font-weight: 700;
+          line-height: 1.1;
+        }
+
+        .balance {
+          font-size: 38px;
+          font-weight: 700;
+          line-height: 1;
+        }
+
+        .range-label-row {
+          margin-top: 14px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 12px;
+          color: var(--muted);
+        }
+
+        .info-dot {
+          display: inline-grid;
+          place-items: center;
+          width: 16px;
+          height: 16px;
+          border: 1px solid var(--line-strong);
+          border-radius: 999px;
+          font-size: 10px;
+          color: var(--muted);
+        }
+
+        .track-shell {
+          margin-top: 8px;
+        }
+
+        .track {
+          position: relative;
+          height: 10px;
+          border-radius: 999px;
+          background: linear-gradient(180deg, #dce3eb 0%, #d1d9e2 100%);
+        }
+
+        .track::before,
+        .track::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          width: 2px;
+          height: 100%;
+          border-radius: 999px;
+          background: #a2b0bf;
+        }
+
+        .track::before { left: 0; }
+        .track::after { right: 0; }
+
+        .marker {
+          position: absolute;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        .marker.current {
+          width: 14px;
+          height: 14px;
+          border-radius: 999px;
+          background: var(--accent);
+          box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        .marker.projected {
+          width: 14px;
+          height: 14px;
+          border-radius: 999px;
+          background: #f7fafc;
+          border: 2px solid var(--accent);
+        }
+
+        .marker.zero {
+          width: 2px;
+          height: 20px;
+          border-radius: 999px;
+          background: var(--line-strong);
+        }
+
+        .axis {
+          margin-top: 8px;
+          display: flex;
+          justify-content: space-between;
+          gap: 12px;
+          font-size: 12px;
+          color: var(--muted);
+        }
+
+        .legend {
+          margin-top: 8px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 14px;
+          font-size: 12px;
+          color: var(--muted);
+        }
+
+        .legend-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .legend-dot,
+        .legend-line {
+          display: inline-block;
+          flex: 0 0 auto;
+        }
+
+        .legend-dot.current {
+          width: 10px;
+          height: 10px;
+          border-radius: 999px;
+          background: var(--accent);
+        }
+
+        .legend-dot.projected {
+          width: 10px;
+          height: 10px;
+          border-radius: 999px;
+          border: 2px solid var(--accent);
+          background: #f7fafc;
+        }
+
+        .legend-line.zero {
+          width: 2px;
+          height: 12px;
+          border-radius: 99px;
+          background: var(--line-strong);
+        }
+
+        .metrics {
+          margin-top: 14px;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          row-gap: 8px;
+          column-gap: 12px;
+          font-size: 15px;
+        }
+
+        .metrics .label { color: var(--muted); }
+        .metrics .value { font-weight: 700; }
+
+        .note {
+          margin: 12px 0 0;
+          font-size: 12px;
+          color: var(--muted);
+        }
+
+        .states {
+          background: #f7fafc;
+          border: 1px solid var(--line);
+          border-radius: 12px;
+          padding: 12px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .states-title {
+          width: 100%;
+          font-size: 12px;
+          color: var(--muted);
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          font-weight: 700;
+        }
+
+        .state-btn {
+          border: 1px solid var(--line-strong);
+          background: #ffffff;
+          color: var(--text);
+          border-radius: 999px;
+          padding: 7px 10px;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        .state-btn[aria-pressed="true"] {
+          border-color: color-mix(in srgb, var(--accent) 52%, #88a0b9 48%);
+          box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 28%, transparent 72%);
+        }
+
+        .state-btn:focus-visible {
+          outline: 2px solid color-mix(in srgb, var(--accent) 48%, #ffffff 52%);
+          outline-offset: 1px;
+        }
+
+        @media (max-width: 680px) {
+          .name { font-size: 24px; }
+          .balance { font-size: 30px; }
+          .metrics { font-size: 14px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .card { animation: none; }
+        }
+      </style>
+    </head>
+    <body>
+      <main class="page">
+        <header class="group-head">
+          <span>Allowance Accounts</span>
+          <span>$1,050</span>
+        </header>
+
+        <section class="card" aria-labelledby="accountName">
+          <div class="top">
+            <h1 id="accountName" class="name">Personal</h1>
+            <div id="balanceText" class="balance">-$50</div>
+          </div>
+
+          <div class="range-label-row">
+            <span>30-day closing balance range</span>
+            <span class="info-dot" aria-hidden="true">i</span>
+          </div>
+
+          <div class="track-shell">
+            <div id="rangeTrack" class="track" role="img" aria-label=""></div>
+
+            <div class="axis">
+              <span id="lowText">Low -$180</span>
+              <span id="highText">High +$90</span>
+            </div>
+
+            <div class="legend">
+              <span class="legend-item">
+                <span class="legend-dot current"></span>
+                <span id="legendCurrent">Current -$50</span>
+              </span>
+              <span class="legend-item" id="legendProjectedWrap">
+                <span class="legend-dot projected"></span>
+                <span id="legendProjected">After next transfer +$50</span>
+              </span>
+              <span class="legend-item" id="legendZeroWrap">
+                <span class="legend-line zero"></span>
+                <span>Zero</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="metrics">
+            <div class="label">Net change this period</div>
+            <div id="periodValue" class="value">-$150</div>
+
+            <div class="label">Next transfer</div>
+            <div id="nextValue" class="value">+$100</div>
+
+            <div class="label">Balance after next transfer</div>
+            <div id="projectedValue" class="value">+$50</div>
+          </div>
+
+          <p id="rangeNote" class="note">
+            Bounds include historical min/max plus zero and projected balance.
+          </p>
+        </section>
+
+        <section class="states" aria-label="Wireframe states">
+          <div class="states-title">State Preview</div>
+          <button class="state-btn" data-state="deficitCarry" aria-pressed="true">Deficit Carry</button>
+          <button class="state-btn" data-state="overspendMonth" aria-pressed="false">Outside History</button>
+          <button class="state-btn" data-state="positiveBuffer" aria-pressed="false">Positive Buffer</button>
+          <button class="state-btn" data-state="noTransfer" aria-pressed="false">No Transfer Set</button>
+        </section>
+      </main>
+
+      <script>
+        const fmt = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 0
+        });
+
+        const states = {
+          deficitCarry: {
+            name: "Personal",
+            current: -50,
+            nextTransfer: 100,
+            periodChange: -150,
+            histLow: -180,
+            histHigh: 90
+          },
+          overspendMonth: {
+            name: "Personal",
+            current: -220,
+            nextTransfer: 100,
+            periodChange: -80,
+            histLow: -150,
+            histHigh: 80
+          },
+          positiveBuffer: {
+            name: "Personal",
+            current: 40,
+            nextTransfer: 100,
+            periodChange: 30,
+            histLow: -110,
+            histHigh: 120
+          },
+          noTransfer: {
+            name: "Personal",
+            current: -50,
+            nextTransfer: null,
+            periodChange: -150,
+            histLow: -180,
+            histHigh: 90
+          }
+        };
+
+        const els = {
+          accountName: document.getElementById("accountName"),
+          balanceText: document.getElementById("balanceText"),
+          rangeTrack: document.getElementById("rangeTrack"),
+          lowText: document.getElementById("lowText"),
+          highText: document.getElementById("highText"),
+          legendCurrent: document.getElementById("legendCurrent"),
+          legendProjectedWrap: document.getElementById("legendProjectedWrap"),
+          legendProjected: document.getElementById("legendProjected"),
+          legendZeroWrap: document.getElementById("legendZeroWrap"),
+          periodValue: document.getElementById("periodValue"),
+          nextValue: document.getElementById("nextValue"),
+          projectedValue: document.getElementById("projectedValue"),
+          rangeNote: document.getElementById("rangeNote")
+        };
+
+        function money(v) {
+          return fmt.format(v);
+        }
+
+        function signedMoney(v) {
+          return `${v >= 0 ? "+" : "-"}${fmt.format(Math.abs(v))}`;
+        }
+
+        function pct(value, low, high) {
+          if (high <= low) return 50;
+          const ratio = ((value - low) / (high - low)) * 100;
+          return Math.max(0, Math.min(100, ratio));
+        }
+
+        function addMarker(cls, leftPct) {
+          const marker = document.createElement("span");
+          marker.className = `marker ${cls}`;
+          marker.style.left = `${leftPct}%`;
+          marker.setAttribute("aria-hidden", "true");
+          els.rangeTrack.appendChild(marker);
+        }
+
+        function render(stateKey) {
+          const state = states[stateKey];
+          const projected =
+            state.nextTransfer === null ? null : state.current + state.nextTransfer;
+
+          const low = Math.min(state.histLow, 0, projected ?? state.current);
+          const high = Math.max(state.histHigh, 0, projected ?? state.current);
+
+          els.accountName.textContent = state.name;
+          els.balanceText.textContent = money(state.current);
+          els.periodValue.textContent = signedMoney(state.periodChange);
+          els.nextValue.textContent =
+            state.nextTransfer === null ? "Not set" : signedMoney(state.nextTransfer);
+          els.projectedValue.textContent =
+            projected === null ? "Not set" : signedMoney(projected);
+
+          els.lowText.textContent = `Low ${signedMoney(low)}`;
+          els.highText.textContent = `High ${signedMoney(high)}`;
+
+          els.legendCurrent.textContent = `Current ${money(state.current)}`;
+
+          if (projected === null) {
+            els.legendProjectedWrap.style.display = "none";
+            els.projectedValue.parentElement.previousElementSibling.textContent = "Balance after next transfer";
+          } else {
+            els.legendProjectedWrap.style.display = "inline-flex";
+            els.legendProjected.textContent = `After next transfer ${money(projected)}`;
+          }
+
+          els.rangeNote.textContent =
+            "Bounds include historical min/max plus zero and projected balance.";
+
+          els.rangeTrack
+            .querySelectorAll(".marker")
+            .forEach((node) => node.remove());
+
+          addMarker("zero", pct(0, low, high));
+          addMarker("current", pct(state.current, low, high));
+          if (projected !== null) {
+            addMarker("projected", pct(projected, low, high));
+          }
+
+          const aria = projected === null
+            ? `Range low ${money(low)}, high ${money(high)}, current ${money(state.current)}, zero marker included.`
+            : `Range low ${money(low)}, high ${money(high)}, current ${money(state.current)}, projected ${money(projected)}, zero marker included.`;
+
+          els.rangeTrack.setAttribute("aria-label", aria);
+        }
+
+        const buttons = Array.from(document.querySelectorAll(".state-btn"));
+        buttons.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            buttons.forEach((b) => b.setAttribute("aria-pressed", "false"));
+            btn.setAttribute("aria-pressed", "true");
+            render(btn.dataset.state);
+          });
+        });
+
+        render("deficitCarry");
+      </script>
+    </body>
+  </html>
