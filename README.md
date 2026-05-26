@@ -48,6 +48,7 @@ Key properties:
 - HttpOnly cookie-based authentication
 - CSRF protection
 - Argon2 password hashing
+- Encryption at rest (AES-256-GCM with per-user keys)
 - DTO separation between internal models and external contracts
 - Stateless API design
 - OpenAPI as a first-class artifact
@@ -63,6 +64,7 @@ Authentication model:
 
 - HttpOnly session cookies
 - No tokens stored in localStorage
+- All user financial data encrypted at rest
 - Backend validation on every request
 - Rate limiting on sensitive endpoints
 - Optional 2FA support

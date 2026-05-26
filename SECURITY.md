@@ -95,6 +95,28 @@ This reduces the impact of client-side script compromise by keeping credentials 
 
 ---
 
+## Encryption at Rest
+
+PiggyPulse encrypts all user financial data at rest — transaction amounts and descriptions, account balances, category and vendor metadata, subscription billing amounts, and budget targets.
+
+### Design
+
+- **Per-user key hierarchy:** Each user has a 32-byte Data Encryption Key (DEK) generated from a CSPRNG at signup. The DEK is wrapped (encrypted) with a Key Encryption Key (KEK) derived from the user's password via Argon2id. The wrapped DEK is stored on the server; the plaintext DEK exists only in client memory and, after login, in a server-side per-session store.
+- **Algorithm:** AES-256-GCM with 96-bit nonce and 128-bit authentication tag.
+- **Scope:** All user-data columns are encrypted across seven tables — `transaction`, `logical_transaction_state`, `account`, `category`, `vendor`, `budget_category`, and `subscription`.
+- **Unlock flow:** After login, the client receives the wrapped DEK and Argon2id parameters, derives the KEK locally, unwraps the DEK, and POSTs it to `POST /v2/auth/unlock`. The server holds the DEK in an in-process session store keyed by the session or API token. On logout, the DEK is evicted.
+- **Key protection:** The `Dek` Rust type zeroizes on drop, omits `Debug`, `Serialize`, `Clone`, and `Display` derives. Only an explicitly named `clone_for_request()` method may copy the key.
+- **Client-side encryption:** Both the web app (React/TypeScript) and iOS client implement the full encryption stack — Argon2id KEK derivation, DEK unwrap, AES-256-GCM encryption and decryption of server data.
+
+### What encryption does not protect against
+
+- **Malware on the client device:** Once data is decrypted in the browser or app, it is accessible to that process and any attacker with local access.
+- **Server-side active tampering:** A compromised server process with write access to the session store could read a user's DEK while that user has an active session.
+
+For a complete design reference, see [ADR-010: Encryption at Rest](adr/ADR-010-encryption-at-rest.md).
+
+---
+
 ## Password Hashing
 
 - Passwords are hashed using Argon2 with per-user salts and memory-hard parameters

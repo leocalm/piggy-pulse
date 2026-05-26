@@ -17,7 +17,7 @@ All product specs, wireframes, and HTML mocks live in `designs/`. This is the ca
 - Product doctrine: `references/doctrine/` (interaction language, governance, keyboard nav, design decisions)
 - Agent role contracts: `references/agents/`
 - Figma tokens/components: `references/figma/`
-- Architecture decisions: `adr/`
+- Architecture decisions: `adr/` (see [ADR-010](adr/ADR-010-encryption-at-rest.md) for encryption at rest)
 - Product alignment: `piggypulse_product_alignment_docs/`
 
 **Before generating any UI, spec, or wireframe — read `designs/v1/design-system.md` and the relevant feature spec.**
@@ -56,6 +56,7 @@ References: `references/doctrine/interaction_language.md`, `references/doctrine/
 - Framework: Rocket
 - Database: PostgreSQL + SQLx
 - Auth: HttpOnly cookie sessions, Argon2 hashing, optional 2FA
+- Encryption: Per-user AES-256-GCM encryption at rest; DEK/KEK key hierarchy; client-side encryption in web and iOS
 - Design: explicit DTO separation, compile-time guarantees, SQL transparency, stateless requests
 
 ### Frontend (`piggy-pulse-web`)
